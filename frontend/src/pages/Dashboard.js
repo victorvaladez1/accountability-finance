@@ -29,8 +29,14 @@ function Dashboard() {
   if (loading) return <div>Loading your dashboard...</div>;
   if (error) return <div>{error}</div>;
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/login";
+  }
+
   return (
     <div>
+      <button onClick={handleLogout}>Logout</button>
       <h2>Welcome to your Dashboard</h2>
       {accounts.length === 0 ? (
         <p>You don't have any accounts yet.</p>
