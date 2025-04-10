@@ -1,5 +1,6 @@
 import React, {useEffect, useState } from "react";
 import axios from "axios";
+import Navbar from "../components/Navbar";
 
 function Dashboard() {
   const [accounts, setAccounts] = useState([]);
@@ -65,7 +66,7 @@ function Dashboard() {
 
   return (
     <div>
-      <button onClick={handleLogout}>Logout</button>
+      <Navbar />
       <h2>Welcome to your Dashboard</h2>
 
       <h3>Create a New Account</h3>

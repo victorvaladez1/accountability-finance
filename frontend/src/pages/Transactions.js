@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Navbar from "../components/Navbar";
 
 function Transactions() {
   const [transactions, setTransactions] = useState([]);
@@ -65,6 +66,7 @@ function Transactions() {
 
   return (
     <div>
+      <Navbar />
       <h2>Transactions</h2>
       <form onSubmit={handleSubmit}>
         <select
