@@ -1,11 +1,14 @@
 import React, {useEffect, useState } from "react";
+import { Circles } from 'react-loader-spinner';
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import ExpensePieChart from "../components/ExpensePieChart";
 
 function Dashboard() {
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [txLoading, setTxLoading] = useState(true);
 
   const [form, setForm] = useState({
     name: "",
@@ -15,6 +18,7 @@ function Dashboard() {
 
   useEffect(() => {
     fetchAccounts();
+    fetchTransactions();
   }, []);
 
   const [editingId, setEditingId] = useState(null);
@@ -23,6 +27,8 @@ function Dashboard() {
     type: "",
     balance: "",
   });
+
+  const [transactions, setTransactions] = useState([]);
 
   const fetchAccounts = async () => {
     try {
@@ -37,6 +43,22 @@ function Dashboard() {
     } catch (err) {
       setError("Failed to load accounts. Make sure you're logged in.");
       setLoading(false);
+    }
+  };
+
+  const fetchTransactions = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get("http://localhost:5000/api/transactions", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setTransactions(res.data);
+    } catch (err) {
+      console.error("Failed to fetch transactions:", err);
+    } finally {
+      setTxLoading(false);
     }
   };
 
@@ -225,6 +247,13 @@ function Dashboard() {
           ))}
         </ul>
       )}
+
+      {txLoading ? (
+        <Circles height="60" width="60" color="#4fa94d" ariaLabel="loading" />
+      ) : (
+        <ExpensePieChart transactions={transactions} />
+      )}
+
     </div>
   );
 }
