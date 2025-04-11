@@ -17,6 +17,13 @@ function Dashboard() {
     fetchAccounts();
   }, []);
 
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState({
+    name: "",
+    type: "",
+    balance: "",
+  });
+
   const fetchAccounts = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -63,6 +70,64 @@ function Dashboard() {
       alert("Error creating account: " + (err.response?.data?.message || "Unknown error"));
     }
   };
+
+  const handleDelete = async (id) => {
+    const confirm = window.confirm("Are you sure you want to delete this account?");
+    if (!confirm) return;
+  
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:5000/api/accounts/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setAccounts((prev) => prev.filter((a) => a._id !== id));
+    } catch (err) {
+      alert("Failed to delete account.");
+      console.error(err);
+    }
+  };
+
+  const startEditing = (account) => {
+    setEditingId(account._id);
+    setEditForm({
+      name: account.name,
+      type: account.type,
+      balance: account.balance,
+    });
+  };
+  
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditForm({ name: "", type: "", balance: "" });
+  };
+  
+  const handleEditChange = (e) => {
+    setEditForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+  
+  const handleSave = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const res = await axios.put(
+        `http://localhost:5000/api/accounts/${editingId}`,
+        editForm,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setAccounts((prev) =>
+        prev.map((acc) => (acc._id === editingId ? res.data : acc))
+      );
+      cancelEdit();
+    } catch (err) {
+      alert("Failed to update account.");
+      console.error(err);
+    }
+  };
+  
 
   const totalBalance = accounts.reduce((acc, curr) => acc + curr.balance, 0);
   const checkingCount = accounts.filter((acc) => acc.type === "Checking").length;
@@ -117,8 +182,46 @@ function Dashboard() {
         <ul>
           {accounts.map((acc) => (
             <li key={acc._id}>
-              <strong>{acc.name}</strong> - ${acc.balance.toFixed(2)} ({acc.type})
-            </li>
+            {editingId === acc._id ? (
+              <div>
+                <input
+                  type="text"
+                  name="name"
+                  value={editForm.name}
+                  onChange={handleEditChange}
+                />
+                <select
+                  name="type"
+                  value={editForm.type}
+                  onChange={handleEditChange}
+                >
+                  <option value="Checking">Checking</option>
+                  <option value="Savings">Savings</option>
+                </select>
+                <input
+                  type="number"
+                  name="balance"
+                  value={editForm.balance}
+                  onChange={handleEditChange}
+                />
+                <button onClick={handleSave}>Save</button>
+                <button onClick={cancelEdit}>Cancel</button>
+              </div>
+            ) : (
+              <div>
+                <strong>{acc.name}</strong> - ${acc.balance.toFixed(2)} ({acc.type})
+                <button onClick={() => startEditing(acc)} style={{ marginLeft: "10px" }}>
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(acc._id)}
+                  style={{ marginLeft: "10px", background: "#e74c3c", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+          </li>
           ))}
         </ul>
       )}
