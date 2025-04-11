@@ -40,6 +40,8 @@ function Transactions() {
     });
   };
 
+  const [sortOption, setSortOption] = useState("dateDesc"); // default: newest first
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -137,6 +139,21 @@ function Transactions() {
     return matchesAccount && matchesCategory && matchesType;
   });
 
+  const sortedTransactions = [...filteredTransactions].sort((a, b) => {
+    switch(sortOption) {
+      case "dateAsc":
+        return new Date(a.date) - new Date(b.date);
+      case "dateDesc":
+        return new Date(b.date) - new Date(a.date);
+      case "amountAsc":
+        return a.amount - b.amount;
+      case "amountDesc":
+        return b.amount - a.amount;
+      default:
+        return 0;
+    }
+  });
+
   return (
     <div>
       <Navbar />
@@ -226,9 +243,19 @@ function Transactions() {
         <option value="Expense">Expense</option>
       </select>
 
+      <div>
+        <label>Sort by: </label>
+        <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+          <option value="dateDesc">Date (Newest)</option>
+          <option value="dateAsc">Date (Oldest)</option>
+          <option value="amountDesc">Amount (High to Low)</option>
+          <option value="amountAsc">Amount (Low to High)</option>
+        </select>
+      </div>
+
       <h3>All Transactions</h3>
       <ul>
-        {filteredTransactions.map((tx) => (
+        {sortedTransactions.map((tx) => (
           <li key={tx._id}>
             {editingId === tx._id ? (
               <form onSubmit={(e) => handleUpdate(e, tx._id)}>
