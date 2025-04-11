@@ -1,47 +1,36 @@
-import React, {useEffect, useState } from "react";
-import { Circles } from 'react-loader-spinner';
+import React, { useEffect, useState } from "react";
+import { Circles } from "react-loader-spinner";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import ExpensePieChart from "../components/ExpensePieChart";
+import "./Dashboard.css";
 
 function Dashboard() {
   const [accounts, setAccounts] = useState([]);
+  const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [txLoading, setTxLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
-  const [form, setForm] = useState({
-    name: "",
-    type: "",
-    balance: "",
-  });
+  const [form, setForm] = useState({ name: "", type: "", balance: "" });
+  const [editForm, setEditForm] = useState({ name: "", type: "", balance: "" });
 
   useEffect(() => {
     fetchAccounts();
     fetchTransactions();
   }, []);
 
-  const [editingId, setEditingId] = useState(null);
-  const [editForm, setEditForm] = useState({
-    name: "",
-    type: "",
-    balance: "",
-  });
-
-  const [transactions, setTransactions] = useState([]);
-
   const fetchAccounts = async () => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get("http://localhost:5000/api/accounts", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setAccounts(res.data);
-      setLoading(false);
     } catch (err) {
       setError("Failed to load accounts. Make sure you're logged in.");
+    } finally {
       setLoading(false);
     }
   };
@@ -50,9 +39,7 @@ function Dashboard() {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.get("http://localhost:5000/api/transactions", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setTransactions(res.data);
     } catch (err) {
@@ -62,19 +49,8 @@ function Dashboard() {
     }
   };
 
-  if (loading) return <div>Loading your dashboard...</div>;
-  if (error) return <div>{error}</div>;
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-  }
-
   const handleChange = (e) => {
-    setForm((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleCreateAccount = async (e) => {
@@ -82,21 +58,17 @@ function Dashboard() {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post("http://localhost:5000/api/accounts", form, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       });
-      setAccounts((prev) => [res.data, ...prev]); // add to the top
-      setForm({ name: "", type: "", balance: ""}); // reset form
+      setAccounts((prev) => [res.data, ...prev]);
+      setForm({ name: "", type: "", balance: "" });
     } catch (err) {
-      alert("Error creating account: " + (err.response?.data?.message || "Unknown error"));
+      alert("Error creating account");
     }
   };
 
   const handleDelete = async (id) => {
-    const confirm = window.confirm("Are you sure you want to delete this account?");
-    if (!confirm) return;
-  
+    if (!window.confirm("Are you sure?")) return;
     try {
       const token = localStorage.getItem("token");
       await axios.delete(`http://localhost:5000/api/accounts/${id}`, {
@@ -104,32 +76,24 @@ function Dashboard() {
       });
       setAccounts((prev) => prev.filter((a) => a._id !== id));
     } catch (err) {
-      alert("Failed to delete account.");
-      console.error(err);
+      alert("Delete failed.");
     }
   };
 
-  const startEditing = (account) => {
-    setEditingId(account._id);
-    setEditForm({
-      name: account.name,
-      type: account.type,
-      balance: account.balance,
-    });
+  const startEditing = (acc) => {
+    setEditingId(acc._id);
+    setEditForm({ name: acc.name, type: acc.type, balance: acc.balance });
   };
-  
+
   const cancelEdit = () => {
     setEditingId(null);
     setEditForm({ name: "", type: "", balance: "" });
   };
-  
+
   const handleEditChange = (e) => {
-    setEditForm((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    setEditForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-  
+
   const handleSave = async () => {
     const token = localStorage.getItem("token");
     try {
@@ -145,113 +109,114 @@ function Dashboard() {
       );
       cancelEdit();
     } catch (err) {
-      alert("Failed to update account.");
-      console.error(err);
+      alert("Update failed.");
     }
   };
-  
 
   const totalBalance = accounts.reduce((acc, curr) => acc + curr.balance, 0);
-  const checkingCount = accounts.filter((acc) => acc.type === "Checking").length;
-  const savingsCount = accounts.filter((acc) => acc.type === "Savings").length;
+  const checkingCount = accounts.filter((a) => a.type === "Checking").length;
+  const savingsCount = accounts.filter((a) => a.type === "Savings").length;
+
+  if (loading) return <div>Loading your dashboard...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
-    <div>
+    <div className="dashboard-container">
       <Navbar />
       <h2>Welcome to your Dashboard</h2>
 
-      <div style={{ margin: "20px 0" }}>
-      <h3>Account Summary</h3>
-      <p><strong>Total Balance:</strong> ${totalBalance.toFixed(2)}</p>
-      <p><strong>Accounts:</strong> {accounts.length} ({checkingCount} Checking / {savingsCount} Savings)</p>
+      <div className="section-card">
+        <h3>Account Summary</h3>
+        <p><strong>Total Balance:</strong> ${totalBalance.toFixed(2)}</p>
+        <p><strong>Accounts:</strong> {accounts.length} ({checkingCount} Checking / {savingsCount} Savings)</p>
       </div>
 
-      <h3>Create a New Account</h3>
-      <form onSubmit={handleCreateAccount}>
-        <input 
-          type="text"
-          name="name"
-          placeholder="Account Name"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
-        <select
-          name="type"
-          value={form.type}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select Type</option>
-          <option value="Checking">Checking</option>
-          <option value="Savings">Savings</option>
-        </select>
+      <div className="section-card">
+        <h3>Create a New Account</h3>
+        <form onSubmit={handleCreateAccount}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Account Name"
+            value={form.name}
+            onChange={handleChange}
+            required
+          />
+          <select
+            name="type"
+            value={form.type}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Type</option>
+            <option value="Checking">Checking</option>
+            <option value="Savings">Savings</option>
+          </select>
+          <input
+            type="number"
+            name="balance"
+            placeholder="Starting Balance"
+            value={form.balance}
+            onChange={handleChange}
+            required
+          />
+          <button type="submit">Add Account</button>
+        </form>
+      </div>
 
-        <input 
-          type="number"
-          name="balance"
-          placeholder="Starting Balance"
-          value={form.balance}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">Add Account</button>
-      </form>
+      <div className="section-card">
+        <h3>Your Accounts</h3>
+        {accounts.length === 0 ? (
+          <p>No accounts yet.</p>
+        ) : (
+          <ul className="account-list">
+            {accounts.map((acc) => (
+              <li key={acc._id}>
+                {editingId === acc._id ? (
+                  <div>
+                    <input
+                      type="text"
+                      name="name"
+                      value={editForm.name}
+                      onChange={handleEditChange}
+                    />
+                    <select
+                      name="type"
+                      value={editForm.type}
+                      onChange={handleEditChange}
+                    >
+                      <option value="Checking">Checking</option>
+                      <option value="Savings">Savings</option>
+                    </select>
+                    <input
+                      type="number"
+                      name="balance"
+                      value={editForm.balance}
+                      onChange={handleEditChange}
+                    />
+                    <button onClick={handleSave}>Save</button>
+                    <button onClick={cancelEdit}>Cancel</button>
+                  </div>
+                ) : (
+                  <>
+                    <strong>{acc.name}</strong> - ${acc.balance.toFixed(2)} ({acc.type})
+                    <div className="actions">
+                      <button onClick={() => startEditing(acc)}>Edit</button>
+                      <button onClick={() => handleDelete(acc._id)}>Delete</button>
+                    </div>
+                  </>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
-      {accounts.length === 0 ? (
-        <p>You don't have any accounts yet.</p>
-      ) : (
-        <ul>
-          {accounts.map((acc) => (
-            <li key={acc._id}>
-            {editingId === acc._id ? (
-              <div>
-                <input
-                  type="text"
-                  name="name"
-                  value={editForm.name}
-                  onChange={handleEditChange}
-                />
-                <select
-                  name="type"
-                  value={editForm.type}
-                  onChange={handleEditChange}
-                >
-                  <option value="Checking">Checking</option>
-                  <option value="Savings">Savings</option>
-                </select>
-                <input
-                  type="number"
-                  name="balance"
-                  value={editForm.balance}
-                  onChange={handleEditChange}
-                />
-                <button onClick={handleSave}>Save</button>
-                <button onClick={cancelEdit}>Cancel</button>
-              </div>
-            ) : (
-              <div>
-                <strong>{acc.name}</strong> - ${acc.balance.toFixed(2)} ({acc.type})
-                <button onClick={() => startEditing(acc)} style={{ marginLeft: "10px" }}>
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(acc._id)}
-                  style={{ marginLeft: "10px", background: "#e74c3c", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}
-                >
-                  Delete
-                </button>
-              </div>
-            )}
-          </li>
-          ))}
-        </ul>
-      )}
-
-    {!txLoading && transactions.length > 0 && (
-      <ExpensePieChart transactions={transactions} />
-    )}
-
+      <div className="chart-section">
+        {!txLoading && transactions.length > 0 && (
+          <ExpensePieChart transactions={transactions} />
+        )}
+      </div>
     </div>
   );
 }
