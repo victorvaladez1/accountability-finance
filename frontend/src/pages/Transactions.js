@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-<<<<<<< HEAD
 import Navbar from "../components/Navbar";
-=======
->>>>>>> 29f5016b313ab8d32c436f594ded97f61ee4b576
 
 function Transactions() {
   const [transactions, setTransactions] = useState([]);
@@ -69,10 +66,7 @@ function Transactions() {
 
   return (
     <div>
-<<<<<<< HEAD
       <Navbar />
-=======
->>>>>>> 29f5016b313ab8d32c436f594ded97f61ee4b576
       <h2>Transactions</h2>
       <form onSubmit={handleSubmit}>
         <select
