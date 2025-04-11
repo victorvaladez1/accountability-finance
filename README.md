@@ -8,19 +8,16 @@ It helps users simulate bank accounts, manage transactions, and track balances �
 ## 🚀 Tech Stack
 
 **Frontend:**
-
 - React
 - Axios
 - React Router DOM
 
 **Backend:**
-
 - Node.js
 - Express.js
 - MongoDB + Mongoose
 
 **Authentication:**
-
 - JWT (JSON Web Tokens)
 - bcrypt password hashing
 - Protected API routes with middleware
@@ -57,60 +54,41 @@ It helps users simulate bank accounts, manage transactions, and track balances �
 
 ## 🧪 Getting Started
 
-### 🔧 🔧 Backend Setup
+### 🔧 Backend Setup
 
-```bash
 ```bash
 cd backend
 npm install
 npm run dev
 ```
 
-### 🎨 Frontend Setup
-```
-###Create a .env file in the /backend folder with the following:
+Create a `.env` file in the `/backend` folder with the following:
+
+```env
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
+```
 
 ### 🎨 Frontend Setup
+
 ```bash
-Copy
-Edit
 cd frontend
 npm install
 npm start
 ```
 
+ChatGPT said:
+Here’s the fully fixed and properly formatted Markdown version of that entire section — clean, structured, and GitHub-ready:
+
+md
+Copy
+Edit
 ## 📡 API Routes (Preview)
 
 ### 🔐 Auth
 - `POST /api/auth/register` – Register a new user  
 - `POST /api/auth/login` – Login and receive a token
-```
 
-## 📡 API Routes (Preview)
-
-### 🔐 Auth
-- `POST /api/auth/register` – Register a new user  
-- `POST /api/auth/login` – Login and receive a token
-
-### 💳 Accounts
-- `GET /api/accounts` – Get user’s accounts (protected)  
-- `POST /api/accounts` – Create a new account  
-- `PUT /api/accounts/:id` – Update an existing account  
-- `DELETE /api/accounts/:id` – Delete an account
-
-### 💸 Transactions
-- `GET /api/transactions` – Get all transactions  
-- `POST /api/transactions` – Create a new transaction
-
----
-
-## ✨ Status
-
-✅ Authentication & backend logic complete  
-✅ Account and transaction CRUD implemented  
-🛠️ Frontend UI in progress  
 ### 💳 Accounts
 - `GET /api/accounts` – Get user’s accounts (protected)  
 - `POST /api/accounts` – Create a new account  
@@ -134,10 +112,6 @@ npm start
 
 ## 📸 Screenshots (Coming Soon)
 
----
-
-## 📸 Screenshots (Coming Soon)
-
 Screenshots and UI walkthroughs will be added as the frontend is completed.
 
 ---
@@ -145,16 +119,7 @@ Screenshots and UI walkthroughs will be added as the frontend is completed.
 ## 🙌 Author
 
 Built with passion by **Victor Valadez** — aspiring Software Engineer with a love for fintech, functionality, and fire code.  
----
-
-## 🙌 Author
-
-Built with passion by **Victor Valadez** — aspiring Software Engineer with a love for fintech, functionality, and fire code.  
 Inspired by a personal mission to build smarter financial tools for the next generation.
-
----
-
-## ⭐ Project Goals
 
 ---
 
