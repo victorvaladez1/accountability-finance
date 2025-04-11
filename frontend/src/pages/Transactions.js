@@ -128,6 +128,8 @@ function Transactions() {
     }
   };
 
+  const uniqueCategories = [...new Set(transactions.map(tx => tx.category))];
+
   const filteredTransactions = transactions.filter((tx) => {
     const matchesAccount = accountFilter === "" || tx.account === accountFilter;
     const matchesCategory = categoryFilter === "" || tx.category === categoryFilter;
@@ -210,10 +212,11 @@ function Transactions() {
       <h3>Filter by Category</h3>
       <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
         <option value="">All Categories</option>
-        <option value="Food">Food</option>
-        <option value="Bills">Bills</option>
-        <option value="Entertainment">Entertainment</option>
-        <option value="Other">Other</option>
+        {uniqueCategories.map((cat) => (
+          <option key={cat} value={cat}>
+            {cat}
+          </option>
+        ))}
       </select>
       
       <h3>Filter by Type</h3>
