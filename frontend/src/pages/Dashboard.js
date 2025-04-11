@@ -248,11 +248,9 @@ function Dashboard() {
         </ul>
       )}
 
-      {txLoading ? (
-        <Circles height="60" width="60" color="#4fa94d" ariaLabel="loading" />
-      ) : (
-        <ExpensePieChart transactions={transactions} />
-      )}
+    {!txLoading && transactions.length > 0 && (
+      <ExpensePieChart transactions={transactions} />
+    )}
 
     </div>
   );
