@@ -14,6 +14,28 @@ function Transactions() {
     date: "",
   });
 
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState({
+    account: "",
+    type: "",
+    amount: "",
+    category: "",
+    description: "",
+    date: "",
+  });
+
+  const handleEditClick = (tx) => {
+    setEditingId(tx._id);
+    setEditForm({
+      account: tx.account,
+      type: tx.type,
+      amount: tx.amount,
+      category: tx.category,
+      description: tx.description,
+      date: tx.date ? tx.date.slice(0, 10) : "",
+    });
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -61,6 +83,44 @@ function Transactions() {
       fetchData();
     } catch (err) {
       alert("Failed to create transaction");
+    }
+  };
+
+  const handleEditChange = (e) => {
+    setEditForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleUpdate = async (e, id) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.put(`http://localhost:5000/api/transactions/${id}`, editForm, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      // Update in-place
+      setTransactions((prev) =>
+        prev.map((tx) => (tx._id === id ? res.data : tx))
+      );
+      setEditingId(null);
+    } catch (err) {
+      alert("Error updating transaction.");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this transaction?")) return;
+    try {
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:5000/api/transactions/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setTransactions((prev) => prev.filter((tx) => tx._id !== id));
+    } catch (err) {
+      alert("Error deleting transaction.");
     }
   };
 
@@ -127,7 +187,26 @@ function Transactions() {
       <ul>
         {transactions.map((tx) => (
           <li key={tx._id}>
-            {tx.type === "Expense" ? "🟥" : "🟩"} {tx.description || "(No desc)"} — ${tx.amount} on {new Date(tx.date).toLocaleDateString()}
+            {editingId === tx._id ? (
+              <form onSubmit={(e) => handleUpdate(e, tx._id)}>
+                <input name="description" value={editForm.description} onChange={handleEditChange} />
+                <input name="amount" type="number" value={editForm.amount} onChange={handleEditChange} />
+                <input name="category" value={editForm.category} onChange={handleEditChange} />
+                <input name="date" type="date" value={editForm.date} onChange={handleEditChange} />
+                <select name="type" value={editForm.type} onChange={handleEditChange}>
+                  <option value="Expense">Expense</option>
+                  <option value="Income">Income</option>
+                </select>
+                <button type="submit">Save</button>
+                <button onClick={() => setEditingId(null)}>Cancel</button>
+              </form>
+            ) : (
+              <>
+                <strong>{tx.description}</strong> — ${tx.amount.toFixed(2)} ({tx.category})
+                <button onClick={() => handleEditClick(tx)}>Edit</button>
+                <button onClick={() => handleDelete(tx._id)}>Delete</button>
+              </>
+            )}
           </li>
         ))}
       </ul>
