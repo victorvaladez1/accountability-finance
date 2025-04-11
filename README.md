@@ -77,12 +77,6 @@ npm install
 npm start
 ```
 
-ChatGPT said:
-Here’s the fully fixed and properly formatted Markdown version of that entire section — clean, structured, and GitHub-ready:
-
-md
-Copy
-Edit
 ## 📡 API Routes (Preview)
 
 ### 🔐 Auth
