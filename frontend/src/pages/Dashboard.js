@@ -64,10 +64,20 @@ function Dashboard() {
     }
   };
 
+  const totalBalance = accounts.reduce((acc, curr) => acc + curr.balance, 0);
+  const checkingCount = accounts.filter((acc) => acc.type === "Checking").length;
+  const savingsCount = accounts.filter((acc) => acc.type === "Savings").length;
+
   return (
     <div>
       <Navbar />
       <h2>Welcome to your Dashboard</h2>
+
+      <div style={{ margin: "20px 0" }}>
+      <h3>Account Summary</h3>
+      <p><strong>Total Balance:</strong> ${totalBalance.toFixed(2)}</p>
+      <p><strong>Accounts:</strong> {accounts.length} ({checkingCount} Checking / {savingsCount} Savings)</p>
+      </div>
 
       <h3>Create a New Account</h3>
       <form onSubmit={handleCreateAccount}>
