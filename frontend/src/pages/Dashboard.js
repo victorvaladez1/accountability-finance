@@ -133,34 +133,36 @@ function Dashboard() {
 
       <div className="section-card">
         <h3>Create a New Account</h3>
-        <form onSubmit={handleCreateAccount}>
-          <input
-            type="text"
-            name="name"
-            placeholder="Account Name"
-            value={form.name}
-            onChange={handleChange}
-            required
-          />
-          <select
-            name="type"
-            value={form.type}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Select Type</option>
-            <option value="Checking">Checking</option>
-            <option value="Savings">Savings</option>
-          </select>
-          <input
-            type="number"
-            name="balance"
-            placeholder="Starting Balance"
-            value={form.balance}
-            onChange={handleChange}
-            required
-          />
-          <button type="submit">Add Account</button>
+        <form className="account-form" onSubmit={handleCreateAccount}>
+          <div className="form-row">
+            <input
+              type="text"
+              name="name"
+              placeholder="Account Name"
+              value={form.name}
+              onChange={handleChange}
+              required
+            />
+            <select
+              name="type"
+              value={form.type}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Type</option>
+              <option value="Checking">Checking</option>
+              <option value="Savings">Savings</option>
+            </select>
+            <input
+              type="number"
+              name="balance"
+              placeholder="Starting Balance"
+              value={form.balance}
+              onChange={handleChange}
+              required
+            />
+            <button type="submit">Add Account</button>
+            </div>
         </form>
       </div>
 

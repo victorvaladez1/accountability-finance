@@ -29,6 +29,13 @@
     font-size: 0.95rem;
   }
 
+  form.account-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
   .account-list {
     list-style-type: none;
     padding: 0;
@@ -58,6 +65,38 @@
     cursor: pointer;
     transition: all 0.2s ease-in-out;
   }
+
+  .account-form .form-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  
+  .account-form input,
+  .account-form select,
+  .account-form button {
+    height: 2.5rem;
+    padding: 0 1rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+  }
+  
+  .account-form button {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .account-form button:hover {
+    background-color: #2980b9;
+  }
+  
   
   button[type="submit"] {
     background-color: #3498db;

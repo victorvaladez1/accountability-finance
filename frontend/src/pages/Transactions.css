@@ -1,0 +1,127 @@
+.transactions-container {
+    max-width: 95rem;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9fafb;
+  }
+  
+  .transaction-form-card {
+    background-color: #f0f4f8;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+  }
+  
+  .transaction-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .transaction-form input,
+  .transaction-form select {
+    padding: 0.6rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+    min-width: 150px;
+  }
+  
+  .transaction-form button {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .transaction-form button:hover {
+    background-color: #2980b9;
+  }
+  
+  /* Filters Section */
+  .filter-section {
+    margin-bottom: 2rem;
+  }
+  
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .filters select {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+  
+  /* Transaction List */
+  .transaction-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .transaction-item {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border-left: 6px solid #ccc;
+  }
+  
+  .transaction-item.expense {
+    border-left-color: #e74c3c;
+    background-color: #fff5f5;
+  }
+  
+  .transaction-item.income {
+    border-left-color: #2ecc71;
+    background-color: #f0fff4;
+  }
+  
+  .transaction-item strong {
+    margin-right: 1rem;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .actions button {
+    padding: 0.4rem 0.8rem;
+    font-weight: bold;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+  }
+  
+  .actions button:first-child {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .actions button:first-child:hover {
+    background-color: #2980b9;
+  }
+  
+  .actions button:last-child {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .actions button:last-child:hover {
+    background-color: #c0392b;
+  }
+  

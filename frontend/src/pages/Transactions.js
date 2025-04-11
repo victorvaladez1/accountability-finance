@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import "./Transactions.css";
 
 function Transactions() {
   const [transactions, setTransactions] = useState([]);
@@ -155,131 +156,140 @@ function Transactions() {
   });
 
   return (
-    <div>
+    <div className="transactions-container">
       <Navbar />
       <h2>Transactions</h2>
-      <form onSubmit={handleSubmit}>
-        <select
-          name="account"
-          value={form.account}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select Account</option>
-          {accounts.map((acc) => (
-            <option key={acc._id} value={acc._id}>
-              {acc.name} (${acc.balance.toFixed(2)})
-            </option>
-          ))}
-        </select>
-        <select
-          name="type"
-          value={form.type}
-          onChange={handleChange}
-          required
-        >
-          <option value="Expense">Expense</option>
-          <option value="Income">Income</option>
-        </select>
-        <input
-          type="number"
-          name="amount"
-          placeholder="Amount"
-          value={form.amount}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="category"
-          placeholder="Category"
-          value={form.category}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="description"
-          placeholder="Description"
-          value={form.description}
-          onChange={handleChange}
-        />
-        <input
-          type="date"
-          name="date"
-          value={form.date}
-          onChange={handleChange}
-          required
-        />
-        <button type="submit">Add Transaction</button>
-      </form>
 
-      <h3>Filter by Account</h3>
-      <select 
-        value={accountFilter}
-        onChange={(e) => setAccountFilter(e.target.value)}
-      >
-        <option value="">All Accounts</option>
-        {accounts.map((acc) => (
-          <option key={acc._id} value={acc._id}>
-            {acc.name}
-          </option>
-        ))}
-      </select>
-
-      <h3>Filter by Category</h3>
-      <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
-        <option value="">All Categories</option>
-        {uniqueCategories.map((cat) => (
-          <option key={cat} value={cat}>
-            {cat}
-          </option>
-        ))}
-      </select>
-      
-      <h3>Filter by Type</h3>
-      <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
-        <option value="">All Types</option>
-        <option value="Income">Income</option>
-        <option value="Expense">Expense</option>
-      </select>
-
-      <div>
-        <label>Sort by: </label>
-        <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
-          <option value="dateDesc">Date (Newest)</option>
-          <option value="dateAsc">Date (Oldest)</option>
-          <option value="amountDesc">Amount (High to Low)</option>
-          <option value="amountAsc">Amount (Low to High)</option>
-        </select>
+      <div className="transaction-form-card">
+        <form onSubmit={handleSubmit} className="transaction-form">
+          <select
+            name="account"
+            value={form.account}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Account</option>
+            {accounts.map((acc) => (
+              <option key={acc._id} value={acc._id}>
+                {acc.name} (${acc.balance.toFixed(2)})
+              </option>
+            ))}
+          </select>
+          <select
+            name="type"
+            value={form.type}
+            onChange={handleChange}
+            required
+          >
+            <option value="Expense">Expense</option>
+            <option value="Income">Income</option>
+          </select>
+          <input
+            type="number"
+            name="amount"
+            placeholder="Amount"
+            value={form.amount}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="text"
+            name="category"
+            placeholder="Category"
+            value={form.category}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="description"
+            placeholder="Description"
+            value={form.description}
+            onChange={handleChange}
+          />
+          <input
+            type="date"
+            name="date"
+            value={form.date}
+            onChange={handleChange}
+            required
+          />
+          <button type="submit">Add Transaction</button>
+        </form>
       </div>
 
-      <h3>All Transactions</h3>
-      <ul>
-        {sortedTransactions.map((tx) => (
-          <li key={tx._id}>
-            {editingId === tx._id ? (
-              <form onSubmit={(e) => handleUpdate(e, tx._id)}>
-                <input name="description" value={editForm.description} onChange={handleEditChange} />
-                <input name="amount" type="number" value={editForm.amount} onChange={handleEditChange} />
-                <input name="category" value={editForm.category} onChange={handleEditChange} />
-                <input name="date" type="date" value={editForm.date} onChange={handleEditChange} />
-                <select name="type" value={editForm.type} onChange={handleEditChange}>
-                  <option value="Expense">Expense</option>
-                  <option value="Income">Income</option>
-                </select>
-                <button type="submit">Save</button>
-                <button onClick={() => setEditingId(null)}>Cancel</button>
-              </form>
-            ) : (
-              <>
-                <strong>{tx.description}</strong> — ${tx.amount.toFixed(2)} ({tx.category})
-                <button onClick={() => handleEditClick(tx)}>Edit</button>
-                <button onClick={() => handleDelete(tx._id)}>Delete</button>
-              </>
-            )}
-          </li>
-        ))}
-      </ul>
+      <div className="filter-section">
+        <h3>Filters</h3>
+        <div className="filters">
+          <select 
+            value={accountFilter}
+            onChange={(e) => setAccountFilter(e.target.value)}
+          >
+            <option value="">All Accounts</option>
+            {accounts.map((acc) => (
+              <option key={acc._id} value={acc._id}>
+                {acc.name}
+              </option>
+            ))}
+          </select>
+
+          <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+            <option value="">All Categories</option>
+            {uniqueCategories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+          
+          <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+            <option value="">All Types</option>
+            <option value="Income">Income</option>
+            <option value="Expense">Expense</option>
+          </select>
+          
+          <label></label>
+          <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+            <option value="dateDesc">Date (Newest)</option>
+            <option value="dateAsc">Date (Oldest)</option>
+            <option value="amountDesc">Amount (High to Low)</option>
+            <option value="amountAsc">Amount (Low to High)</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="transaction-list-section">
+        <h3>All Transactions</h3>
+        <ul className="transaction-list">
+          {sortedTransactions.map((tx) => (
+            <li key={tx._id}>
+              {editingId === tx._id ? (
+                <form onSubmit={(e) => handleUpdate(e, tx._id)}>
+                  <input name="description" value={editForm.description} onChange={handleEditChange} />
+                  <input name="amount" type="number" value={editForm.amount} onChange={handleEditChange} />
+                  <input name="category" value={editForm.category} onChange={handleEditChange} />
+                  <input name="date" type="date" value={editForm.date} onChange={handleEditChange} />
+                  <select name="type" value={editForm.type} onChange={handleEditChange}>
+                    <option value="Expense">Expense</option>
+                    <option value="Income">Income</option>
+                  </select>
+                  <button type="submit">Save</button>
+                  <button onClick={() => setEditingId(null)}>Cancel</button>
+                </form>
+              ) : (
+                <div className={`transaction-item ${tx.type.toLowerCase()}`}>
+                  <div>
+                    <strong>{tx.description}</strong> — ${tx.amount.toFixed(2)} ({tx.category})
+                  </div>
+                  <div className="actions">
+                  <button onClick={() => handleEditClick(tx)}>Edit</button>
+                  <button onClick={() => handleDelete(tx._id)}>Delete</button>
+                  </div>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
