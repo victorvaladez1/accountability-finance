@@ -24,6 +24,8 @@ function Transactions() {
     date: "",
   });
 
+  const [accountFilter, setAccountFilter] = useState("");
+
   const handleEditClick = (tx) => {
     setEditingId(tx._id);
     setEditForm({
@@ -124,6 +126,10 @@ function Transactions() {
     }
   };
 
+  const filteredTransactions = transactions.filter((tx) => 
+    accountFilter === "" ? true : tx.account === accountFilter
+  );
+
   return (
     <div>
       <Navbar />
@@ -183,9 +189,22 @@ function Transactions() {
         <button type="submit">Add Transaction</button>
       </form>
 
+      <h3>Filter by Account</h3>
+      <select 
+        value={accountFilter}
+        onChange={(e) => setAccountFilter(e.target.value)}
+      >
+        <option value="">All Accounts</option>
+        {accounts.map((acc) => (
+          <option key={acc._id} value={acc._id}>
+            {acc.name}
+          </option>
+        ))}
+      </select>
+
       <h3>All Transactions</h3>
       <ul>
-        {transactions.map((tx) => (
+        {filteredTransactions.map((tx) => (
           <li key={tx._id}>
             {editingId === tx._id ? (
               <form onSubmit={(e) => handleUpdate(e, tx._id)}>
