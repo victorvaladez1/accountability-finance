@@ -25,6 +25,8 @@ function Transactions() {
   });
 
   const [accountFilter, setAccountFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [typeFilter, setTypeFilter] = useState("");
 
   const handleEditClick = (tx) => {
     setEditingId(tx._id);
@@ -126,9 +128,12 @@ function Transactions() {
     }
   };
 
-  const filteredTransactions = transactions.filter((tx) => 
-    accountFilter === "" ? true : tx.account === accountFilter
-  );
+  const filteredTransactions = transactions.filter((tx) => {
+    const matchesAccount = accountFilter === "" || tx.account === accountFilter;
+    const matchesCategory = categoryFilter === "" || tx.category === categoryFilter;
+    const matchesType = typeFilter === "" || tx.type === typeFilter;
+    return matchesAccount && matchesCategory && matchesType;
+  });
 
   return (
     <div>
@@ -200,6 +205,22 @@ function Transactions() {
             {acc.name}
           </option>
         ))}
+      </select>
+
+      <h3>Filter by Category</h3>
+      <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+        <option value="">All Categories</option>
+        <option value="Food">Food</option>
+        <option value="Bills">Bills</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Other">Other</option>
+      </select>
+      
+      <h3>Filter by Type</h3>
+      <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+        <option value="">All Types</option>
+        <option value="Income">Income</option>
+        <option value="Expense">Expense</option>
       </select>
 
       <h3>All Transactions</h3>
