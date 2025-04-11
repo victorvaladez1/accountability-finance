@@ -57,55 +57,68 @@ It helps users simulate bank accounts, manage transactions, and track balances �
 
 ## 🧪 Getting Started
 
-### Backend Setup
+### 🔧 Backend Setup
 
-````bash
+```bash
 cd backend
 npm install
 npm run dev
+```
 
-Create a .env file inside the /backend folder with the following:
-
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-Frontend Setup
-
+### 🎨 Frontend Setup
 ```bash
+Copy
+Edit
 cd frontend
 npm install
 npm start
+```
 
-🔧 API Routes (Preview)
-Auth
-POST /api/auth/register – Register a new user
+## 📡 API Routes (Preview)
 
-POST /api/auth/login – Login and receive a token
+### 🔐 Auth
+- `POST /api/auth/register` – Register a new user  
+- `POST /api/auth/login` – Login and receive a token
 
-(Planned)
-GET /api/accounts – Get user’s accounts (protected)
+### 💳 Accounts
+- `GET /api/accounts` – Get user’s accounts (protected)  
+- `POST /api/accounts` – Create a new account  
+- `PUT /api/accounts/:id` – Update an existing account  
+- `DELETE /api/accounts/:id` – Delete an account
 
-POST /api/transactions – Create a transaction (protected)
+### 💸 Transactions
+- `GET /api/transactions` – Get all transactions  
+- `POST /api/transactions` – Create a new transaction
 
-✨ Status
-✅ Authentication & backend logic complete
-🛠️ Frontend UI in development
+---
+
+## ✨ Status
+
+✅ Authentication & backend logic complete  
+✅ Account and transaction CRUD implemented  
+🛠️ Frontend UI in progress  
 📈 More features coming soon
 
-📸 Screenshots (Coming Soon)
+---
+
+## 📸 Screenshots (Coming Soon)
+
 Screenshots and UI walkthroughs will be added as the frontend is completed.
 
-🙌 Author
-Built with passion by Victor V. — aspiring Software Engineer with a love for fintech, functionality, and fire code.
+---
+
+## 🙌 Author
+
+Built with passion by **Victor Valadez** — aspiring Software Engineer with a love for fintech, functionality, and fire code.  
 Inspired by a personal mission to build smarter financial tools for the next generation.
 
-⭐ Project Goals
+---
+
+## ⭐ Project Goals
+
 This project is a portfolio piece demonstrating:
 
-Full-stack app architecture
-
-Real authentication and data protection
-
-Clean, scalable project structure
-
-A passion for financial literacy + software development
-````
+- Full-stack app architecture  
+- Real authentication and data protection  
+- Clean, scalable project structure  
+- A passion for financial literacy + software development
