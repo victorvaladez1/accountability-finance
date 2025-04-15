@@ -29,6 +29,9 @@ function Transactions() {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  
   const handleEditClick = (tx) => {
     setEditingId(tx._id);
     setEditForm({
@@ -47,18 +50,20 @@ function Transactions() {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
+  const fetchData = async (page = 1) => {
     const token = localStorage.getItem("token");
     try {
       const [transRes, acctRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/transactions", {
+        axios.get(`http://localhost:5000/api/transactions?page=${page}`, {
           headers: {Authorization: `Bearer ${token}`},
         }),
         axios.get("http://localhost:5000/api/accounts", {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
-      setTransactions(transRes.data);
+      setTransactions(transRes.data.transactions);
+      setCurrentPage(transRes.data.currentPage);
+      setTotalPages(transRes.data.totalPages);
       setAccounts(acctRes.data);
     } catch (err) {
       console.error("error loading data:", err);
@@ -131,7 +136,10 @@ function Transactions() {
     }
   };
 
-  const uniqueCategories = [...new Set(transactions.map(tx => tx.category))];
+  const uniqueCategories = Array.isArray(transactions)
+  ? [...new Set(transactions.map(tx => tx.category))]
+  : [];
+
 
   const filteredTransactions = transactions.filter((tx) => {
     const matchesAccount = accountFilter === "" || tx.account === accountFilter;
@@ -290,6 +298,22 @@ function Transactions() {
           ))}
         </ul>
       </div>
+
+          <div className="pagination-controls">
+            <button 
+              disabled={currentPage === 1}
+              onClick={() => fetchData(currentPage - 1)}
+            >
+              Previous
+            </button>
+            <span>Page {currentPage} of {totalPages}</span>
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => fetchData(currentPage + 1)}
+            >
+              Next
+            </button>
+          </div>
     </div>
   );
 }
