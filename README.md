@@ -58,7 +58,7 @@
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-username/accountability-finance.git
+git clone https://github.com/victorvaladez1/accountability-finance.git
 cd accountability-finance
 
 # Start backend
