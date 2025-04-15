@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import "./Transactions.css";
+import "./CommonLayout.css";
 
 function Transactions() {
   const [transactions, setTransactions] = useState([]);
@@ -183,7 +184,7 @@ function Transactions() {
   });
 
   return (
-    <div className="transactions-container">
+    <div className="page-container">
       <Navbar />
       <h2>Transactions</h2>
   

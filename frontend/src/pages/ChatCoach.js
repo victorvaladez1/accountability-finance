@@ -1,10 +1,11 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import "./ChatCoach.css";
+import "./CommonLayout.css";
 
 function ChatCoach() {
     return (
-        <div className="chatcoach-container">
+        <div className="page-container">
             <Navbar />
             <h2>Ask Me Anything: Personal Finance Coach</h2>
             <p>This is your AI-powered financial coach. Ask anything about budgeting</p>

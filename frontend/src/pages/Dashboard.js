@@ -5,6 +5,7 @@ import axios from "axios";
 import Navbar from "../components/Navbar";
 import ExpensePieChart from "../components/ExpensePieChart";
 import "./Dashboard.css";
+import "./CommonLayout.css";
 
 function Dashboard() {
   const [accounts, setAccounts] = useState([]);
@@ -138,7 +139,7 @@ function Dashboard() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="dashboard-container">
+    <div className="page-container">
       <Navbar />
       <h2>Welcome to your Dashboard</h2>
 

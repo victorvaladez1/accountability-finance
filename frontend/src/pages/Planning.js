@@ -1,11 +1,12 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import "./Planning.css";
+import "./CommonLayout.css";
 
 function Planning()
 {
     return (
-        <div className="planning-container">
+        <div className="page-container">
         <Navbar />
         <h2>Financial Planning Tools</h2>
 
