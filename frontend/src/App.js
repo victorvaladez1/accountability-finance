@@ -7,6 +7,7 @@ import Transactions from './pages/Transactions';
 import PrivateRoute from "./components/PrivateRoute";
 import Planning from "./pages/Planning";
 import ChatCoach from "./pages/ChatCoach";
+import Portfolio from "./pages/Portfolio";
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/planning" element={<Planning />} />
         <Route path="/chat-coach" element={<ChatCoach />}/>
-
+        <Route path="/portfolio" element={<Portfolio />} />
+        
         <Route 
           path="/"
           element={
