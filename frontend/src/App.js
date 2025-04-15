@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
 import PrivateRoute from "./components/PrivateRoute";
+import Planning from "./pages/Planning";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
 
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/planning" element={<Planning />} />
 
         <Route 
           path="/"
