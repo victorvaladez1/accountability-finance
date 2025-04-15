@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const authRoutes = require("./routes/auth");
 const accountRoutes = require("./routes/accounts");
 const transactionRoutes = require("./routes/transactions");
+const analyticsRoutes = require("./routes/analytics");
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/accounts", accountRoutes);
 app.use("/api/transactions", transactionRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 // Root test route
 app.get("/", (req, res) => {

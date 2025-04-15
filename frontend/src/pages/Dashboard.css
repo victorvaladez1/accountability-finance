@@ -137,4 +137,19 @@
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   }
+
+  .analytics-section {
+    background-color: #f0f4f8;
+    padding: 1.5rem;
+    border-radius: 10px;
+    margin-top: 2rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  }
+  
+  .expense-summary-message {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+  }
   

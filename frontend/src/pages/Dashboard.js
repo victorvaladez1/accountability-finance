@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { Circles } from "react-loader-spinner";
 import axios from "axios";
 import Navbar from "../components/Navbar";
@@ -16,7 +17,23 @@ function Dashboard() {
   const [form, setForm] = useState({ name: "", type: "", balance: "" });
   const [editForm, setEditForm] = useState({ name: "", type: "", balance: "" });
 
+  const [expenseData, setExpenseData] = useState([]);
+  const [average, setAverage] = useState(0);
+  const [currentMonth, setCurrentMonth] = useState(0);
+
   useEffect(() => {
+    const fetchExpenses = async () => {
+      const token = localStorage.getItem("token");
+      const res = await axios.get("http://localhost:5000/api/analytics/monthly-expenses", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      setExpenseData(res.data.months);
+      setAverage(res.data.average);
+      setCurrentMonth(res.data.currentMonth);
+    };
+  
+    fetchExpenses();
     fetchAccounts();
     fetchTransactions();
   }, []);
@@ -212,6 +229,28 @@ function Dashboard() {
             ))}
           </ul>
         )}
+      </div>
+
+      <div className="section-card">
+        <div className="analytics-section">
+          <h3>Monthly Spending (Last 12 Months)</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={expenseData}>
+              <XAxis dataKey="month" />
+              <YAxis />
+              <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+              <Bar dataKey="total" fill="#e74c3c" />
+            </BarChart>
+          </ResponsiveContainer>
+
+          <div className="expense-summary-message">
+            {currentMonth < average ? (
+              <p>🎉 You’ve spent <strong>${(average - currentMonth).toFixed(2)}</strong> less than your average monthly spending.</p>
+            ) : (
+              <p>⚠️ You’ve spent <strong>${(currentMonth - average).toFixed(2)}</strong> more than your average monthly spending.</p>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="chart-section">
