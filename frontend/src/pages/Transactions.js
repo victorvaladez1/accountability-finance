@@ -295,12 +295,21 @@ function Transactions() {
                 </form>
               ) : (
                 <div className={`transaction-item ${tx.type.toLowerCase()}`}>
-                  <div>
-                    <strong>{tx.description}</strong> — ${tx.amount.toFixed(2)} ({tx.category})
-                  </div>
-                  <div className="actions">
-                    <button onClick={() => handleEditClick(tx)}>Edit</button>
-                    <button onClick={() => handleDelete(tx._id)}>Delete</button>
+                  <div className="transaction-header">
+                    <div className="transaction-left">
+                      <div className="transaction-topline">
+                        <strong>{tx.description}</strong> — ${tx.amount.toFixed(2)} ({tx.category})
+                      </div>
+                      <div className="transaction-meta">
+                        <div>Date: {new Date(tx.date).toLocaleDateString()}</div>
+                        <div>Account: {tx.account?.name || "Unknown"}</div>
+                        <div>Balance: ${tx.account?.balance?.toFixed(2) || "N/A"}</div>
+                      </div>
+                    </div>
+                    <div className="transaction-actions">
+                      <button onClick={() => handleEditClick(tx)}>Edit</button>
+                      <button onClick={() => handleDelete(tx._id)}>Delete</button>
+                    </div>
                   </div>
                 </div>
               )}

@@ -15,7 +15,8 @@ router.get("/", verifyToken, async (req, res) => {
       const transactions = await Transaction.find( {user: req.user.id })
       .sort({date: -1})
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .populate("account", "name balance");
 
       res.json({
         transactions,
