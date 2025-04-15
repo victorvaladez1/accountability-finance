@@ -147,4 +147,25 @@ router.put("/:id", verifyToken, async (req, res) => {
     }
   });
 
+  router.get("/monthly", verifyToken, async (req, res) => {
+    try {
+      const transactions = await Transaction.find({ user: req.user.id });
+
+      const monthly = {};
+
+      transactions.forEach((tx) => {
+        const month = tx.date.toISOString().slice(0, 7);
+        if (!monthly[month]) {
+          monthly[month] = [];
+        }
+        monthly[month].push(tx);
+      });
+      
+      res.json(monthly);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+
 module.exports = router;
