@@ -1,0 +1,15 @@
+.chatcoach-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2 rem;
+}
+
+.chat-box-placeholder {
+    margin-top: 2rem;
+    padding: 2rem;
+    background-color: #f0f4f8;
+    border-radius: 10px;
+    text-align: center;
+    color: #888;
+    font-style: italic;
+}
