@@ -6,9 +6,24 @@ const verifyToken = require("../middleware/verifyToken");
 // Get all transactions for a user
 router.get("/", verifyToken, async (req, res) => {
     try {
-        const transactions = await Transaction.find({ user: req.user.id }).sort({ date: -1});
-        res.json(transactions);
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const skip = (page - 1) * limit;
+
+      const total = await Transaction.countDocuments({ user: req.user.id });
+
+      const transactions = await Transaction.find( {user: req.user.id })
+      .sort({date: -1})
+      .skip(skip)
+      .limit(limit);
+
+      res.json({
+        transactions,
+        currentPage: page,
+        totalPages: Math.ceil(total / limit),
+      });
     } catch (err) {
+      console.error("Pagination error:", err);
         res.status(500).json({ message: "Server error", error: err.message});
     }
 });
