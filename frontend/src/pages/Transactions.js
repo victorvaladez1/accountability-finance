@@ -31,6 +31,8 @@ function Transactions() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   
   const handleEditClick = (tx) => {
     setEditingId(tx._id);
@@ -50,11 +52,11 @@ function Transactions() {
     fetchData();
   }, []);
 
-  const fetchData = async (page = 1) => {
+  const fetchData = async (page = currentPage, limit = rowsPerPage) => {
     const token = localStorage.getItem("token");
     try {
       const [transRes, acctRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/transactions?page=${page}`, {
+        axios.get(`http://localhost:5000/api/transactions?page=${page}&limit=${limit}`, {
           headers: {Authorization: `Bearer ${token}`},
         }),
         axios.get("http://localhost:5000/api/accounts", {
@@ -299,6 +301,22 @@ function Transactions() {
         </ul>
       </div>
 
+      <div className="rows-per-page">
+      <label>Rows per page: </label>
+      <select
+        value={rowsPerPage}
+        onChange={(e) => {
+          const newLimit = parseInt(e.target.value);
+          setRowsPerPage(newLimit);
+          fetchData(1, newLimit);
+        }}
+      >
+        <option value={5}>5</option>
+        <option value={10}>10</option>
+        <option value={20}>20</option>
+      </select>
+    </div>
+
           <div className="pagination-controls">
             <button 
               disabled={currentPage === 1}
@@ -319,4 +337,3 @@ function Transactions() {
 }
 
 export default Transactions;
-
