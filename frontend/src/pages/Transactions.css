@@ -154,4 +154,40 @@
     align-items: center;
     gap: 0.5rem;
   }
+
+  .monthly-toggle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1.5rem 0 1rem 0;
+  }
+  
+  .monthly-toggle label {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .month-dropdown {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+  }
+  
+  .monthly-grouped-list {
+    margin-top: 1.5rem;
+    list-style: none;
+    padding-left: 0;
+  }
+  
+  .monthly-grouped-list li {
+    padding: 0.75rem 1rem;
+    background-color: #fdfdfd;
+    margin-bottom: 0.75rem;
+    border-radius: 8px;
+    border-left: 4px solid #2980b9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  }
+  
   

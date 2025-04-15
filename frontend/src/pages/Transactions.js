@@ -250,14 +250,14 @@ function Transactions() {
       </div>
   
       {/* View By Month Toggle & Dropdown */}
-      <div style={{ marginBottom: "1.5rem" }}>
+      <div className="monthly-toggle">
         <label style={{ marginRight: "1rem" }}>
           <input type="checkbox" checked={viewByMonth} onChange={(e) => setViewByMonth(e.target.checked)} />
           Group by Month
         </label>
   
         {viewByMonth && (
-          <select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
+          <select className="month-dropdown" value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
             <option value="">Select Month</option>
             {Object.keys(monthlyTransactions).map((month) => (
               <option key={month} value={month}>
