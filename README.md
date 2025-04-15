@@ -1,127 +1,99 @@
-# 💸 AccountAbility
+# 💰 AccountAbility
 
-**AccountAbility** is a full-stack personal finance tracker built with the MERN stack.  
-It helps users simulate bank accounts, manage transactions, and track balances — all with a clean and modern authentication system.
-
----
-
-## 🚀 Tech Stack
-
-**Frontend:**
-- React
-- Axios
-- React Router DOM
-
-**Backend:**
-- Node.js
-- Express.js
-- MongoDB + Mongoose
-
-**Authentication:**
-- JWT (JSON Web Tokens)
-- bcrypt password hashing
-- Protected API routes with middleware
+**AccountAbility** is a modern personal finance tracker built with the MERN stack. It helps users track their income, expenses, and accounts with clean UI, helpful visualizations, and simple filtering tools.
 
 ---
 
-## ✅ Current Features
+## 🚀 Features
 
-- 🔐 **User Registration & Login**  
-  Securely register new users and log in using JWT-based authentication.
+### 🔐 Authentication
+- Secure login and registration using JWT tokens.
+- Protected backend routes with middleware.
 
-- 🧠 **JWT Token Storage**  
-  Auth token stored in `localStorage` and sent in headers for protected endpoints.
+### 💳 Account Management
+- Create, edit, and delete checking or savings accounts.
+- Real-time balance updates based on transactions.
 
-- 🛡 **Protected Backend Routes**  
-  Only authenticated users can access routes like `/api/accounts` or `/api/transactions`.
+### 📒 Transactions
+- Add income or expenses with descriptions, categories, and dates.
+- Filter transactions by account, type, or category.
+- Sort by amount or date.
+- Pagination and adjustable rows per page (5, 10, 20).
+- Monthly breakdown view for better tracking.
 
-- 📫 **Tested API with Postman**  
-  All routes tested and functional with Postman for backend verification.
+### 📊 Dashboard
+- Pie chart of spending by category.
+- Total balance and account summary.
+- Bar chart of monthly expenses (last 12 months).
+- Smart spending summary ("You've spent more/less than average this month").
+
+### 📈 Planning Page (NEW)
+- Calculate house or car affordability based on income, interest rates, and terms.
+- Follows popular financial rules and guidelines.
+- Educates users with rule explanations.
+
+### 🤖 AI Assistant Page (Coming Soon)
+- "Ask Me Anything" Financial Coach powered by OpenAI.
+- Users can ask questions like "What’s the 50/30/20 rule?" or "How do I save for retirement?"
 
 ---
 
-## 🛠 Upcoming Features
+## 🖼️ Screenshots
 
-- 💳 Create, update, and delete simulated bank accounts
-- 📊 Add transactions (income/expense) linked to specific accounts
-- ⚖️ Auto-update account balances when transactions are created or removed
-- 📂 Filter and sort by categories or date ranges
-- 🧾 Dashboard UI showing financial overview
-- 🚪 Logout functionality and session handling
-- 🌈 Polished frontend UI with styled components
+> Screenshots coming soon – app includes modern UI styled with custom CSS and responsive layouts.
 
 ---
 
-## 🧪 Getting Started
+## 📦 Tech Stack
 
-### 🔧 Backend Setup
+- **Frontend:** React, Axios, Recharts
+- **Backend:** Node.js, Express
+- **Database:** MongoDB + Mongoose
+- **Auth:** JWT
+- **Styling:** Custom CSS + modular layout
+
+---
+
+## 🛠️ Installation
 
 ```bash
+# Clone the repo
+git clone https://github.com/your-username/accountability-finance.git
+cd accountability-finance
+
+# Start backend
 cd backend
 npm install
 npm run dev
-```
 
-Create a `.env` file in the `/backend` folder with the following:
-
-```env
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-```
-
-### 🎨 Frontend Setup
-
-```bash
-cd frontend
+# Start frontend
+cd ../frontend
 npm install
 npm start
 ```
 
-## 📡 API Routes (Preview)
+---
 
-### 🔐 Auth
-- `POST /api/auth/register` – Register a new user  
-- `POST /api/auth/login` – Login and receive a token
+## 🌍 Live Demo
 
-### 💳 Accounts
-- `GET /api/accounts` – Get user’s accounts (protected)  
-- `POST /api/accounts` – Create a new account  
-- `PUT /api/accounts/:id` – Update an existing account  
-- `DELETE /api/accounts/:id` – Delete an account
-
-### 💸 Transactions
-- `GET /api/transactions` – Get all transactions  
-- `POST /api/transactions` – Create a new transaction
+Coming soon – to be hosted with Vercel and MongoDB Atlas.
 
 ---
 
-## ✨ Status
+## 📅 Roadmap
 
-✅ Authentication & backend logic complete  
-✅ Account and transaction CRUD implemented  
-🛠️ Frontend UI in progress  
-📈 More features coming soon
-
----
-
-## 📸 Screenshots (Coming Soon)
-
-Screenshots and UI walkthroughs will be added as the frontend is completed.
+- [x] Core: Auth, Accounts, Transactions
+- [x] Pagination and Monthly breakdown
+- [x] Dashboard charts and insights
+- [x] Planning Page with financial tools
+- [ ] AI Chatbot Page
+- [ ] Deploy to production (Vercel + Atlas)
+- [ ] Add budgeting goals
 
 ---
 
-## 🙌 Author
+## 🧠 Inspiration
 
-Built with passion by **Victor Valadez** — aspiring Software Engineer with a love for fintech, functionality, and fire code.  
-Inspired by a personal mission to build smarter financial tools for the next generation.
+Built by someone who cares about mastering personal finance and helping others do the same. "AccountAbility" stands for accountability and financial clarity. 💡
 
 ---
-
-## ⭐ Project Goals
-
-This project is a portfolio piece demonstrating:
-
-- Full-stack app architecture  
-- Real authentication and data protection  
-- Clean, scalable project structure  
-- A passion for financial literacy + software development
