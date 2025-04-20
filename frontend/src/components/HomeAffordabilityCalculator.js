@@ -41,18 +41,15 @@ const HomeAffordabilityCalculator = () => {
         const homePrice = loanAmount + downPayment;
 
         setResult({
-            maxMonthly: maxMonthly.toFixed(2),
-            loanAmount: loanAmount.toFixed(2),
-            homePrice: homePrice.toFixed(2),
+            maxMonthly: maxMonthly.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+            loanAmount: loanAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+            homePrice: homePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
         });
+        
     };
 
     return (
-        <div className="calculator-card">
-            <button className="calculator-toggle" onClick={toggleOpen}>
-                🏠 Home Affordability Calculator
-            </button>
-            { isOpen && (
+        <div>
                 <form className="calculator-form" onSubmit={handleSubmit}>
                     <label>
                         Gross Monthly Income:
@@ -92,7 +89,6 @@ const HomeAffordabilityCalculator = () => {
                         </div>
                     )}
                 </form>
-            )}
         </div>
     );
 };

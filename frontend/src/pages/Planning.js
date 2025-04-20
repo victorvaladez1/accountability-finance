@@ -7,21 +7,31 @@ import "./CommonLayout.css";
 function Planning() {
     const [showHomeCalculator, setShowHomeCalculator] = useState(false);
 
-    const toggleOpen = () => {
-        setShowHomeCalculator(!showHomeCalculator);
-    };
-
     return (
         <div className="page-container">
             <Navbar />
             <h2>Financial Planning Tools</h2>
-
-            <div className="planning-section">
+            
+            <div>
                 <div className="calculator-card">
-                    <button onClick={toggleOpen}>
+                    <h3>🏠 Home Affordability Calculator</h3>
+                    <p>
+                        Estimate how much house you can afford based on your income,
+                        down payment, interest rate, and other debt. This calculator follows the{" "}
+                        <strong>28/36 rule</strong> — meaning no more than 28% of your gross income
+                        should go to housing expenses, and no more than 36% toward total debt
+                        (including credit cards, car payments, student loans, etc).
+                    </p>
+
+                    <button onClick={() => setShowHomeCalculator(!showHomeCalculator)}>
                         {showHomeCalculator ? "Hide Calculator" : "Show Calculator"}
                     </button>
-                    {showHomeCalculator && <HomeAffordabilityCalculator />}
+
+                    {showHomeCalculator && (
+                        <div className="calculator-toggle-box">
+                            <HomeAffordabilityCalculator />
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -38,6 +48,7 @@ function Planning() {
             </div>
         </div>
     );
+
 }
 
 export default Planning;

@@ -24,6 +24,31 @@
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 6px;
-    cursor: not-allowed;
+  }
+
+  .planning-section button:hover {
+    background-color: #b3b3b3;
+    color: #222;
+    cursor: pointer;
+    transform: translateY(-1px);
+    transition: all 0.2s ease-in-out;
+  }
+
+  .calculator-card h3 {
+    margin-top: 0.5rem;
+    color: #1f2d3d;
   }
   
+  .calculator-card p {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .calculator-toggle-box {
+    margin-top: 1rem;
+    background-color: #fff;
+    padding: 1.25rem;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0,0.05);
+  }
