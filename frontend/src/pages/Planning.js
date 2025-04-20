@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import HomeAffordabilityCalculator from "../components/HomeAffordabilityCalculator";
 import CarAffordabilityCalculator from "../components/CarAffordabilityCalculator";
+import LoanPaymentCalculator from "../components/LoanPaymentCalculator";
 import "./Planning.css";
 import "./CommonLayout.css";
 
 function Planning() {
     const [showHomeCalculator, setShowHomeCalculator] = useState(false);
     const [showCarCalculator, setShowCarCalculator] = useState(false);
+    const [showLoanCalculator, setShowLoanCalculator] = useState(false);
 
     return (
         <div className="page-container">
@@ -55,11 +57,24 @@ function Planning() {
                     )}
             </div>
 
-            <div className="planning-section">
+            <div className="calculator-card">
                 <h3>📉 Loan Payment Calculator</h3>
-                <p>Calculate your monthly loan payments and total interest paid.</p>
-                <button disabled>Coming Soon</button>
+                <p>
+                    Calculate your estimated monthly payment and total interest paid over the life of your loan. 
+                    Perfect for understanding how much you'll owe based on loan amount, term, and interest rate.
+                </p>
+
+                <button onClick={() => setShowLoanCalculator(!showLoanCalculator)}>
+                    {showLoanCalculator ? "Hide Calculator" : "Show Calculator"}
+                </button>
+
+                {showLoanCalculator && (
+                    <div className="calculator-toggle-box">
+                    <LoanPaymentCalculator />
+                    </div>
+                )}
             </div>
+                    
         </div>
     );
 
