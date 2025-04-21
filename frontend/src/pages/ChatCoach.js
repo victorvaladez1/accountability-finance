@@ -17,7 +17,19 @@ function ChatCoach() {
 
         try {
             console.log("📤 Sending message:", input);
-            const res = await axios.post("/api/chat/ask", { message: input });
+
+            const token = localStorage.getItem("token");
+
+            const res = await axios.post(
+                "/api/chat/ask",
+                { message: input },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
             console.log("✅ Response from backend:", res.data);
             const assistantMessage = {
                 role: "assistant",

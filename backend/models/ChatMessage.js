@@ -1,4 +1,4 @@
-import mongoose form "mongoose";
+import mongoose from "mongoose";
 
 const ChatMessageSchema = new mongoose.Schema(
     {
