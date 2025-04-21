@@ -100,15 +100,17 @@ function ChatCoach() {
         <div className="page-container">
             <Navbar />
 
-            <div className="chat-header">
-                <h2>Ask Me Anything: Personal Finance Coach</h2>
-                <button className="clear-btn" onClick={handleClearHistory}>
-                    🧹 Clear History
-                </button>
-            </div>
+            <h2 className="chat-title">Ask Me Anything: Personal Finance Coach</h2>
 
             <div className="chat-box">
                 <div className="chat-log">
+
+                    {chatLog.length === 0 && !loading && (
+                        <div className="message assistant" style={{ opacity: 0.6 }}>
+                            <em>Ask me anything about budgeting, saving, or finance to get started.</em>
+                        </div>
+                    )}
+
                     {chatLog.map((msg, idx) => (
                         <div key={idx} className={`message ${msg.role}`}>
                             <strong>{msg.role === "user" ? "You" : "Coach"}:</strong>{" "}
@@ -138,8 +140,12 @@ function ChatCoach() {
                         onKeyDown={(e) => e.key === "Enter" && handleSend()}
                         placeholder="Ask a personal finance question..."
                     />
+
                     <button onClick={handleSend} disabled={!input.trim() || loading}>
-                        {loading ? "Sending..." : "Send"}
+                            {loading ? "Sending..." : "Send"}
+                        </button>
+                        <button className="clear-btn-inline" onClick={handleClearHistory}>
+                            Clear
                     </button>
                 </div>
             </div>
