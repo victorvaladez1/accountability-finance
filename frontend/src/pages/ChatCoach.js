@@ -1,18 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import Navbar from "../components/Navbar";
 import "./ChatCoach.css";
 import "./CommonLayout.css";
 
 function ChatCoach() {
+    const [input, setInput] = useState("");
+    const [chatLog, setChatLog] = useState([]);
+
+    const handleSend = async () => {
+        if (!input.trim()) return;
+
+        const userMessage = { role: "user", content: input };
+        setChatLog([...chatLog, userMessage]);
+        setInput("");
+
+        try {
+            console.log("📤 Sending message:", input);
+            const res = await axios.post("/api/chat/ask", { message: input });
+            console.log("✅ Response from backend:", res.data);
+            const assistantMessage = {
+                role: "assistant",
+                content: res.data.reply,
+            };
+            setChatLog((prev) => [...prev, assistantMessage]);
+        } catch (err) {
+            console.error("❌ Error from backend:", err);
+            setChatLog((prev) => [
+                ...prev,
+                { role: "assistant", content: "Error: Could not fetch response." },
+            ]);
+        }
+    };
+    
     return (
         <div className="page-container">
-            <Navbar />
-            <h2>Ask Me Anything: Personal Finance Coach</h2>
-            <p>This is your AI-powered financial coach. Ask anything about budgeting</p>
-            <div className="chat-box-placeholder">
-                <p>Chat functionality coming soon...</p>
+        <Navbar />
+        <h2>Ask Me Anything: Personal Finance Coach</h2>
+        <div className="chat-box">
+            <div className="chat-log">
+                {chatLog.map((msg, idx) => (
+                    <div key={idx} className={`message ${msg.role}`}>
+                        <strong>{msg.role === "user" ? "You" : "Coach"}:</strong> {msg.content}
+                    </div>
+                ))}
+            </div>
+            <div className="chat-input">
+                <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Ask a personal finance question..."
+                />
+                <button onClick={handleSend}>Send</button>
             </div>
         </div>
+    </div>
     );
 }
 

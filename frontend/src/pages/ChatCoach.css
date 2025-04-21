@@ -1,15 +1,47 @@
-.chatcoach-container {
-    max-width: 95rem;
-    margin: 0 auto;
-    padding: 2 rem;
+.chat-box {
+    border: 1px solid #ccc;
+    padding: 1rem;
+    max-width: 800px;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 10px;
 }
 
-.chat-box-placeholder {
-    margin-top: 2rem;
-    padding: 2rem;
-    background-color: #f0f4f8;
-    border-radius: 10px;
-    text-align: center;
-    color: #888;
-    font-style: italic;
+.chat-log {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+}
+
+.message {
+    padding: 0.5rem 0;
+}
+
+.message.user {
+    color: #333;
+}
+
+.message.assistant {
+    color: #007bff;
+}
+
+.chat-input {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.chat-input button {
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
 }

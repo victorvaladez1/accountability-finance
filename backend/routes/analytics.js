@@ -1,7 +1,8 @@
-const express = require("express");
+import express from "express";
+import Transaction from "../models/Transaction.js";
+import requireAuth from "../middleware/verifyToken.js";
+
 const router = express.Router();
-const Transaction = require("../models/Transaction");
-const requireAuth = require("../middleware/verifyToken");
 
 router.use(requireAuth);
 
@@ -18,25 +19,23 @@ router.get("/monthly-expenses", async (req, res) => {
         $match: {
           user: req.user.id,
           type: "Expense",
-          date: { $gte: pastYear, $lte: now }
-        }
+          date: { $gte: pastYear, $lte: now },
+        },
       },
       {
         $group: {
           _id: { $dateToString: { format: "%Y-%m", date: "$date" } },
-          total: { $sum: "$amount" }
-        }
+          total: { $sum: "$amount" },
+        },
       },
-      {
-        $sort: { _id: 1 }
-      },
+      { $sort: { _id: 1 } },
       {
         $project: {
           _id: 0,
           month: "$_id",
-          total: 1
-        }
-      }
+          total: 1,
+        },
+      },
     ]);
 
     const monthsMap = {};
@@ -52,7 +51,7 @@ router.get("/monthly-expenses", async (req, res) => {
 
     const monthsArray = Object.keys(monthsMap).map((month) => ({
       month,
-      total: monthsMap[month]
+      total: monthsMap[month],
     }));
 
     const totalSpending = monthsArray.reduce((sum, m) => sum + m.total, 0);
@@ -63,7 +62,7 @@ router.get("/monthly-expenses", async (req, res) => {
     res.json({
       months: monthsArray,
       average,
-      currentMonth
+      currentMonth,
     });
   } catch (err) {
     console.error("Error in monthly-expenses route:", err);
@@ -71,4 +70,4 @@ router.get("/monthly-expenses", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
