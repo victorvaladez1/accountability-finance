@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import "./ChatCoach.css";
@@ -7,6 +7,27 @@ import "./CommonLayout.css";
 function ChatCoach() {
     const [input, setInput] = useState("");
     const [chatLog, setChatLog] = useState([]);
+
+    useEffect(() => {
+        const fetchHistory = async () => {
+            try {
+                const token = localStorage.getItem("token");
+    
+                const res = await axios.get("/api/chat/history", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+    
+                setChatLog(res.data);
+            } catch (err) {
+                console.error("❌ Failed to fetch chat history:", err);
+            }
+        };
+    
+        fetchHistory();
+    }, []);
+    
 
     const handleSend = async () => {
         if (!input.trim()) return;
