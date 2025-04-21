@@ -8,6 +8,7 @@ import accountRoutes from "./routes/accounts.js";
 import transactionRoutes from "./routes/transactions.js";
 import analyticsRoutes from "./routes/analytics.js";
 import chatRoutes from "./routes/chat.js";
+import holdingsRoutes from "./routes/holdings.js";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use("/api/accounts", accountRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/holdings", holdingsRoutes);
 
 // Root test route
 app.get("/", (req, res) => {

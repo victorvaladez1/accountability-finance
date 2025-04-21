@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import "./CommonLayout.css";
+import "./Portfolio.css";
 
 function Portfolio() {
     return (
