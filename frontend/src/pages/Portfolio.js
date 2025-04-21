@@ -7,7 +7,7 @@ function Portfolio() {
     const [accounts, setAccounts] = useState([]);
     const [holdingsMap, setHoldingsMap] = useState({});
     const [loading, setLoading] = useState(true);
-    
+
     // Fetch accounts on load
     useEffect(() => {
         const fetchAccounts = async () => {
@@ -53,18 +53,26 @@ function Portfolio() {
             {accounts.length === 0 ? (
                 <p>No investment accounts found</p>
             ) : (
-                accounts.map((account) => (
-                    <div key={account._id} className="account-card">
-                        <h3>{account.name}</h3>
-                        <ul>
-                            {(holdingsMap[account._id] || []).map((holding) => (
+                accounts.map((account) => {
+                    const holdings = holdingsMap[account._id] || [];
+                    const totalValue = holdings.reduce((acc, holding) => {
+                        return acc + holding.shares * holding.averageCost;
+                    }, 0);
+
+                    return (
+                        <div key={account._id} className="account-card">
+                            <h3>{account.name}</h3>
+                            <p><strong>Total Value:</strong> ${totalValue.toFixed(2)}</p>
+                            <ul>
+                                {holdings.map((holding) => (
                                     <li key={holding._id}>
                                         {holding.ticker} – {holding.shares} shares @ ${holding.averageCost.toFixed(2)}
                                     </li>
-                            ))}
-                        </ul>
-                    </div>
-                ))
+                                ))}
+                            </ul>
+                        </div>
+                    );
+                })
             )}
         </div>
     );
