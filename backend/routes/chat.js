@@ -61,5 +61,13 @@ router.get("/history", verifyToken, async (req, res) => {
     }
 });
 
+router.delete("/history", verifyToken, async (req, res) => {
+    try {
+        await ChatMessage.deleteMany({ user: req.user.id });
+        res.json({ message: "Chat history cleared." });
+    } catch (err) {
+        res.status(500).json({ error: "Failed to clear chat history."});
+    }
+});
 
 export default router;

@@ -72,11 +72,33 @@ function ChatCoach() {
             ]);
         }
     };
+
+    const handleClearHistory = async() => {
+        try {
+            const token = localStorage.getItem("token");
+            await axios.delete("/api/chat/history", {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            setChatLog([]);
+        } catch (err) {
+            console.error("❌ Failed to clear chat history:", err);
+        }
+    };
     
     return (
         <div className="page-container">
         <Navbar />
-        <h2>Ask Me Anything: Personal Finance Coach</h2>
+
+        <div className="chat-header">
+            <h2>Ask Me Anything: Personal Finance Coach</h2>
+            <button className="clear-btn" onClick={handleClearHistory}>
+                🧹 Clear History
+            </button>
+        </div>
+
         <div className="chat-box">
             <div className="chat-log">
                 {chatLog.map((msg, idx) => (
