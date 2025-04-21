@@ -24,7 +24,16 @@ router.post("/ask", verifyToken, async (req, res) => {
             "https://api.openai.com/v1/chat/completions",
             {
                 model: "gpt-3.5-turbo",
-                messages: [{ role: "user", content: message }],
+                messages: [
+                    {
+                        role: "system",
+                        content: `You are a helpful and friendly budgeting coach that gives personal finance advice to users in their 20s. Be realistic, practical, and encouraging. Your tone should be chill, supportive, and easy to understand — no finance jargon unless you explain it.`,
+                    },
+                    {
+                        role: "user",
+                        content: message,
+                    },
+                ],
             },
             {
                 headers: {
