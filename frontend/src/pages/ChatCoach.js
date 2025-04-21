@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import "./ChatCoach.css";
@@ -7,6 +7,8 @@ import "./CommonLayout.css";
 function ChatCoach() {
     const [input, setInput] = useState("");
     const [chatLog, setChatLog] = useState([]);
+
+    const bottomRef = useRef(null);
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -27,7 +29,12 @@ function ChatCoach() {
     
         fetchHistory();
     }, []);
-    
+
+    useEffect(() => {
+        if (bottomRef.current) {
+            bottomRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [chatLog]);
 
     const handleSend = async () => {
         if (!input.trim()) return;
@@ -77,6 +84,7 @@ function ChatCoach() {
                         <strong>{msg.role === "user" ? "You" : "Coach"}:</strong> {msg.content}
                     </div>
                 ))}
+                <div ref={bottomRef} />
             </div>
             <div className="chat-input">
                 <input
