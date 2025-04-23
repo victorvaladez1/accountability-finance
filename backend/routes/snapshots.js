@@ -2,6 +2,8 @@ import express from "express";
 import verifyToken from "../middleware/verifyToken.js";
 import PortfolioSnapshot from "../models/PortfolioSnapshot.js";
 
+const router = express.Router();
+
 // Get latest snapshots
 router.get("/", verifyToken, async (req, res) => {
     try {
@@ -16,7 +18,7 @@ router.get("/", verifyToken, async (req, res) => {
 // Add a new snapshot
 router.post("/", verifyToken, async (req, res) => {
     try {
-        const snapshot = new PorfolioSnapshot({
+        const snapshot = new PortfolioSnapshot({
             user: req.user.id,
             value: req.body.value,
         });

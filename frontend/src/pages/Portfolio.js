@@ -10,6 +10,11 @@ import {
     Tooltip,
     Legend,
     ResponsiveContainer,
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
 } from "recharts";
 
 function Portfolio() {
@@ -30,6 +35,8 @@ function Portfolio() {
     const [editHolding, setEditHolding] = useState(null);
     const [editShares, setEditShares] = useState("");
     const [editAvgCost, setEditAvgCost] = useState("");
+
+    const [snapshots, setSnapshots] = useState([]);
 
     useEffect(() => {
         const fetchAccounts = async () => {
@@ -84,38 +91,22 @@ function Portfolio() {
     }, []);
 
     useEffect(() => {
-        const takeSnapshotOnce = async () => {
-            const alreadySnapshotted = localStorage.getItem("portfolioSnapshotTaken");
-
-            if (alreadySnapshotted) return;
-
-            try {
-                const res = await fetch("/api/snapshots", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                  },
-                  body: JSON.stringify({ value: totalPortfolioValue }),
-                });
-          
-                if (res.ok) {
-                  localStorage.setItem("portfolioSnapshotTaken", "true");
-                  console.log("✅ Snapshot taken successfully");
-                } else {
-                  console.warn("⚠️ Failed to take snapshot");
-                }
-              } catch (err) {
-                console.error("Snapshot error:", err);
-              }
-            };
-
-            if (!loading && totalPortfolioValue > 0) {
-                takeSnapshotOnce();
-            }
-    }, [loading, totalPortfolioValue]);
-
-    if (loading) return <div className="page-container"><Navbar /><p>Loading portfolio...</p></div>;
+        const fetchSnapshots = async () => {
+          try {
+            const res = await fetch("/api/snapshots", {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            });
+            const data = await res.json();
+            setSnapshots(data);
+          } catch (err) {
+            console.error("Error fetching snapshots:", err);
+          }
+        };
+      
+        fetchSnapshots();
+      }, []);
 
     let totalPortfolioValue = 0;
     let totalPortfolioCost = 0;
@@ -131,6 +122,38 @@ function Portfolio() {
         totalPortfolioValue += currentValue;
     });
     });
+
+    useEffect(() => {
+    const takeSnapshotOnce = async () => {
+        const alreadySnapshotted = localStorage.getItem("portfolioSnapshotTaken");
+        if (alreadySnapshotted) return;
+        if (totalPortfolioValue <= 0) return;
+
+        try {
+        const res = await fetch("/api/snapshots", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ value: totalPortfolioValue }),
+        });
+
+        if (res.ok) {
+            localStorage.setItem("portfolioSnapshotTaken", "true");
+            console.log("✅ Snapshot taken");
+        } else {
+            console.warn("⚠️ Failed to snapshot");
+        }
+        } catch (err) {
+        console.error("Snapshot error:", err);
+        }
+    };
+
+    takeSnapshotOnce();
+    }, [loading, totalPortfolioValue]);
+    
+    if (loading) return <div className="page-container"><Navbar /><p>Loading portfolio...</p></div>;
 
     const totalGainLoss = totalPortfolioValue - totalPortfolioCost;
 
@@ -182,6 +205,8 @@ function Portfolio() {
         return data;
       };
 
+      console.log("📈 Snapshots for performance chart:", snapshots);
+
     return (
         <div className="page-container">
             <Navbar />
@@ -219,6 +244,51 @@ function Portfolio() {
                     </PieChart>
                 </ResponsiveContainer>
             </div>
+
+            {snapshots.length > 0 && (
+                <div className="portfolio-performance">
+                    <h4>📈 Portfolio Performance</h4>
+                    <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={snapshots}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis
+                        dataKey="timestamp"
+                        tickFormatter={(str) => new Date(str).toLocaleDateString()}
+                        />
+                        <YAxis />
+                        <Tooltip
+                        labelFormatter={(str) =>
+                            `Date: ${new Date(str).toLocaleDateString()}`
+                        }
+                        formatter={(value) => [`$${value.toFixed(2)}`, "Portfolio Value"]}
+                        />
+                        <Line type="monotone" dataKey="value" stroke="#007bff" strokeWidth={2} />
+                    </LineChart>
+                    </ResponsiveContainer>
+                </div>
+            )}
+
+            <button
+            onClick={async () => {
+                const res = await fetch("/api/snapshots", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify({ value: totalPortfolioValue }),
+                });
+
+                if (res.ok) {
+                alert("✅ Snapshot saved");
+                window.location.reload();
+                } else {
+                alert("❌ Failed to save snapshot");
+                }
+            }}
+            >
+            📸 Save Snapshot Now
+            </button>
 
             <button onClick={() => setShowAddModal(true)} className="add-account-btn">
             ➕ Add Investment Account
@@ -258,7 +328,7 @@ function Portfolio() {
                                     setShowAddModal(false);
                                     setNewAccountName("");
                                     setNewAccountBalance("");
-                                    window.location.reload(); // reload to fetch new accounts
+                                    window.location.reload();
                                 } else {
                                     console.error("Error creating account");
                                 }
@@ -300,7 +370,6 @@ function Portfolio() {
                         
                         <button onClick={async () => {
                             try {
-                                // 🔄 Auto-fill avg cost with live price if empty
                                 let finalAvgCost = parseFloat(newAvgCost);
                                 if (!newAvgCost) {
                                     const priceRes = await fetch(`/api/market/${newTicker.toUpperCase()}`);

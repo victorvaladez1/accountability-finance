@@ -9,4 +9,4 @@ const PortfolioSnapshotSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-export default mongoose.model("PortfolioSnapshot", PortfolioSnapShotSchema);
+export default mongoose.model("PortfolioSnapshot", PortfolioSnapshotSchema);
