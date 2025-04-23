@@ -218,22 +218,39 @@ function Portfolio() {
                         <div key={account._id} className="account-card">
                             <h3>{account.name}</h3>
                             <p><strong>Total Value:</strong> ${totalValue.toFixed(2)}</p>
-                            <ul>
+                            
+                            <div>
                                 <button onClick={() => setSelectedAccountId(account._id)} className="add-holding-btn">
                                     ➕ Add Holding
                                 </button>
-                                {holdings.map((holding) => (
-                                    <li key={holding._id}>
-                                        {holding.ticker} – {holding.shares} shares
-                                        <br />
-                                        Avg Cost: ${holding.averageCost.toFixed(2)}
-                                        <br />
-                                        {livePrices[holding.ticker]
-                                            ? <>Live Price: ${livePrices[holding.ticker].toFixed(2)}</>
-                                            : <em>Fetching live price...</em>}
-                                    </li>
-                                ))}
-                            </ul>
+                                {holdings.map((holding) => {
+                                    const livePrice = livePrices[holding.ticker];
+                                    const gainLoss = livePrice ? (livePrice - holding.averageCost) * holding.shares : 0;
+
+                                    return (
+                                        <div className="holding-card" key={holding._id}>
+                                            <div className="holding-header">
+                                                <span className="ticker">{holding.ticker}</span>
+                                                {livePrice && (
+                                                    <span className={`gain-loss ${gainLoss >= 0 ? "gain" : "loss"}`}>
+                                                        {gainLoss >= 0 ? "+" : "-"}${Math.abs(gainLoss).toFixed(2)}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div className="holding-details">
+                                                <span>{holding.shares} shares</span>
+                                                <span>Avg: ${holding.averageCost.toFixed(2)}</span>
+                                                <span>
+                                                    {livePrice
+                                                        ? `Live: $${livePrice.toFixed(2)}`
+                                                        : "Fetching..."}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
                         </div>
                     );
                 })
