@@ -129,6 +129,27 @@ function Portfolio() {
           "#FF5722", "#4CAF50", "#607D8B", "#795548"
     ];
 
+    const getPieDataForAccount = (accountId) => {
+        const holdings = holdingsMap[accountId] || [];
+        const data = [];
+      
+        holdings.forEach((holding) => {
+          const livePrice = livePrices[holding.ticker];
+          const shares = holding.shares;
+          if (!livePrice || shares <= 0) return;
+      
+          const value = shares * livePrice;
+          const existing = data.find((item) => item.name === holding.ticker);
+          if (existing) {
+            existing.value += value;
+          } else {
+            data.push({ name: holding.ticker, value });
+          }
+        });
+      
+        return data;
+      };
+
     return (
         <div className="page-container">
             <Navbar />
@@ -361,6 +382,31 @@ function Portfolio() {
                                 <button onClick={() => setSelectedAccountId(account._id)} className="add-holding-btn">
                                     ➕ Add Holding
                                 </button>
+
+                                {getPieDataForAccount(account._id).length > 0 && (
+                                            <div className="account-chart">
+                                            <ResponsiveContainer width="100%" height={250}>
+                                                <PieChart>
+                                                <Pie
+                                                    data={getPieDataForAccount(account._id)}
+                                                    dataKey="value"
+                                                    nameKey="name"
+                                                    cx="50%"
+                                                    cy="50%"
+                                                    outerRadius={80}
+                                                    label
+                                                >
+                                                    {getPieDataForAccount(account._id).map((entry, index) => (
+                                                    <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
+                                                    ))}
+                                                </Pie>
+                                                <Tooltip />
+                                                <Legend />
+                                                </PieChart>
+                                            </ResponsiveContainer>
+                                            </div>
+                                        )}
+
                                 {holdings.map((holding) => {
                                     const livePrice = livePrices[holding.ticker];
                                     const gainLoss = livePrice ? (livePrice - holding.averageCost) * holding.shares : 0;
