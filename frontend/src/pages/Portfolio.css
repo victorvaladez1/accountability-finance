@@ -94,3 +94,13 @@
     padding: 0;
     align-self: flex-start;
   }
+
+  .delete-holding-btn {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-left: 12px;
+    padding: 0;
+  }

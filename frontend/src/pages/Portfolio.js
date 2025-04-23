@@ -311,6 +311,36 @@ function Portfolio() {
                                             ✏️ Edit
                                             </button>
 
+                                            <button
+                                                className="delete-holding-btn"
+                                                onClick={async () => {
+                                                    const confirmDelete = window.confirm(`Delete ${holding.ticker}?`);
+                                                    if (!confirmDelete) return;
+
+                                                    try {
+                                                    const res = await fetch(`/api/holdings/${holding._id}`, {
+                                                        method: "DELETE",
+                                                        headers: {
+                                                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                                        },
+                                                    });
+
+                                                    if (res.ok) {
+                                                        window.location.reload();
+                                                    } else {
+                                                        const err = await res.json();
+                                                        console.error("Delete failed:", err.message);
+                                                        alert("Failed to delete holding.");
+                                                    }
+                                                    } catch (err) {
+                                                    console.error("Delete error:", err);
+                                                    alert("Error deleting holding.");
+                                                    }
+                                                }}
+                                                >
+                                                🗑️ Delete
+                                            </button>
+
                                         </div>
                                     );
                                 })}
