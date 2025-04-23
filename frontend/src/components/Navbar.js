@@ -6,14 +6,15 @@ function Navbar() {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
-        navigate("/login");
+      localStorage.removeItem("token");
+      localStorage.removeItem("portfolioSnapshotTaken");
+      navigate("/login");
     };
 
     return (
         <nav className="navbar">
           <h2 className="logo">AccountAbility</h2>
-          <div classsName="nav-links">
+          <div className="nav-links">
             <Link to="/">Dashboard</Link>
             <Link to="/transactions">Transactions</Link>
             <Link to="/portfolio">Portfolio</Link>

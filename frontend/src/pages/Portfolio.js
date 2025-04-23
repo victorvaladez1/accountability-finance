@@ -83,6 +83,38 @@ function Portfolio() {
         fetchAccounts();
     }, []);
 
+    useEffect(() => {
+        const takeSnapshotOnce = async () => {
+            const alreadySnapshotted = localStorage.getItem("portfolioSnapshotTaken");
+
+            if (alreadySnapshotted) return;
+
+            try {
+                const res = await fetch("/api/snapshots", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                  body: JSON.stringify({ value: totalPortfolioValue }),
+                });
+          
+                if (res.ok) {
+                  localStorage.setItem("portfolioSnapshotTaken", "true");
+                  console.log("✅ Snapshot taken successfully");
+                } else {
+                  console.warn("⚠️ Failed to take snapshot");
+                }
+              } catch (err) {
+                console.error("Snapshot error:", err);
+              }
+            };
+
+            if (!loading && totalPortfolioValue > 0) {
+                takeSnapshotOnce();
+            }
+    }, [loading, totalPortfolioValue]);
+
     if (loading) return <div className="page-container"><Navbar /><p>Loading portfolio...</p></div>;
 
     let totalPortfolioValue = 0;
