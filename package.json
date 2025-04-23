@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "react-loader-spinner": "^6.1.6"
+    "react-loader-spinner": "^6.1.6",
+    "recharts": "^2.15.3"
   }
 }

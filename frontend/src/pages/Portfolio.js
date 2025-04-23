@@ -3,6 +3,15 @@ import Navbar from "../components/Navbar";
 import "./CommonLayout.css";
 import "./Portfolio.css";
 
+import {
+    PieChart,
+    Pie,
+    Cell,
+    Tooltip,
+    Legend,
+    ResponsiveContainer,
+} from "recharts";
+
 function Portfolio() {
     const [accounts, setAccounts] = useState([]);
     const [holdingsMap, setHoldingsMap] = useState({});
@@ -21,7 +30,6 @@ function Portfolio() {
     const [editHolding, setEditHolding] = useState(null);
     const [editShares, setEditShares] = useState("");
     const [editAvgCost, setEditAvgCost] = useState("");
-
 
     useEffect(() => {
         const fetchAccounts = async () => {
@@ -92,7 +100,34 @@ function Portfolio() {
     });
     });
 
-const totalGainLoss = totalPortfolioValue - totalPortfolioCost;
+    const totalGainLoss = totalPortfolioValue - totalPortfolioCost;
+
+    const pieData = [];
+
+    accounts.forEach((account) => {
+    const holdings = holdingsMap[account._id] || [];
+    holdings.forEach((holding) => {
+        const livePrice = livePrices[holding.ticker];
+        const shares = holding.shares;
+
+        if (!livePrice || shares <= 0) return;
+
+        const currentValue = shares * livePrice;
+        const existing = pieData.find((item) => item.name === holding.ticker);
+
+        if (existing) {
+        existing.value += currentValue;
+        } else {
+        pieData.push({ name: holding.ticker, value: currentValue });
+        }
+    });
+    });
+
+
+    const pieColors = [
+          "#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#AA00FF", "#FF4081",
+          "#FF5722", "#4CAF50", "#607D8B", "#795548"
+    ];
 
     return (
         <div className="page-container">
@@ -107,6 +142,29 @@ const totalGainLoss = totalPortfolioValue - totalPortfolioCost;
                     {totalGainLoss >= 0 ? "+" : "-"}${Math.abs(totalGainLoss).toFixed(2)}
                     </span>
                 </p>
+            </div>
+
+            <div className="portfolio-chart-container">
+                <h4>📊 Asset Allocation</h4>
+                <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                    <Pie
+                        data={pieData}
+                        dataKey="value"
+                        nameKey="name"
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={100}
+                        label
+                    >
+                        {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
+                        ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                    </PieChart>
+                </ResponsiveContainer>
             </div>
 
             <button onClick={() => setShowAddModal(true)} className="add-account-btn">
