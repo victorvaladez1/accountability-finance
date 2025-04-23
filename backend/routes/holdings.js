@@ -54,4 +54,20 @@ router.put("/:id", verifyToken, async (req, res) => {
     }
   });
 
+  router.delete("/:id", verifyToken, async (req, res) => {
+    try {
+        const deleted = await Holding.findOneAndDelete({
+            _id: req.params.id,
+        });
+
+        if(!deleted) {
+            return res.status(404).json({ message: "Holding not found" });
+        }
+
+        res.json({ message: "Holding deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
+  });
+
 export default router;
