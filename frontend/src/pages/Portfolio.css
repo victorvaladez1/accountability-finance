@@ -83,3 +83,14 @@
 .ticker {
     text-transform: uppercase;
 }
+
+.edit-holding-btn {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 0.85rem;
+    margin-top: 6px;
+    padding: 0;
+    align-self: flex-start;
+  }

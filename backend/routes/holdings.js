@@ -38,4 +38,20 @@ router.post("/", verifyToken, async (req, res) => {
     }
 });
 
+router.put("/:id", verifyToken, async (req, res) => {
+    const { shares, averageCost } = req.body;
+    try {
+      const holding = await Holding.findById(req.params.id);
+      if (!holding) return res.status(404).json({ message: "Holding not found" });
+  
+      holding.shares = shares;
+      holding.averageCost = averageCost;
+  
+      const updated = await holding.save();
+      res.json(updated);
+    } catch (err) {
+      res.status(500).json({ message: "Update error", error: err.message });
+    }
+  });
+
 export default router;

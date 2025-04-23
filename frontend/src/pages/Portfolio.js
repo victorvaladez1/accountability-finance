@@ -18,6 +18,11 @@ function Portfolio() {
     const [newShares, setNewShares] = useState("");
     const [newAvgCost, setNewAvgCost] = useState("");
 
+    const [editHolding, setEditHolding] = useState(null);
+    const [editShares, setEditShares] = useState("");
+    const [editAvgCost, setEditAvgCost] = useState("");
+
+
     useEffect(() => {
         const fetchAccounts = async () => {
             try {
@@ -205,6 +210,54 @@ function Portfolio() {
                 </div>
             )}
 
+            {editHolding && (
+            <div className="modal-overlay">
+                <div className="modal-content">
+                <h3>Edit {editHolding.ticker}</h3>
+                <input
+                    type="number"
+                    placeholder="Shares"
+                    value={editShares}
+                    onChange={(e) => setEditShares(e.target.value)}
+                />
+                <input
+                    type="number"
+                    placeholder="Average Cost"
+                    value={editAvgCost}
+                    onChange={(e) => setEditAvgCost(e.target.value)}
+                />
+                <button onClick={async () => {
+                    try {
+                    const res = await fetch(`/api/holdings/${editHolding._id}`, {
+                        method: "PUT",
+                        headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                        body: JSON.stringify({
+                        shares: parseFloat(editShares),
+                        averageCost: parseFloat(editAvgCost),
+                        }),
+                    });
+
+                    if (res.ok) {
+                        setEditHolding(null);
+                        setEditShares("");
+                        setEditAvgCost("");
+                        window.location.reload();
+                    } else {
+                        console.error("Failed to update holding");
+                    }
+                    } catch (err) {
+                    console.error("Update error:", err);
+                    }
+                }}>Save</button>
+                <button onClick={() => setEditHolding(null)}>Cancel</button>
+                </div>
+            </div>
+            )}
+
+
             {accounts.length === 0 ? (
                 <p>No investment accounts found</p>
             ) : (
@@ -246,6 +299,18 @@ function Portfolio() {
                                                         : "Fetching..."}
                                                 </span>
                                             </div>
+
+                                            <button
+                                            className="edit-holding-btn"
+                                            onClick={() => {
+                                                setEditHolding(holding);
+                                                setEditShares(holding.shares.toString());
+                                                setEditAvgCost(holding.averageCost.toString());
+                                            }}
+                                            >
+                                            ✏️ Edit
+                                            </button>
+
                                         </div>
                                     );
                                 })}
