@@ -104,3 +104,31 @@
     margin-left: 12px;
     padding: 0;
   }
+
+  .portfolio-summary-card {
+    background-color: #fdfdfd;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    margin: 1rem 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border-left: 6px solid #007bff;
+  }
+  
+  .portfolio-summary-card h4 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .portfolio-summary-card p {
+    margin: 0.25rem 0;
+    font-size: 0.95rem;
+  }
+  
+  .portfolio-summary-card .gain {
+    color: #28a745;
+    font-weight: bold;
+  }
+  
+  .portfolio-summary-card .loss {
+    color: #dc3545;
+    font-weight: bold;
+  }

@@ -77,10 +77,37 @@ function Portfolio() {
 
     if (loading) return <div className="page-container"><Navbar /><p>Loading portfolio...</p></div>;
 
+    let totalPortfolioValue = 0;
+    let totalPortfolioCost = 0;
+
+    accounts.forEach((account) => {
+    const holdings = holdingsMap[account._id] || [];
+    holdings.forEach((holding) => {
+        const livePrice = livePrices[holding.ticker];
+        const cost = holding.shares * holding.averageCost;
+        const currentValue = livePrice ? holding.shares * livePrice : 0;
+
+        totalPortfolioCost += cost;
+        totalPortfolioValue += currentValue;
+    });
+    });
+
+const totalGainLoss = totalPortfolioValue - totalPortfolioCost;
+
     return (
         <div className="page-container">
             <Navbar />
             <h2>Investment Portfolio</h2>
+
+            <div className="portfolio-summary-card">
+                <h4>📊 Portfolio Summary</h4>
+                <p><strong>Total Value:</strong> ${totalPortfolioValue.toFixed(2)}</p>
+                <p><strong>Total Gain/Loss:</strong> 
+                    <span className={totalGainLoss >= 0 ? "gain" : "loss"}>
+                    {totalGainLoss >= 0 ? "+" : "-"}${Math.abs(totalGainLoss).toFixed(2)}
+                    </span>
+                </p>
+            </div>
 
             <button onClick={() => setShowAddModal(true)} className="add-account-btn">
             ➕ Add Investment Account
