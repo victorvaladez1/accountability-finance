@@ -150,8 +150,26 @@ function Portfolio() {
                             value={newAvgCost}
                             onChange={(e) => setNewAvgCost(e.target.value)}
                         />
+
+                        <small style={{ fontSize: "0.8rem", color: "#666" }}>
+                            Leave blank to use current market price
+                        </small>
+                        
                         <button onClick={async () => {
                             try {
+                                // 🔄 Auto-fill avg cost with live price if empty
+                                let finalAvgCost = parseFloat(newAvgCost);
+                                if (!newAvgCost) {
+                                    const priceRes = await fetch(`/api/market/${newTicker.toUpperCase()}`);
+                                    const priceData = await priceRes.json();
+                                    if (!priceData.fallback && priceData.price) {
+                                        finalAvgCost = priceData.price;
+                                    } else {
+                                        alert("Could not fetch live price. Please enter average cost manually.");
+                                        return;
+                                    }
+                                }
+
                                 const res = await fetch("/api/holdings", {
                                     method: "POST",
                                     headers: {
@@ -162,7 +180,7 @@ function Portfolio() {
                                         accountId: selectedAccountId,
                                         ticker: newTicker.toUpperCase(),
                                         shares: parseFloat(newShares),
-                                        averageCost: parseFloat(newAvgCost),
+                                        averageCost: finalAvgCost,
                                     }),
                                 });
 
@@ -171,7 +189,7 @@ function Portfolio() {
                                     setNewTicker("");
                                     setNewShares("");
                                     setNewAvgCost("");
-                                    window.location.reload(); // reload to see the new holding
+                                    window.location.reload();
                                 } else {
                                     console.error("Error creating holding");
                                 }
@@ -181,6 +199,7 @@ function Portfolio() {
                         }}>
                             Add
                         </button>
+
                         <button onClick={() => setSelectedAccountId(null)}>Cancel</button>
                     </div>
                 </div>
