@@ -9,6 +9,10 @@ function Portfolio() {
     const [loading, setLoading] = useState(true);
     const [livePrices, setLivePrices] = useState({});
 
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [newAccountName, setNewAccountName] = useState("");
+    const [newAccountBalance, setNewAccountBalance] = useState("");
+
     useEffect(() => {
         const fetchAccounts = async () => {
             try {
@@ -67,6 +71,58 @@ function Portfolio() {
         <div className="page-container">
             <Navbar />
             <h2>Investment Portfolio</h2>
+
+            <button onClick={() => setShowAddModal(true)} className="add-account-btn">
+            ➕ Add Investment Account
+            </button>
+
+            {showAddModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3>New Investment Account</h3>
+                        <input
+                            type="text"
+                            placeholder="Account Name"
+                            value={newAccountName}
+                            onChange={(e) => setNewAccountName(e.target.value)}
+                        />
+                        <input
+                            type="number"
+                            placeholder="Initial Balance"
+                            value={newAccountBalance}
+                            onChange={(e) => setNewAccountBalance(e.target.value)}
+                        />
+                        <button onClick={async () => {
+                            try {
+                                const res = await fetch("/api/accounts", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                    },
+                                    body: JSON.stringify({
+                                        name: newAccountName,
+                                        type: "Investment",
+                                        balance: parseFloat(newAccountBalance),
+                                    }),
+                                });
+                                if (res.ok) {
+                                    setShowAddModal(false);
+                                    setNewAccountName("");
+                                    setNewAccountBalance("");
+                                    window.location.reload(); // reload to fetch new accounts
+                                } else {
+                                    console.error("Error creating account");
+                                }
+                            } catch (err) {
+                                console.error("Account creation error:", err);
+                            }
+                        }}>Create</button>
+                        <button onClick={() => setShowAddModal(false)}>Cancel</button>
+                    </div>
+                </div>
+            )}
+
             {accounts.length === 0 ? (
                 <p>No investment accounts found</p>
             ) : (
