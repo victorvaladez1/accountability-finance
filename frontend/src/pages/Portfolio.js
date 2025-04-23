@@ -13,6 +13,11 @@ function Portfolio() {
     const [newAccountName, setNewAccountName] = useState("");
     const [newAccountBalance, setNewAccountBalance] = useState("");
 
+    const [selectedAccountId, setSelectedAccountId] = useState(null);
+    const [newTicker, setNewTicker] = useState("");
+    const [newShares, setNewShares] = useState("");
+    const [newAvgCost, setNewAvgCost] = useState("");
+
     useEffect(() => {
         const fetchAccounts = async () => {
             try {
@@ -123,6 +128,64 @@ function Portfolio() {
                 </div>
             )}
 
+            {selectedAccountId && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h3>Add Holding</h3>
+                        <input
+                            type="text"
+                            placeholder="Ticker (e.g., AAPL)"
+                            value={newTicker}
+                            onChange={(e) => setNewTicker(e.target.value)}
+                        />
+                        <input
+                            type="number"
+                            placeholder="Shares"
+                            value={newShares}
+                            onChange={(e) => setNewShares(e.target.value)}
+                        />
+                        <input
+                            type="number"
+                            placeholder="Average Cost"
+                            value={newAvgCost}
+                            onChange={(e) => setNewAvgCost(e.target.value)}
+                        />
+                        <button onClick={async () => {
+                            try {
+                                const res = await fetch("/api/holdings", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                    },
+                                    body: JSON.stringify({
+                                        accountId: selectedAccountId,
+                                        ticker: newTicker.toUpperCase(),
+                                        shares: parseFloat(newShares),
+                                        averageCost: parseFloat(newAvgCost),
+                                    }),
+                                });
+
+                                if (res.ok) {
+                                    setSelectedAccountId(null);
+                                    setNewTicker("");
+                                    setNewShares("");
+                                    setNewAvgCost("");
+                                    window.location.reload(); // reload to see the new holding
+                                } else {
+                                    console.error("Error creating holding");
+                                }
+                            } catch (err) {
+                                console.error("Holding creation error:", err);
+                            }
+                        }}>
+                            Add
+                        </button>
+                        <button onClick={() => setSelectedAccountId(null)}>Cancel</button>
+                    </div>
+                </div>
+            )}
+
             {accounts.length === 0 ? (
                 <p>No investment accounts found</p>
             ) : (
@@ -137,6 +200,9 @@ function Portfolio() {
                             <h3>{account.name}</h3>
                             <p><strong>Total Value:</strong> ${totalValue.toFixed(2)}</p>
                             <ul>
+                                <button onClick={() => setSelectedAccountId(account._id)} className="add-holding-btn">
+                                    ➕ Add Holding
+                                </button>
                                 {holdings.map((holding) => (
                                     <li key={holding._id}>
                                         {holding.ticker} – {holding.shares} shares

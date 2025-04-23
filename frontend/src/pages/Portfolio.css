@@ -34,3 +34,13 @@
     gap: 0.5rem;
     width: 300px;
 }
+
+.add-holding-btn {
+    margin-top: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
