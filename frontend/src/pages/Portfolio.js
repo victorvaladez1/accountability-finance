@@ -245,27 +245,44 @@ function Portfolio() {
                 </ResponsiveContainer>
             </div>
 
-            {snapshots.length > 0 && (
-                <div className="portfolio-performance">
-                    <h4>📈 Portfolio Performance</h4>
-                    <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={snapshots}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis
-                        dataKey="timestamp"
-                        tickFormatter={(str) => new Date(str).toLocaleDateString()}
-                        />
-                        <YAxis />
-                        <Tooltip
-                        labelFormatter={(str) =>
-                            `Date: ${new Date(str).toLocaleDateString()}`
-                        }
-                        formatter={(value) => [`$${value.toFixed(2)}`, "Portfolio Value"]}
-                        />
-                        <Line type="monotone" dataKey="value" stroke="#007bff" strokeWidth={2} />
-                    </LineChart>
-                    </ResponsiveContainer>
-                </div>
+            {snapshots.length > 1 && (
+            <div className="chart-card">
+                <h4>📈 Portfolio Performance</h4>
+                <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={snapshots}>
+                    <defs>
+                    <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#007bff" stopOpacity={0.8} />
+                        <stop offset="100%" stopColor="#007bff" stopOpacity={0.2} />
+                    </linearGradient>
+                    </defs>
+
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                    <XAxis
+                    dataKey="timestamp"
+                    tickFormatter={(str) => new Date(str).toLocaleDateString()}
+                    />
+                    <YAxis
+                    tickFormatter={(val) => `$${val.toLocaleString()}`}
+                    domain={["auto", "auto"]}
+                    />
+                    <Tooltip
+                    labelFormatter={(str) =>
+                        `Date: ${new Date(str).toLocaleDateString()}`
+                    }
+                    formatter={(value) => [`$${value.toLocaleString()}`, "Portfolio Value"]}
+                    />
+                    <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="url(#colorValue)"
+                    strokeWidth={3}
+                    dot={{ r: 4 }}
+                    activeDot={{ r: 6 }}
+                    />
+                </LineChart>
+                </ResponsiveContainer>
+            </div>
             )}
 
             <button
