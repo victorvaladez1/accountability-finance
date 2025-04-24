@@ -292,3 +292,38 @@
 .loss-bg {
   background-color: #f44336;
 }
+
+.holding-actions {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.edit-holding-btn,
+.delete-holding-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-holding-btn {
+  background-color: #e0f0ff;
+  color: #007bff;
+}
+
+.edit-holding-btn:hover {
+  background-color: #cfe6ff;
+}
+
+.delete-holding-btn {
+  background-color: #ffe5e5;
+  color: #dc3545;
+}
+
+.delete-holding-btn:hover {
+  background-color: #ffcccc;
+}

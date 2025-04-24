@@ -600,47 +600,48 @@ function Portfolio() {
                                                 </span>
                                             </div>
 
-                                            <button
-                                            className="edit-holding-btn"
-                                            onClick={() => {
-                                                setEditHolding(holding);
-                                                setEditShares(holding.shares.toString());
-                                                setEditAvgCost(holding.averageCost.toString());
-                                            }}
-                                            >
-                                            ✏️ Edit
-                                            </button>
+                                            <div className="holding-actions">
+                                                <button
+                                                    className="edit-holding-btn"
+                                                    onClick={() => {
+                                                    setEditHolding(holding);
+                                                    setEditShares(holding.shares.toString());
+                                                    setEditAvgCost(holding.averageCost.toString());
+                                                    }}
+                                                >
+                                                    ✏️ Edit
+                                                </button>
 
-                                            <button
-                                                className="delete-holding-btn"
-                                                onClick={async () => {
+                                                <button
+                                                    className="delete-holding-btn"
+                                                    onClick={async () => {
                                                     const confirmDelete = window.confirm(`Delete ${holding.ticker}?`);
                                                     if (!confirmDelete) return;
 
                                                     try {
-                                                    const res = await fetch(`/api/holdings/${holding._id}`, {
+                                                        const res = await fetch(`/api/holdings/${holding._id}`, {
                                                         method: "DELETE",
                                                         headers: {
-                                                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                                            Authorization: `Bearer ${localStorage.getItem("token")}`,
                                                         },
-                                                    });
+                                                        });
 
-                                                    if (res.ok) {
+                                                        if (res.ok) {
                                                         window.location.reload();
-                                                    } else {
+                                                        } else {
                                                         const err = await res.json();
                                                         console.error("Delete failed:", err.message);
                                                         alert("Failed to delete holding.");
-                                                    }
+                                                        }
                                                     } catch (err) {
-                                                    console.error("Delete error:", err);
-                                                    alert("Error deleting holding.");
+                                                        console.error("Delete error:", err);
+                                                        alert("Error deleting holding.");
                                                     }
-                                                }}
+                                                    }}
                                                 >
-                                                🗑️ Delete
-                                            </button>
-
+                                                    🗑️ Delete
+                                                </button>
+                                            </div>
                                         </div>
                                     );
                                 })}
