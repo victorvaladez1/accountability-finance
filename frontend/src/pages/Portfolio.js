@@ -38,6 +38,18 @@ function Portfolio() {
 
     const [snapshots, setSnapshots] = useState([]);
 
+    const [chartFilter, setChartFilter] = useState("all");
+
+    const getFilteredSnapshots = () => {
+        if (chartFilter === "all") return snapshots;
+      
+        const days = chartFilter === "7d" ? 7 : 30;
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - days);
+      
+        return snapshots.filter((snap) => new Date(snap.timestamp) >= cutoff);
+      };
+
     useEffect(() => {
         const fetchAccounts = async () => {
             try {
@@ -248,8 +260,30 @@ function Portfolio() {
             {snapshots.length > 1 && (
             <div className="chart-card">
                 <h4>📈 Portfolio Performance</h4>
+
+                <div className="chart-filters">
+                <button
+                    className={chartFilter === "7d" ? "active" : ""}
+                    onClick={() => setChartFilter("7d")}
+                >
+                    Last 7 Days
+                </button>
+                <button
+                    className={chartFilter === "30d" ? "active" : ""}
+                    onClick={() => setChartFilter("30d")}
+                >
+                    Last 30 Days
+                </button>
+                <button
+                    className={chartFilter === "all" ? "active" : ""}
+                    onClick={() => setChartFilter("all")}
+                >
+                    All Time
+                </button>
+                </div>
+
                 <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={snapshots}>
+                <LineChart data={getFilteredSnapshots()}>
                     <defs>
                     <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor="#007bff" stopOpacity={0.8} />
@@ -282,30 +316,31 @@ function Portfolio() {
                     />
                 </LineChart>
                 </ResponsiveContainer>
+                
+                <button
+                    onClick={async () => {
+                        const res = await fetch("/api/snapshots", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                        body: JSON.stringify({ value: totalPortfolioValue }),
+                        });
+
+                        if (res.ok) {
+                        alert("✅ Snapshot saved");
+                        window.location.reload();
+                        } else {
+                        alert("❌ Failed to save snapshot");
+                        }
+                    }}
+                    >
+                    📸 Save Snapshot Now
+                </button>
+
             </div>
             )}
-
-            <button
-            onClick={async () => {
-                const res = await fetch("/api/snapshots", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-                body: JSON.stringify({ value: totalPortfolioValue }),
-                });
-
-                if (res.ok) {
-                alert("✅ Snapshot saved");
-                window.location.reload();
-                } else {
-                alert("❌ Failed to save snapshot");
-                }
-            }}
-            >
-            📸 Save Snapshot Now
-            </button>
 
             <button onClick={() => setShowAddModal(true)} className="add-account-btn">
             ➕ Add Investment Account
