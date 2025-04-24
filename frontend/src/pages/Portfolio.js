@@ -282,40 +282,56 @@ function Portfolio() {
                 </button>
                 </div>
 
-                <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={getFilteredSnapshots()}>
-                    <defs>
-                    <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#007bff" stopOpacity={0.8} />
-                        <stop offset="100%" stopColor="#007bff" stopOpacity={0.2} />
-                    </linearGradient>
-                    </defs>
+                {getFilteredSnapshots().length > 1 && (() => {
+                    const snapshots = getFilteredSnapshots();
+                    const first = snapshots[0].value;
+                    const last = snapshots[snapshots.length - 1].value;
+                    const change = last - first;
+                    const isGain = change >= 0;
+                    const lineColor = isGain ? "#4CAF50" : "#F44336"; // green or red
 
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                    <XAxis
-                    dataKey="timestamp"
-                    tickFormatter={(str) => new Date(str).toLocaleDateString()}
-                    />
-                    <YAxis
-                    tickFormatter={(val) => `$${val.toLocaleString()}`}
-                    domain={["auto", "auto"]}
-                    />
-                    <Tooltip
-                    labelFormatter={(str) =>
-                        `Date: ${new Date(str).toLocaleDateString()}`
-                    }
-                    formatter={(value) => [`$${value.toLocaleString()}`, "Portfolio Value"]}
-                    />
-                    <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke="url(#colorValue)"
-                    strokeWidth={3}
-                    dot={{ r: 4 }}
-                    activeDot={{ r: 6 }}
-                    />
-                </LineChart>
-                </ResponsiveContainer>
+                    return (
+                        <div className="performance-wrapper">
+                            <div className={`performance-header ${isGain ? "gain-bg" : "loss-bg"}`}>
+                                <span className="performance-icon">📈</span>
+                                <strong>{isGain ? "Gain" : "Loss"}:</strong> ${Math.abs(change).toLocaleString()}
+                            </div>
+
+                            <ResponsiveContainer width="100%" height={300}>
+                                <LineChart data={snapshots}>
+                                <defs>
+                                    <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor={lineColor} stopOpacity={0.8} />
+                                    <stop offset="100%" stopColor={lineColor} stopOpacity={0.2} />
+                                    </linearGradient>
+                                </defs>
+
+                                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                                <XAxis
+                                    dataKey="timestamp"
+                                    tickFormatter={(str) => new Date(str).toLocaleDateString()}
+                                />
+                                <YAxis
+                                    tickFormatter={(val) => `$${val.toLocaleString()}`}
+                                    domain={["auto", "auto"]}
+                                />
+                                <Tooltip
+                                    labelFormatter={(str) => `Date: ${new Date(str).toLocaleDateString()}`}
+                                    formatter={(value) => [`$${value.toLocaleString()}`, "Portfolio Value"]}
+                                />
+                                <Line
+                                    type="monotone"
+                                    dataKey="value"
+                                    stroke="url(#colorValue)"
+                                    strokeWidth={3}
+                                    dot={{ r: 4 }}
+                                    activeDot={{ r: 6 }}
+                                />
+                                </LineChart>
+                            </ResponsiveContainer>
+                        </div>
+                    );
+                })()}
                 
                 <button
                     onClick={async () => {

@@ -252,3 +252,43 @@
 .modal-overlay {
   backdrop-filter: blur(2px);
 }
+
+.gain {
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+.loss {
+  color: #F44336;
+  font-weight: bold;
+}
+
+.performance-wrapper {
+  margin-top: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.performance-header {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  color: #fff;
+}
+
+.performance-icon {
+  margin-right: 8px;
+}
+
+.gain-bg {
+  background-color: #4caf50;
+}
+
+.loss-bg {
+  background-color: #f44336;
+}
