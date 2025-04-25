@@ -362,49 +362,51 @@ function Portfolio() {
 
                 <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={snapshots}>
-                    <defs>
-                        <linearGradient id={`miniGradient-${account._id}`} x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor={miniLineColor} stopOpacity={0.8} />
-                        <stop offset="100%" stopColor={miniLineColor} stopOpacity={0.2} />
-                        </linearGradient>
-                    </defs>
+                        <defs>
+                            <linearGradient id={`miniGradient-${account._id}`} x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stopColor={miniLineColor} stopOpacity={0.8} />
+                                <stop offset="100%" stopColor={miniLineColor} stopOpacity={0.2} />
+                            </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
 
-                    <XAxis
-                        dataKey="timestamp"
-                        tickFormatter={(str) => new Date(str).toLocaleDateString()}
-                    />
-                    <YAxis
-                        tickFormatter={(val) => `$${val.toLocaleString()}`}
-                        domain={["auto", "auto"]}
-                    />
-                    <Tooltip
-                        contentStyle={{
-                            backgroundColor: "#ffffff",
-                            borderRadius: "8px",
-                            boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
-                            border: "1px solid #e0e0e0",
-                        }}
-                        itemStyle={{
-                            color: "#333",
-                            fontWeight: 500,
-                        }}
-                        labelStyle={{
-                            fontWeight: "bold",
-                            color: "#555",
-                        }}
-                        labelFormatter={(str) => `Date: ${new Date(str).toLocaleDateString()}`}
-                        formatter={(val) => [`$${val.toLocaleString()}`, "Account Value"]}
-                    />
-                    <Line
-                        type="monotone"
-                        dataKey="value"
-                        stroke={miniLineColor}
-                        strokeWidth={3}
-                        dot={{ r: 4 }}
-                        activeDot={{ r: 6 }}
-                    />
+                        <XAxis
+                            dataKey="timestamp"
+                            tickFormatter={(str) => new Date(str).toLocaleDateString()}
+                        />
+                        <YAxis
+                            tickFormatter={(val) => `$${val.toLocaleString()}`}
+                            domain={["auto", "auto"]}
+                        />
+                        <Tooltip
+                            contentStyle={{
+                                backgroundColor: "#ffffff",
+                                borderRadius: "8px",
+                                boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                                border: "1px solid #e0e0e0",
+                            }}
+                            itemStyle={{
+                                color: "#333",
+                                fontWeight: 500,
+                            }}
+                            labelStyle={{
+                                fontWeight: "bold",
+                                color: "#555",
+                            }}
+                            labelFormatter={(str) => `Date: ${new Date(str).toLocaleDateString()}`}
+                            formatter={(val) => [`$${val.toLocaleString()}`, "Account Value"]}
+                        />
+                        <Line
+                            type="monotone"
+                            dataKey="value"
+                            stroke={`url(#miniGradient-${account._id})`}
+                            strokeWidth={3}
+                            dot={{ r: 4 }}
+                            activeDot={{ r: 6 }}
+                        />
                     </LineChart>
                 </ResponsiveContainer>
+
             </div>
             
           </div>
