@@ -450,7 +450,7 @@ function Portfolio() {
                         cx="50%"
                         cy="50%"
                         outerRadius={100}
-                        label
+                        label={({ value }) => value.toFixed(2)}
                     >
                         {pieData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
@@ -765,7 +765,7 @@ function Portfolio() {
                                                     cx="50%"
                                                     cy="50%"
                                                     outerRadius={80}
-                                                    label
+                                                    label={({ value }) => value.toFixed(2)}
                                                 >
                                                     {getPieDataForAccount(account._id).map((entry, index) => (
                                                     <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
