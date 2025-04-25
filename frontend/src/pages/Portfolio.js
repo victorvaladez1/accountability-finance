@@ -15,6 +15,7 @@ import {
     XAxis,
     YAxis,
     CartesianGrid,
+    Sector,
 } from "recharts";
 
 function Portfolio() {
@@ -443,6 +444,18 @@ function Portfolio() {
                 <h4>📊 Asset Allocation</h4>
                 <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
+                        <defs>
+                        {pieData.map((entry, index) => (
+                            <linearGradient id={`color-${index}`} key={index} x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stopColor={pieColors[index % pieColors.length]} stopOpacity={0.8} />
+                            <stop offset="100%" stopColor={pieColors[index % pieColors.length]} stopOpacity={0.5} />
+                            </linearGradient>
+                        ))}
+                        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#000" floodOpacity="0.2" />
+                        </filter>
+                        </defs>
+
                         <Pie
                         data={pieData}
                         dataKey="value"
@@ -450,24 +463,58 @@ function Portfolio() {
                         cx="50%"
                         cy="50%"
                         outerRadius={100}
-                        label={({ value }) => value.toFixed(2)}
+                        label={false}
+                        stroke="none"
+                        fillOpacity={0.9}
+                        filter="url(#shadow)"
+                        activeShape={({ cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload }) => {
+                            const RADIAN = Math.PI / 180;
+                            const sin = Math.sin(-RADIAN * midAngle);
+                            const cos = Math.cos(-RADIAN * midAngle);
+                            const sx = cx + (outerRadius + 10) * cos;
+                            const sy = cy + (outerRadius + 10) * sin;
+                            const mx = cx + (outerRadius + 30) * cos;
+                            const my = cy + (outerRadius + 30) * sin;
+                            return (
+                            <g>
+                                <Sector
+                                cx={cx}
+                                cy={cy}
+                                innerRadius={innerRadius}
+                                outerRadius={outerRadius + 6}
+                                startAngle={startAngle}
+                                endAngle={endAngle}
+                                fill={fill}
+                                />
+                            </g>
+                            );
+                        }}
                         >
                         {pieData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
+                            <Cell key={`cell-${index}`} fill={`url(#color-${index})`} />
                         ))}
                         </Pie>
 
                         <Tooltip
-                        formatter={(value, name) => {
-                            const total = pieData.reduce((sum, item) => sum + item.value, 0);
-                            const percent = ((value / total) * 100).toFixed(2);
-                            return [`$${value.toFixed(2)}`, `${name} (${percent}%)`];
-                        }}
+                            contentStyle={{
+                                backgroundColor: "#ffffff",
+                                borderRadius: "8px",
+                                boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                                border: "1px solid #e0e0e0",
+                            }}
+                            itemStyle={{
+                                color: "#333",
+                                fontWeight: 500,
+                            }}
+                            formatter={(value, name) => {
+                                const total = pieData.reduce((sum, item) => sum + item.value, 0);
+                                const percent = ((value / total) * 100).toFixed(2);
+                                return [`$${value.toFixed(2)}`, `${name} (${percent}%)`];
+                            }}
                         />
-
-                        <Legend />
+                        <Legend verticalAlign="bottom" height={36} />
                     </PieChart>
-                </ResponsiveContainer>
+                    </ResponsiveContainer>
             </div>
 
             {snapshots.length > 1 && (
@@ -766,6 +813,18 @@ function Portfolio() {
                                             <div className="account-chart">
                                                 <ResponsiveContainer width="100%" height={250}>
                                                     <PieChart>
+                                                        <defs>
+                                                        {getPieDataForAccount(account._id).map((entry, index) => (
+                                                            <linearGradient id={`account-color-${account._id}-${index}`} key={index} x1="0" y1="0" x2="1" y2="1">
+                                                            <stop offset="0%" stopColor={pieColors[index % pieColors.length]} stopOpacity={0.8} />
+                                                            <stop offset="100%" stopColor={pieColors[index % pieColors.length]} stopOpacity={0.5} />
+                                                            </linearGradient>
+                                                        ))}
+                                                        <filter id={`shadow-${account._id}`} x="-20%" y="-20%" width="140%" height="140%">
+                                                            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#000" floodOpacity="0.2" />
+                                                        </filter>
+                                                        </defs>
+
                                                         <Pie
                                                         data={getPieDataForAccount(account._id)}
                                                         dataKey="value"
@@ -773,23 +832,58 @@ function Portfolio() {
                                                         cx="50%"
                                                         cy="50%"
                                                         outerRadius={80}
-                                                        label={({ value }) => value.toFixed(2)}
+                                                        label={false}
+                                                        stroke="none"
+                                                        fillOpacity={0.9}
+                                                        filter={`url(#shadow-${account._id})`}
+                                                        activeShape={({ cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill }) => {
+                                                            const RADIAN = Math.PI / 180;
+                                                            const sin = Math.sin(-RADIAN * midAngle);
+                                                            const cos = Math.cos(-RADIAN * midAngle);
+                                                            const sx = cx + (outerRadius + 10) * cos;
+                                                            const sy = cy + (outerRadius + 10) * sin;
+                                                            const mx = cx + (outerRadius + 30) * cos;
+                                                            const my = cy + (outerRadius + 30) * sin;
+                                                            return (
+                                                            <g>
+                                                                <Sector
+                                                                cx={cx}
+                                                                cy={cy}
+                                                                innerRadius={innerRadius}
+                                                                outerRadius={outerRadius + 6}
+                                                                startAngle={startAngle}
+                                                                endAngle={endAngle}
+                                                                fill={fill}
+                                                                />
+                                                            </g>
+                                                            );
+                                                        }}
                                                         >
                                                         {getPieDataForAccount(account._id).map((entry, index) => (
-                                                            <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
+                                                            <Cell key={`cell-${index}`} fill={`url(#account-color-${account._id}-${index})`} />
                                                         ))}
                                                         </Pie>
 
                                                         <Tooltip
+                                                        contentStyle={{
+                                                            backgroundColor: "#ffffff",
+                                                            borderRadius: "8px",
+                                                            boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                                                            border: "1px solid #e0e0e0",
+                                                        }}
+                                                        itemStyle={{
+                                                            color: "#333",
+                                                            fontWeight: 500,
+                                                        }}
                                                         formatter={(value, name) => {
-                                                            const accountPieData = getPieDataForAccount(account._id);
-                                                            const total = accountPieData.reduce((sum, item) => sum + item.value, 0);
+                                                            const data = getPieDataForAccount(account._id);
+                                                            const total = data.reduce((sum, item) => sum + item.value, 0);
                                                             const percent = ((value / total) * 100).toFixed(2);
                                                             return [`$${value.toFixed(2)}`, `${name} (${percent}%)`];
                                                         }}
                                                         />
 
-                                                        <Legend />
+                                                        <Legend verticalAlign="bottom" height={36} />
                                                     </PieChart>
                                                 </ResponsiveContainer>
                                             </div>
