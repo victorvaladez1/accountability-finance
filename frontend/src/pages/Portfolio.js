@@ -378,6 +378,20 @@ function Portfolio() {
                         domain={["auto", "auto"]}
                     />
                     <Tooltip
+                        contentStyle={{
+                            backgroundColor: "#ffffff",
+                            borderRadius: "8px",
+                            boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                            border: "1px solid #e0e0e0",
+                        }}
+                        itemStyle={{
+                            color: "#333",
+                            fontWeight: 500,
+                        }}
+                        labelStyle={{
+                            fontWeight: "bold",
+                            color: "#555",
+                        }}
                         labelFormatter={(str) => `Date: ${new Date(str).toLocaleDateString()}`}
                         formatter={(val) => [`$${val.toLocaleString()}`, "Account Value"]}
                     />
@@ -589,8 +603,22 @@ function Portfolio() {
                                     domain={["auto", "auto"]}
                                 />
                                 <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: "#ffffff",
+                                        borderRadius: "8px",
+                                        boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                                        border: "1px solid #e0e0e0",
+                                    }}
+                                    itemStyle={{
+                                        color: "#333",
+                                        fontWeight: 500,
+                                    }}
+                                    labelStyle={{
+                                        fontWeight: "bold",
+                                        color: "#555",
+                                    }}
                                     labelFormatter={(str) => `Date: ${new Date(str).toLocaleDateString()}`}
-                                    formatter={(value) => [`$${value.toLocaleString()}`, "Portfolio Value"]}
+                                    formatter={(val) => [`$${val.toLocaleString()}`, "Portfolio Value"]}
                                 />
                                 <Line
                                     type="monotone"
