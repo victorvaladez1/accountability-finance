@@ -43,6 +43,18 @@ function Portfolio() {
 
     const [accountSnapshots, setAccountSnapshots] = useState({});
 
+    const [openAccountId, setOpenAccountId] = useState(null);
+    const [holdingPage, setHoldingPage] = useState({});
+    const [holdingsPerPage, setHoldingsPerPage] = useState({});
+
+    const paginatedHoldings = (accountId) => {
+        const allHoldings = holdingsMap[accountId] || [];
+        const page = holdingPage[accountId] || 1;
+        const perPage = holdingsPerPage[accountId] || 5;
+        const start = (page - 1) * perPage;
+        return allHoldings.slice(start, start + perPage);
+    };
+      
     const saveAllSnapshots = async () => {
         try {
           // Save overall portfolio snapshot
@@ -922,75 +934,150 @@ function Portfolio() {
                                     
                                 {renderMiniChartForAccount(account)}
 
-                                {holdings.map((holding) => {
-                                    const livePrice = livePrices[holding.ticker];
-                                    const gainLoss = livePrice ? (livePrice - holding.averageCost) * holding.shares : 0;
+                                <button
+                                    className="toggle-holdings-btn"
+                                    onClick={() =>
+                                        setOpenAccountId(openAccountId === account._id ? null : account._id)
+                                    }
+                                    >
+                                    {openAccountId === account._id ? "Hide Holdings ▲" : "View Holdings ▼"}
+                                    </button>
 
-                                    return (
-                                        <div className="holding-card" key={holding._id}>
+                                    {openAccountId === account._id && (
+                                    <>
+                                        {paginatedHoldings(account._id).map((holding) => {
+                                        const livePrice = livePrices[holding.ticker];
+                                        const gainLoss = livePrice ? (livePrice - holding.averageCost) * holding.shares : 0;
+
+                                        return (
+                                            <div className="holding-card" key={holding._id}>
                                             <div className="holding-header">
                                                 <span className="ticker">{holding.ticker}</span>
                                                 {livePrice && (
-                                                    <span className={`gain-loss ${gainLoss >= 0 ? "gain" : "loss"}`}>
-                                                        {gainLoss >= 0 ? "+" : "-"}${Math.abs(gainLoss).toFixed(2)}
-                                                    </span>
+                                                <span className={`gain-loss ${gainLoss >= 0 ? "gain" : "loss"}`}>
+                                                    {gainLoss >= 0 ? "+" : "-"}${Math.abs(gainLoss).toFixed(2)}
+                                                </span>
                                                 )}
                                             </div>
                                             <div className="holding-details">
                                                 <span>{holding.shares} shares</span>
                                                 <span>Avg: ${holding.averageCost.toFixed(2)}</span>
                                                 <span>
-                                                    {livePrice
-                                                        ? `Live: $${livePrice.toFixed(2)}`
-                                                        : "Fetching..."}
+                                                {livePrice ? `Live: $${livePrice.toFixed(2)}` : "Fetching..."}
                                                 </span>
                                             </div>
-
                                             <div className="holding-actions">
                                                 <button
-                                                    className="edit-holding-btn"
-                                                    onClick={() => {
+                                                className="edit-holding-btn"
+                                                onClick={() => {
                                                     setEditHolding(holding);
                                                     setEditShares(holding.shares.toString());
                                                     setEditAvgCost(holding.averageCost.toString());
-                                                    }}
+                                                }}
                                                 >
-                                                    ✏️ Edit
+                                                ✏️ Edit
                                                 </button>
 
                                                 <button
-                                                    className="delete-holding-btn"
-                                                    onClick={async () => {
+                                                className="delete-holding-btn"
+                                                onClick={async () => {
                                                     const confirmDelete = window.confirm(`Delete ${holding.ticker}?`);
                                                     if (!confirmDelete) return;
 
                                                     try {
-                                                        const res = await fetch(`/api/holdings/${holding._id}`, {
+                                                    const res = await fetch(`/api/holdings/${holding._id}`, {
                                                         method: "DELETE",
                                                         headers: {
-                                                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                                        Authorization: `Bearer ${localStorage.getItem("token")}`,
                                                         },
-                                                        });
+                                                    });
 
-                                                        if (res.ok) {
+                                                    if (res.ok) {
                                                         window.location.reload();
-                                                        } else {
+                                                    } else {
                                                         const err = await res.json();
                                                         console.error("Delete failed:", err.message);
                                                         alert("Failed to delete holding.");
-                                                        }
-                                                    } catch (err) {
-                                                        console.error("Delete error:", err);
-                                                        alert("Error deleting holding.");
                                                     }
-                                                    }}
+                                                    } catch (err) {
+                                                    console.error("Delete error:", err);
+                                                    alert("Error deleting holding.");
+                                                    }
+                                                }}
                                                 >
-                                                    🗑️ Delete
+                                                🗑️ Delete
                                                 </button>
                                             </div>
-                                        </div>
-                                    );
-                                })}
+                                            </div>
+                                        );
+                                        })}
+                                        
+                                        {holdings.length > 0 && (
+                                            <div className="holding-pagination">
+                                                <div className="rows-per-page">
+                                                <label htmlFor={`rows-${account._id}`}>Rows per page:</label>
+                                                <select
+                                                    id={`rows-${account._id}`}
+                                                    value={holdingsPerPage[account._id] || 5}
+                                                    onChange={(e) =>
+                                                    setHoldingsPerPage((prev) => ({
+                                                        ...prev,
+                                                        [account._id]: parseInt(e.target.value),
+                                                    }))
+                                                    }
+                                                >
+                                                    <option value={5}>5</option>
+                                                    <option value={10}>10</option>
+                                                    <option value={20}>20</option>
+                                                </select>
+                                                </div>
+
+                                                <div className="pagination-buttons">
+                                                <button
+                                                    className={`pagination-btn ${
+                                                    (holdingPage[account._id] || 1) === 1 ? "disabled" : ""
+                                                    }`}
+                                                    disabled={(holdingPage[account._id] || 1) === 1}
+                                                    onClick={() =>
+                                                    setHoldingPage((prev) => ({
+                                                        ...prev,
+                                                        [account._id]: (prev[account._id] || 1) - 1,
+                                                    }))
+                                                    }
+                                                >
+                                                    ◀ Prev
+                                                </button>
+
+                                                <span>
+                                                    Page {holdingPage[account._id] || 1} of{" "}
+                                                    {Math.ceil(holdings.length / (holdingsPerPage[account._id] || 5))}
+                                                </span>
+
+                                                <button
+                                                    className={`pagination-btn ${
+                                                    (holdingPage[account._id] || 1) * (holdingsPerPage[account._id] || 5) >=
+                                                    holdings.length
+                                                        ? "disabled"
+                                                        : ""
+                                                    }`}
+                                                    disabled={
+                                                    (holdingPage[account._id] || 1) * (holdingsPerPage[account._id] || 5) >=
+                                                    holdings.length
+                                                    }
+                                                    onClick={() =>
+                                                    setHoldingPage((prev) => ({
+                                                        ...prev,
+                                                        [account._id]: (prev[account._id] || 1) + 1,
+                                                    }))
+                                                    }
+                                                >
+                                                    Next ▶
+                                                </button>
+                                                </div>
+                                            </div>
+                                            )}
+                                    </>
+                                    )}
                             </div>
 
                         </div>
