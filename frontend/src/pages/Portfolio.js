@@ -443,7 +443,7 @@ function Portfolio() {
                 <h4>📊 Asset Allocation</h4>
                 <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
-                    <Pie
+                        <Pie
                         data={pieData}
                         dataKey="value"
                         nameKey="name"
@@ -451,13 +451,21 @@ function Portfolio() {
                         cy="50%"
                         outerRadius={100}
                         label={({ value }) => value.toFixed(2)}
-                    >
+                        >
                         {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
+                            <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
                         ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
+                        </Pie>
+
+                        <Tooltip
+                        formatter={(value, name) => {
+                            const total = pieData.reduce((sum, item) => sum + item.value, 0);
+                            const percent = ((value / total) * 100).toFixed(2);
+                            return [`$${value.toFixed(2)}`, `${name} (${percent}%)`];
+                        }}
+                        />
+
+                        <Legend />
                     </PieChart>
                 </ResponsiveContainer>
             </div>
@@ -756,25 +764,34 @@ function Portfolio() {
 
                                 {getPieDataForAccount(account._id).length > 0 && (
                                             <div className="account-chart">
-                                            <ResponsiveContainer width="100%" height={250}>
-                                                <PieChart>
-                                                <Pie
-                                                    data={getPieDataForAccount(account._id)}
-                                                    dataKey="value"
-                                                    nameKey="name"
-                                                    cx="50%"
-                                                    cy="50%"
-                                                    outerRadius={80}
-                                                    label={({ value }) => value.toFixed(2)}
-                                                >
-                                                    {getPieDataForAccount(account._id).map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
-                                                    ))}
-                                                </Pie>
-                                                <Tooltip />
-                                                <Legend />
-                                                </PieChart>
-                                            </ResponsiveContainer>
+                                                <ResponsiveContainer width="100%" height={250}>
+                                                    <PieChart>
+                                                        <Pie
+                                                        data={getPieDataForAccount(account._id)}
+                                                        dataKey="value"
+                                                        nameKey="name"
+                                                        cx="50%"
+                                                        cy="50%"
+                                                        outerRadius={80}
+                                                        label={({ value }) => value.toFixed(2)}
+                                                        >
+                                                        {getPieDataForAccount(account._id).map((entry, index) => (
+                                                            <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
+                                                        ))}
+                                                        </Pie>
+
+                                                        <Tooltip
+                                                        formatter={(value, name) => {
+                                                            const accountPieData = getPieDataForAccount(account._id);
+                                                            const total = accountPieData.reduce((sum, item) => sum + item.value, 0);
+                                                            const percent = ((value / total) * 100).toFixed(2);
+                                                            return [`$${value.toFixed(2)}`, `${name} (${percent}%)`];
+                                                        }}
+                                                        />
+
+                                                        <Legend />
+                                                    </PieChart>
+                                                </ResponsiveContainer>
                                             </div>
                                         )}
 
