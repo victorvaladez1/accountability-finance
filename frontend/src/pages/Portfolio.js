@@ -466,25 +466,38 @@ function Portfolio() {
             <div className="chart-card">
                 <h4>📈 Portfolio Performance</h4>
 
-                <div className="chart-filters">
-                <button
-                    className={chartFilter === "7d" ? "active" : ""}
-                    onClick={() => setChartFilter("7d")}
-                >
-                    Last 7 Days
-                </button>
-                <button
-                    className={chartFilter === "30d" ? "active" : ""}
-                    onClick={() => setChartFilter("30d")}
-                >
-                    Last 30 Days
-                </button>
-                <button
-                    className={chartFilter === "all" ? "active" : ""}
-                    onClick={() => setChartFilter("all")}
-                >
-                    All Time
-                </button>
+                <div className="chart-controls">
+                    <div className="chart-filters">
+                        <button className={chartFilter === "7d" ? "active" : ""} onClick={() => setChartFilter("7d")}>Last 7 Days</button>
+                        <button className={chartFilter === "30d" ? "active" : ""} onClick={() => setChartFilter("30d")}>Last 30 Days</button>
+                        <button className={chartFilter === "all" ? "active" : ""} onClick={() => setChartFilter("all")}>All Time</button>
+                    </div>
+
+                    <div className="snapshot-buttons">
+                        <button onClick={async () => {
+                        const res = await fetch("/api/snapshots", {
+                            method: "POST",
+                            headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                            },
+                            body: JSON.stringify({ value: totalPortfolioValue }),
+                        });
+
+                        if (res.ok) {
+                            alert("✅ Snapshot saved");
+                            window.location.reload();
+                        } else {
+                            alert("❌ Failed to save snapshot");
+                        }
+                        }}>
+                        📸 Save Snapshot Now
+                        </button>
+
+                        <button onClick={saveAllSnapshots}>
+                        📸 Save All Snapshots
+                        </button>
+                    </div>
                 </div>
 
                 {getFilteredSnapshots().length > 1 && (() => {
@@ -537,32 +550,6 @@ function Portfolio() {
                         </div>
                     );
                 })()}
-                
-                <button
-                    onClick={async () => {
-                        const res = await fetch("/api/snapshots", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${localStorage.getItem("token")}`,
-                        },
-                        body: JSON.stringify({ value: totalPortfolioValue }),
-                        });
-
-                        if (res.ok) {
-                        alert("✅ Snapshot saved");
-                        window.location.reload();
-                        } else {
-                        alert("❌ Failed to save snapshot");
-                        }
-                    }}
-                    >
-                    📸 Save Snapshot Now
-                </button>
-
-                <button onClick={saveAllSnapshots}>
-                    📸 Save All Snapshots
-                </button>
             </div>
             )}
 
