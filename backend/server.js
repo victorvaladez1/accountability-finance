@@ -13,6 +13,7 @@ import chatRoutes from "./routes/chat.js";
 import holdingsRoutes from "./routes/holdings.js";
 import marketRoutes from "./routes/market.js";
 import snapshotRoutes from "./routes/snapshots.js";
+import accountSnapshotsRoute from "./routes/accountSnapshots.js";
 
 
 const app = express();
@@ -30,6 +31,7 @@ app.use("/api/chat", chatRoutes);
 app.use("/api/holdings", holdingsRoutes);
 app.use("/api/market", marketRoutes);
 app.use("/api/snapshots", snapshotRoutes);
+app.use("/api/account-snapshots", accountSnapshotsRoute);
 
 // Root test route
 app.get("/", (req, res) => {

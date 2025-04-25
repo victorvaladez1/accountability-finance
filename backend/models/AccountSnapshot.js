@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const AccountSnapshotSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
@@ -7,4 +7,6 @@ const AccountSnapshotSchema = new mongoose.Schema({
   timestamp: { type: Date, default: Date.now },
 });
 
-export default mongoose.model("AccountSnapshot", AccountSnapshotSchema);
+const AccountSnapshot = mongoose.model("AccountSnapshot", AccountSnapshotSchema);
+
+export default AccountSnapshot;

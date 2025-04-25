@@ -40,6 +40,57 @@ function Portfolio() {
 
     const [chartFilter, setChartFilter] = useState("all");
 
+    const [accountSnapshots, setAccountSnapshots] = useState({});
+
+    const saveAllSnapshots = async () => {
+        try {
+          // Save overall portfolio snapshot
+          const res = await fetch("/api/snapshots", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ value: totalPortfolioValue }),
+          });
+      
+          if (!res.ok) throw new Error("Failed to save portfolio snapshot");
+      
+          // Save snapshots for each individual account
+          for (const account of accounts) {
+            const holdings = holdingsMap[account._id] || [];
+            const value = holdings.reduce((acc, h) => {
+              const livePrice = livePrices[h.ticker];
+              return acc + (livePrice ? h.shares * livePrice : 0);
+            }, 0);
+      
+            const accountRes = await fetch("/api/account-snapshots", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              body: JSON.stringify({
+                accountId: account._id,
+                value,
+              }),
+            });
+      
+            if (!accountRes.ok) {
+              console.error(`❌ Failed to save snapshot for ${account.name}`);
+            } else {
+              console.log(`✅ Snapshot saved for ${account.name}`);
+            }
+          }
+      
+          alert("📸 All snapshots saved!");
+        } catch (err) {
+          console.error("Snapshot save error:", err);
+          alert("❌ Failed to save one or more snapshots.");
+        }
+      };
+
+
     const getFilteredSnapshots = () => {
         if (chartFilter === "all") return snapshots;
       
@@ -49,6 +100,17 @@ function Portfolio() {
       
         return snapshots.filter((snap) => new Date(snap.timestamp) >= cutoff);
       };
+
+    const getFilteredAccountSnapshots = (accountId) => {
+        const snaps = accountSnapshots[accountId] || [];
+        if (chartFilter === "all") return snaps;
+      
+        const days = chartFilter === "7d" ? 7 : 30;
+        const cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - days);
+        return snaps.filter((snap) => new Date(snap.timestamp) >= cutoff);
+      };
+      
 
     useEffect(() => {
         const fetchAccounts = async () => {
@@ -62,6 +124,8 @@ function Portfolio() {
                 const data = await res.json();
                 const investmentAccounts = data.filter((acc) => acc.type === "Investment");
                 setAccounts(investmentAccounts);
+
+                console.log("🆔 All Accounts:", investmentAccounts);
 
                 const holdingsData = {};
                 for (const acc of investmentAccounts) {
@@ -100,7 +164,7 @@ function Portfolio() {
             }
         };
         fetchAccounts();
-    }, []);
+    }, [livePrices]);
 
     useEffect(() => {
         const fetchSnapshots = async () => {
@@ -119,6 +183,42 @@ function Portfolio() {
       
         fetchSnapshots();
       }, []);
+
+      useEffect(() => {
+        const fetchAccountSnapshots = async () => {
+            try {
+              const snapshotMap = {};
+          
+              for (const acc of accounts) {
+                const res = await fetch(`/api/account-snapshots/${acc._id}`, {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                  },
+                });
+          
+                if (!res.ok) throw new Error(`Failed to fetch snapshot for ${acc.name}`);
+                const data = await res.json();
+          
+                // ⬇️ Convert timestamp string to Date object or formatted string
+                const formattedData = data.map((snap) => ({
+                  ...snap,
+                  timestamp: new Date(snap.timestamp),
+                }));
+          
+                snapshotMap[acc._id] = formattedData;
+              }
+          
+              setAccountSnapshots(snapshotMap);
+            } catch (err) {
+              console.error("❌ Error fetching account snapshots:", err);
+            }
+          };
+          
+      
+        if (accounts.length > 0) {
+          fetchAccountSnapshots();
+        }
+      }, [accounts]);
 
     let totalPortfolioValue = 0;
     let totalPortfolioCost = 0;
@@ -218,6 +318,86 @@ function Portfolio() {
       };
 
       console.log("📈 Snapshots for performance chart:", snapshots);
+
+      const renderMiniChartForAccount = (account) => {
+        const snapshots = getFilteredAccountSnapshots(account._id);
+        if (!snapshots || snapshots.length < 2) return null;
+      
+        const first = snapshots[0].value;
+        const last = snapshots[snapshots.length - 1].value;
+        const isGain = last - first >= 0;
+        const miniLineColor = isGain ? "#4CAF50" : "#F44336";
+      
+        return (
+      
+            <div className="account-performance-wrapper">
+
+                <div className="account-performance-mini-chart">
+                            <div className="chart-filters">
+                            <button
+                                className={chartFilter === "7d" ? "active" : ""}
+                                onClick={() => setChartFilter("7d")}
+                            >
+                                Last 7 Days
+                            </button>
+                            <button
+                                className={chartFilter === "30d" ? "active" : ""}
+                                onClick={() => setChartFilter("30d")}
+                            >
+                                Last 30 Days
+                            </button>
+                            <button
+                                className={chartFilter === "all" ? "active" : ""}
+                                onClick={() => setChartFilter("all")}
+                            >
+                                All Time
+                            </button>
+                    </div>
+
+                <div className={`performance-header ${isGain ? "gain-bg" : "loss-bg"}`}>
+                    <span className="performance-icon">📈</span>
+                    <strong>{isGain ? "Gain" : "Loss"}:</strong> ${Math.abs(last - first).toLocaleString()}
+                </div>
+
+                <ResponsiveContainer width="100%" height={300}>
+                    <LineChart data={snapshots}>
+                    <defs>
+                        <linearGradient id={`miniGradient-${account._id}`} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor={miniLineColor} stopOpacity={0.8} />
+                        <stop offset="100%" stopColor={miniLineColor} stopOpacity={0.2} />
+                        </linearGradient>
+                    </defs>
+
+                    <XAxis
+                        dataKey="timestamp"
+                        tickFormatter={(str) => new Date(str).toLocaleDateString()}
+                    />
+                    <YAxis
+                        tickFormatter={(val) => `$${val.toLocaleString()}`}
+                        domain={["auto", "auto"]}
+                    />
+                    <Tooltip
+                        labelFormatter={(str) => `Date: ${new Date(str).toLocaleDateString()}`}
+                        formatter={(val) => [`$${val.toLocaleString()}`, "Account Value"]}
+                    />
+                    <Line
+                        type="monotone"
+                        dataKey="value"
+                        stroke={miniLineColor}
+                        strokeWidth={3}
+                        dot={{ r: 4 }}
+                        activeDot={{ r: 6 }}
+                    />
+                    </LineChart>
+                </ResponsiveContainer>
+            </div>
+            
+          </div>
+        );
+      };
+      
+      
+      
 
     return (
         <div className="page-container">
@@ -355,6 +535,9 @@ function Portfolio() {
                     📸 Save Snapshot Now
                 </button>
 
+                <button onClick={saveAllSnapshots}>
+                    📸 Save All Snapshots
+                </button>
             </div>
             )}
 
@@ -575,6 +758,9 @@ function Portfolio() {
                                             </ResponsiveContainer>
                                             </div>
                                         )}
+
+                                    
+                                {renderMiniChartForAccount(account)}
 
                                 {holdings.map((holding) => {
                                     const livePrice = livePrices[holding.ticker];
