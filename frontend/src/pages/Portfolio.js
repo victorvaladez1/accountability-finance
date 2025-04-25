@@ -452,6 +452,11 @@ function Portfolio() {
           alert("Error deleting account.");
         }
       };
+
+      const costBasis = (accountId) => {
+        const holdings = holdingsMap[accountId] || [];
+        return holdings.reduce((sum, h) => sum + h.shares * h.averageCost, 0);
+    };
       
     return (
         <div className="page-container">
@@ -841,11 +846,30 @@ function Portfolio() {
                                 <button
                                     className="delete-account-btn"
                                     onClick={() => deleteAccount(account._id)}
-                                    >
+                                >
                                     🗑️ Delete Account
                                 </button>
                             </div>
-                            
+
+                            <div className="portfolio-summary">
+                                <h4>📊 Account Summary</h4>
+                                <p>
+                                    <strong>Total Value:</strong> ${totalValue.toFixed(2)}
+                                </p>
+                                <p>
+                                    <strong>Total Gain/Loss:</strong>{" "}
+                                    <span
+                                        style={{
+                                            color: totalValue - costBasis(account._id) >= 0 ? "green" : "red",
+                                            fontWeight: 600,
+                                        }}
+                                    >
+                                        {totalValue - costBasis(account._id) >= 0 ? "+" : "-"}$
+                                        {Math.abs(totalValue - costBasis(account._id)).toFixed(2)}
+                                    </span>
+                                </p>
+                            </div>
+                        
                             <div>
                                 <button onClick={() => setSelectedAccountId(account._id)} className="add-holding-btn">
                                     ➕ Add Holding
