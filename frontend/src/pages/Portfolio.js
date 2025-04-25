@@ -396,9 +396,34 @@ function Portfolio() {
         );
       };
       
+      const deleteAccount = async (accountId) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this investment account?");
+        if (!confirmDelete) return;
       
+        try {
+          const res = await fetch(`/api/accounts/${accountId}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
       
-
+          if (res.ok) {
+            setAccounts((prev) => prev.filter((acc) => acc._id !== accountId));
+            const newHoldingsMap = { ...holdingsMap };
+            delete newHoldingsMap[accountId];
+            setHoldingsMap(newHoldingsMap);
+          } else {
+            const err = await res.json();
+            console.error("Delete failed:", err.message);
+            alert("Failed to delete account.");
+          }
+        } catch (err) {
+          console.error("Delete error:", err);
+          alert("Error deleting account.");
+        }
+      };
+      
     return (
         <div className="page-container">
             <Navbar />
@@ -727,8 +752,15 @@ function Portfolio() {
 
                     return (
                         <div key={account._id} className="account-card">
-                            <h3>{account.name}</h3>
-                            <p><strong>Total Value:</strong> ${totalValue.toFixed(2)}</p>
+                            <div className="account-card-header">
+                                <h3>{account.name}</h3>
+                                <button
+                                    className="delete-account-btn"
+                                    onClick={() => deleteAccount(account._id)}
+                                    >
+                                    🗑️ Delete Account
+                                </button>
+                            </div>
                             
                             <div>
                                 <button onClick={() => setSelectedAccountId(account._id)} className="add-holding-btn">

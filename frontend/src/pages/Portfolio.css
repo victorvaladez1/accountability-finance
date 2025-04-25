@@ -343,3 +343,22 @@
 .performance-header.loss-bg {
   background-color: #F44336;
 }
+
+.delete-account-btn {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  float: right;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.delete-account-btn:hover {
+  background-color: #e04343;
+  opacity: 0.9;
+  cursor: pointer;
+}
+
