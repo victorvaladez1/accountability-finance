@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import InvestmentAccountCard from "../components/InvestmentAccountCard";
 import "./CommonLayout.css";
 import "./Portfolio.css";
 
@@ -316,8 +317,6 @@ function Portfolio() {
       
         return data;
       };
-
-      console.log("📈 Snapshots for performance chart:", snapshots);
 
       const renderMiniChartForAccount = (account) => {
         const snapshots = getFilteredAccountSnapshots(account._id);
@@ -715,128 +714,17 @@ function Portfolio() {
             </div>
             )}
 
-
-            {accounts.length === 0 ? (
-                <p>No investment accounts found</p>
-            ) : (
-                accounts.map((account) => {
-                    const holdings = holdingsMap[account._id] || [];
-                    const totalValue = holdings.reduce((acc, holding) => {
-                        return acc + holding.shares * holding.averageCost;
-                    }, 0);
-
-                    return (
-                        <div key={account._id} className="account-card">
-                            <h3>{account.name}</h3>
-                            <p><strong>Total Value:</strong> ${totalValue.toFixed(2)}</p>
-                            
-                            <div>
-                                <button onClick={() => setSelectedAccountId(account._id)} className="add-holding-btn">
-                                    ➕ Add Holding
-                                </button>
-
-                                {getPieDataForAccount(account._id).length > 0 && (
-                                            <div className="account-chart">
-                                            <ResponsiveContainer width="100%" height={250}>
-                                                <PieChart>
-                                                <Pie
-                                                    data={getPieDataForAccount(account._id)}
-                                                    dataKey="value"
-                                                    nameKey="name"
-                                                    cx="50%"
-                                                    cy="50%"
-                                                    outerRadius={80}
-                                                    label
-                                                >
-                                                    {getPieDataForAccount(account._id).map((entry, index) => (
-                                                    <Cell key={`cell-${index}`} fill={pieColors[index % pieColors.length]} />
-                                                    ))}
-                                                </Pie>
-                                                <Tooltip />
-                                                <Legend />
-                                                </PieChart>
-                                            </ResponsiveContainer>
-                                            </div>
-                                        )}
-
-                                    
-                                {renderMiniChartForAccount(account)}
-
-                                {holdings.map((holding) => {
-                                    const livePrice = livePrices[holding.ticker];
-                                    const gainLoss = livePrice ? (livePrice - holding.averageCost) * holding.shares : 0;
-
-                                    return (
-                                        <div className="holding-card" key={holding._id}>
-                                            <div className="holding-header">
-                                                <span className="ticker">{holding.ticker}</span>
-                                                {livePrice && (
-                                                    <span className={`gain-loss ${gainLoss >= 0 ? "gain" : "loss"}`}>
-                                                        {gainLoss >= 0 ? "+" : "-"}${Math.abs(gainLoss).toFixed(2)}
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <div className="holding-details">
-                                                <span>{holding.shares} shares</span>
-                                                <span>Avg: ${holding.averageCost.toFixed(2)}</span>
-                                                <span>
-                                                    {livePrice
-                                                        ? `Live: $${livePrice.toFixed(2)}`
-                                                        : "Fetching..."}
-                                                </span>
-                                            </div>
-
-                                            <div className="holding-actions">
-                                                <button
-                                                    className="edit-holding-btn"
-                                                    onClick={() => {
-                                                    setEditHolding(holding);
-                                                    setEditShares(holding.shares.toString());
-                                                    setEditAvgCost(holding.averageCost.toString());
-                                                    }}
-                                                >
-                                                    ✏️ Edit
-                                                </button>
-
-                                                <button
-                                                    className="delete-holding-btn"
-                                                    onClick={async () => {
-                                                    const confirmDelete = window.confirm(`Delete ${holding.ticker}?`);
-                                                    if (!confirmDelete) return;
-
-                                                    try {
-                                                        const res = await fetch(`/api/holdings/${holding._id}`, {
-                                                        method: "DELETE",
-                                                        headers: {
-                                                            Authorization: `Bearer ${localStorage.getItem("token")}`,
-                                                        },
-                                                        });
-
-                                                        if (res.ok) {
-                                                        window.location.reload();
-                                                        } else {
-                                                        const err = await res.json();
-                                                        console.error("Delete failed:", err.message);
-                                                        alert("Failed to delete holding.");
-                                                        }
-                                                    } catch (err) {
-                                                        console.error("Delete error:", err);
-                                                        alert("Error deleting holding.");
-                                                    }
-                                                    }}
-                                                >
-                                                    🗑️ Delete
-                                                </button>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-
-                        </div>
-                    );
-                })
-            )}
+            {/* {accounts.map((account) => (
+                <InvestmentAccountCard
+                    key={account._id}
+                    account={account}
+                    holdings={holdingsMap[account._id] || []}
+                    livePrices={livePrices}
+                    chartFilter={chartFilter}
+                    setChartFilter={setChartFilter}
+                    snapshots={accountSnapshots[account._id] || []}
+                />
+            ))} */}
         </div>
     );
 }
