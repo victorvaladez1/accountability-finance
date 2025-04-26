@@ -5,7 +5,7 @@ import CarAffordabilityCalculator from "../components/CarAffordabilityCalculator
 import LoanPaymentCalculator from "../components/LoanPaymentCalculator";
 import RothIRACalculator from "../components/RothIRACalculator";
 import MortgagePaymentCalculator from "../components/MortgagePaymentCalculator";
-
+import BudgetCalculator from "../components/BudgetCalculator";
 import "./Planning.css";
 import "./CommonLayout.css";
 
@@ -15,6 +15,7 @@ function Planning() {
     const [showLoanCalculator, setShowLoanCalculator] = useState(false);
     const [showRothCalculator, setShowRothCalculator] = useState(false);
     const [showMortgageCalculator, setShowMortgageCalculator] = useState(false);
+    const [showBudgetCalculator, setShowBudgetCalculator] = useState(false);
 
     return (
         <div className="planning-container">
@@ -77,6 +78,24 @@ function Planning() {
                             <CarAffordabilityCalculator />
                         </div>
                     )}
+            </div>
+
+            <div className="calculator-card">
+                <h3>📚 Budget Calculator (50/30/20 Rule)</h3>
+                <p>
+                    Split your monthly after-tax income using the popular 50/30/20 rule: 
+                    50% to needs, 30% to wants, and 20% to savings or debt payments.
+                </p>
+
+                <button onClick={() => setShowBudgetCalculator(!showBudgetCalculator)}>
+                    {showBudgetCalculator ? "Hide Calculator" : "Show Calculator"}
+                </button>
+
+                {showBudgetCalculator && (
+                    <div className="calculator-toggle-box">
+                    <BudgetCalculator />
+                    </div>
+                )}
             </div>
 
             <div className="calculator-card">
