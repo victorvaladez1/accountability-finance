@@ -11,6 +11,12 @@ function ChatCoach() {
 
     const bottomRef = useRef(null);
 
+    const suggestedPrompts = [
+        "How do I start budgeting?",
+        "What's a Roth IRA?",
+        "How much house can I afford?"
+      ];
+
     useEffect(() => {
         const fetchHistory = async () => {
             try {
@@ -96,6 +102,48 @@ function ChatCoach() {
         }
     };
 
+    const sendPrompt = async (prompt) => {
+        const now = new Date().toISOString();
+    
+        const userMessage = { role: "user", content: prompt, createdAt: now };
+        setChatLog((prev) => [...prev, userMessage]);
+        setInput("");
+        setLoading(true);
+    
+        try {
+            const token = localStorage.getItem("token");
+    
+            const res = await axios.post(
+                "/api/chat/ask",
+                { message: prompt },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+    
+            const assistantMessage = {
+                role: "assistant",
+                content: res.data.reply,
+                createdAt: new Date().toISOString(),
+            };
+            setChatLog((prev) => [...prev, assistantMessage]);
+        } catch (err) {
+            console.error("❌ Error from backend:", err);
+            setChatLog((prev) => [
+                ...prev,
+                {
+                    role: "assistant",
+                    content: "Error: Could not fetch response.",
+                    createdAt: new Date().toISOString(),
+                },
+            ]);
+        }
+    
+        setLoading(false);
+    };
+
     return (
         <div className="page-container">
             <Navbar />
@@ -130,6 +178,19 @@ function ChatCoach() {
                     )}
 
                     <div ref={bottomRef} />
+                </div>
+
+                <div className="suggested-prompts">
+                    {suggestedPrompts.map((prompt, idx) => (
+                        <button 
+                        key={idx} 
+                        className="prompt-btn" 
+                        onClick={() => sendPrompt(prompt)}
+                        disabled={loading}
+                        >
+                        {prompt}
+                        </button>
+                    ))}
                 </div>
 
                 <div className="chat-input">
