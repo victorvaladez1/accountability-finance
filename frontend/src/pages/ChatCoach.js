@@ -15,7 +15,7 @@ function ChatCoach() {
         "How do I start budgeting?",
         "What's a Roth IRA?",
         "How much house can I afford?"
-      ];
+    ];
 
     useEffect(() => {
         const fetchHistory = async () => {
@@ -104,15 +104,15 @@ function ChatCoach() {
 
     const sendPrompt = async (prompt) => {
         const now = new Date().toISOString();
-    
+
         const userMessage = { role: "user", content: prompt, createdAt: now };
         setChatLog((prev) => [...prev, userMessage]);
         setInput("");
         setLoading(true);
-    
+
         try {
             const token = localStorage.getItem("token");
-    
+
             const res = await axios.post(
                 "/api/chat/ask",
                 { message: prompt },
@@ -122,7 +122,7 @@ function ChatCoach() {
                     },
                 }
             );
-    
+
             const assistantMessage = {
                 role: "assistant",
                 content: res.data.reply,
@@ -140,8 +140,17 @@ function ChatCoach() {
                 },
             ]);
         }
-    
+
         setLoading(false);
+    };
+
+    const formatDate = (isoDateStr) => {
+        const date = new Date(isoDateStr);
+        return date.toLocaleDateString(undefined, {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        });
     };
 
     return (
@@ -152,24 +161,39 @@ function ChatCoach() {
 
             <div className="chat-box">
                 <div className="chat-log">
-
                     {chatLog.length === 0 && !loading && (
                         <div className="message assistant" style={{ opacity: 0.6 }}>
                             <em>Ask me anything about budgeting, saving, or finance to get started.</em>
                         </div>
                     )}
 
-                    {chatLog.map((msg, idx) => (
-                        <div key={idx} className={`message ${msg.role}`}>
-                            <strong>{msg.role === "user" ? "You" : "Coach"}:</strong>{" "}
-                            {msg.content}
-                            {msg.createdAt && (
-                                <span className="timestamp">
-                                    {new Date(msg.createdAt).toLocaleTimeString()}
-                                </span>
-                            )}
-                        </div>
-                    ))}
+                    {(() => {
+                        let lastDate = null;
+
+                        return chatLog.map((msg, idx) => {
+                            const msgDate = formatDate(msg.createdAt);
+                            const showDateSeparator = msgDate !== lastDate;
+                            lastDate = msgDate;
+
+                            return (
+                                <React.Fragment key={idx}>
+                                    {showDateSeparator && (
+                                        <div className="date-separator">
+                                            <span>{msgDate}</span>
+                                        </div>
+                                    )}
+                                    <div className={`message ${msg.role}`}>
+                                        <strong>{msg.role === "user" ? "You" : "Coach"}:</strong> {msg.content}
+                                        {msg.createdAt && (
+                                            <span className="timestamp">
+                                                {new Date(msg.createdAt).toLocaleTimeString()}
+                                            </span>
+                                        )}
+                                    </div>
+                                </React.Fragment>
+                            );
+                        });
+                    })()}
 
                     {loading && (
                         <div className="message assistant">
@@ -182,13 +206,13 @@ function ChatCoach() {
 
                 <div className="suggested-prompts">
                     {suggestedPrompts.map((prompt, idx) => (
-                        <button 
-                        key={idx} 
-                        className="prompt-btn" 
-                        onClick={() => sendPrompt(prompt)}
-                        disabled={loading}
+                        <button
+                            key={idx}
+                            className="prompt-btn"
+                            onClick={() => sendPrompt(prompt)}
+                            disabled={loading}
                         >
-                        {prompt}
+                            {prompt}
                         </button>
                     ))}
                 </div>
@@ -203,10 +227,11 @@ function ChatCoach() {
                     />
 
                     <button onClick={handleSend} disabled={!input.trim() || loading}>
-                            {loading ? "Sending..." : "Send"}
-                        </button>
-                        <button className="clear-btn-inline" onClick={handleClearHistory}>
-                            Clear
+                        {loading ? "Sending..." : "Send"}
+                    </button>
+
+                    <button className="clear-btn-inline" onClick={handleClearHistory}>
+                        Clear
                     </button>
                 </div>
             </div>

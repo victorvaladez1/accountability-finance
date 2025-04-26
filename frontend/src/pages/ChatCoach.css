@@ -158,3 +158,29 @@
     opacity: 0.6;
     cursor: not-allowed;
 }
+
+.date-separator {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #888;
+    margin: 1.2rem 0 0.5rem;
+    position: relative;
+}
+
+.date-separator span {
+    background-color: #fff;
+    padding: 0 12px;
+    z-index: 1;
+    position: relative;
+}
+
+.date-separator::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: #ddd;
+    z-index: 0;
+}
