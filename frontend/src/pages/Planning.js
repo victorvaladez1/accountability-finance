@@ -3,6 +3,8 @@ import Navbar from "../components/Navbar";
 import HomeAffordabilityCalculator from "../components/HomeAffordabilityCalculator";
 import CarAffordabilityCalculator from "../components/CarAffordabilityCalculator";
 import LoanPaymentCalculator from "../components/LoanPaymentCalculator";
+import RothIRACalculator from "../components/RothIRACalculator";
+
 import "./Planning.css";
 import "./CommonLayout.css";
 
@@ -10,9 +12,10 @@ function Planning() {
     const [showHomeCalculator, setShowHomeCalculator] = useState(false);
     const [showCarCalculator, setShowCarCalculator] = useState(false);
     const [showLoanCalculator, setShowLoanCalculator] = useState(false);
+    const [showRothCalculator, setShowRothCalculator] = useState(false);
 
     return (
-        <div className="page-container">
+        <div className="planning-container">
             <Navbar />
             <h2>Financial Planning Tools</h2>
             
@@ -74,10 +77,26 @@ function Planning() {
                     </div>
                 )}
             </div>
-                    
+
+            <div className="calculator-card">
+                <h3>🧮 Roth IRA Growth Calculator</h3>
+                <p>
+                    Estimate how your Roth IRA contributions could grow over time based on your annual contribution,
+                    expected return rate, and investment period. Plan your retirement savings effectively!
+                </p>
+
+                <button onClick={() => setShowRothCalculator(!showRothCalculator)}>
+                    {showRothCalculator ? "Hide Calculator" : "Show Calculator"}
+                </button>
+
+                {showRothCalculator && (
+                    <div className="calculator-toggle-box">
+                    <RothIRACalculator />
+                    </div>
+                )}
+            </div>        
         </div>
     );
-
 }
 
 export default Planning;
