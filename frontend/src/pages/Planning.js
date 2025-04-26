@@ -90,7 +90,7 @@ function Planning() {
                 <button onClick={() => setShowBudgetCalculator(!showBudgetCalculator)}>
                     {showBudgetCalculator ? "Hide Calculator" : "Show Calculator"}
                 </button>
-
+  
                 {showBudgetCalculator && (
                     <div className="calculator-toggle-box">
                     <BudgetCalculator />
