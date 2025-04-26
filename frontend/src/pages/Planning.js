@@ -4,6 +4,7 @@ import HomeAffordabilityCalculator from "../components/HomeAffordabilityCalculat
 import CarAffordabilityCalculator from "../components/CarAffordabilityCalculator";
 import LoanPaymentCalculator from "../components/LoanPaymentCalculator";
 import RothIRACalculator from "../components/RothIRACalculator";
+import MortgagePaymentCalculator from "../components/MortgagePaymentCalculator";
 
 import "./Planning.css";
 import "./CommonLayout.css";
@@ -13,6 +14,7 @@ function Planning() {
     const [showCarCalculator, setShowCarCalculator] = useState(false);
     const [showLoanCalculator, setShowLoanCalculator] = useState(false);
     const [showRothCalculator, setShowRothCalculator] = useState(false);
+    const [showMortgageCalculator, setShowMortgageCalculator] = useState(false);
 
     return (
         <div className="planning-container">
@@ -40,6 +42,23 @@ function Planning() {
                         </div>
                     )}
                 </div>
+            </div>
+
+            <div className="calculator-card">
+                <h3>🏡 Mortgage Payment Calculator</h3>
+                <p>
+                    Break down your estimated monthly mortgage payment, including principal & interest, taxes, and insurance.
+                </p>
+
+                <button onClick={() => setShowMortgageCalculator(!showMortgageCalculator)}>
+                    {showMortgageCalculator ? "Hide Calculator" : "Show Calculator"}
+                </button>
+
+                {showMortgageCalculator && (
+                    <div className="calculator-toggle-box">
+                        <MortgagePaymentCalculator />
+                    </div>
+                )}
             </div>
 
             <div className="calculator-card">
