@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import EditTransactionModal from "../components/EditTransactionModal";
 import "./Transactions.css";
 import "./CommonLayout.css";
 
@@ -38,6 +39,8 @@ function Transactions() {
   const [monthlyTransactions, setMonthlyTransactions] = useState({});
   const [viewByMonth, setViewByMonth] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState();
+
+  const [showModal, setShowModal] = useState(false);
   
   const handleEditClick = (tx) => {
     setEditingId(tx._id);
@@ -49,8 +52,9 @@ function Transactions() {
       description: tx.description,
       date: tx.date ? tx.date.slice(0, 10) : "",
     });
+    setShowModal(true);
   };
-
+  
   const [sortOption, setSortOption] = useState("dateDesc"); // default: newest first
 
   useEffect(() => {
@@ -125,24 +129,24 @@ function Transactions() {
     }));
   };
 
-  const handleUpdate = async (e, id) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.put(`http://localhost:5000/api/transactions/${id}`, editForm, {
+      const res = await axios.put(`http://localhost:5000/api/transactions/${editingId}`, editForm, {
         headers: { Authorization: `Bearer ${token}` },
       });
   
-      // Update in-place
       setTransactions((prev) =>
-        prev.map((tx) => (tx._id === id ? res.data : tx))
+        prev.map((tx) => (tx._id === editingId ? res.data : tx))
       );
       setEditingId(null);
+      setShowModal(false);
     } catch (err) {
       alert("Error updating transaction.");
     }
   };
-
+  
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this transaction?")) return;
     try {
@@ -188,7 +192,6 @@ function Transactions() {
       <Navbar />
       <h2>Transactions</h2>
   
-      {/* Add Transaction Form */}
       <div className="transaction-form-card">
         <form onSubmit={handleSubmit} className="transaction-form">
           <select name="account" value={form.account} onChange={handleChange} required>
@@ -213,7 +216,6 @@ function Transactions() {
         </form>
       </div>
   
-      {/* Filters */}
       <div className="filter-section">
         <h3>Filters</h3>
         <div className="filters">
@@ -250,7 +252,6 @@ function Transactions() {
         </div>
       </div>
   
-      {/* View By Month Toggle & Dropdown */}
       <div className="monthly-toggle">
         <label style={{ marginRight: "1rem" }}>
           <input type="checkbox" checked={viewByMonth} onChange={(e) => setViewByMonth(e.target.checked)} />
@@ -269,7 +270,6 @@ function Transactions() {
         )}
       </div>
   
-      {/* Transaction List */}
       <div className="transaction-list-section">
         <h3>
           {viewByMonth && selectedMonth ? `Transactions for ${selectedMonth}` : "All Transactions"}
@@ -281,45 +281,29 @@ function Transactions() {
             : sortedTransactions
           ).map((tx) => (
             <li key={tx._id}>
-              {editingId === tx._id ? (
-                <form onSubmit={(e) => handleUpdate(e, tx._id)}>
-                  <input name="description" value={editForm.description} onChange={handleEditChange} />
-                  <input name="amount" type="number" value={editForm.amount} onChange={handleEditChange} />
-                  <input name="category" value={editForm.category} onChange={handleEditChange} />
-                  <input name="date" type="date" value={editForm.date} onChange={handleEditChange} />
-                  <select name="type" value={editForm.type} onChange={handleEditChange}>
-                    <option value="Expense">Expense</option>
-                    <option value="Income">Income</option>
-                  </select>
-                  <button type="submit">Save</button>
-                  <button onClick={() => setEditingId(null)}>Cancel</button>
-                </form>
-              ) : (
-                <div className={`transaction-item ${tx.type.toLowerCase()}`}>
-                  <div className="transaction-header">
-                    <div className="transaction-left">
-                      <div className="transaction-topline">
-                        <strong>{tx.description}</strong> — ${tx.amount.toFixed(2)} ({tx.category})
-                      </div>
-                      <div className="transaction-meta">
-                        <div>Date: {new Date(tx.date).toLocaleDateString()}</div>
-                        <div>Account: {tx.account?.name || "Unknown"}</div>
-                        <div>Balance: ${tx.account?.balance?.toFixed(2) || "N/A"}</div>
-                      </div>
+              <div className={`transaction-item ${tx.type.toLowerCase()}`}>
+                <div className="transaction-header">
+                  <div className="transaction-left">
+                    <div className="transaction-topline">
+                      <strong>{tx.description}</strong> — ${tx.amount.toFixed(2)} ({tx.category})
                     </div>
-                    <div className="transaction-actions">
-                      <button onClick={() => handleEditClick(tx)}>Edit</button>
-                      <button onClick={() => handleDelete(tx._id)}>Delete</button>
+                    <div className="transaction-meta">
+                      <div>Date: {new Date(tx.date).toLocaleDateString()}</div>
+                      <div>Account: {tx.account?.name || "Unknown"}</div>
+                      <div>Balance: ${tx.account?.balance?.toFixed(2) || "N/A"}</div>
                     </div>
                   </div>
+                  <div className="transaction-actions">
+                    <button onClick={() => handleEditClick(tx)}>Edit</button>
+                    <button onClick={() => handleDelete(tx._id)}>Delete</button>
+                  </div>
                 </div>
-              )}
+              </div>
             </li>
           ))}
-        </ul>
+      </ul>
       </div>
   
-      {/* Rows Per Page */}
       {!viewByMonth && (
         <div className="rows-per-page">
           <label>Rows per page: </label>
@@ -338,7 +322,6 @@ function Transactions() {
         </div>
       )}
   
-      {/* Pagination */}
       {!viewByMonth && (
         <div className="pagination-controls">
           <button disabled={currentPage === 1} onClick={() => fetchData(currentPage - 1, rowsPerPage)}>
@@ -350,6 +333,15 @@ function Transactions() {
           </button>
         </div>
       )}
+
+      <EditTransactionModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        editForm={editForm}
+        handleEditChange={handleEditChange}
+        handleUpdate={handleUpdate}
+      />
+      
     </div>
   );
   
