@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-    PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
+    PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Sector, Legend
 } from "recharts";
 import "./HomeAffordabilityCalculator.css";
 
@@ -84,40 +84,76 @@ const CarAffordabilityCalculator = () => {
                             </div>
 
                             <div className="chart-container">
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <PieChart>
-                                        <Pie
-                                            data={[
-                                                { name: "Loan Amount", value: parseFloat(result.loanAmount.replace(/,/g, "")) },
-                                                { name: "Down Payment", value: result.downPayment },
-                                            ]}
-                                            cx="50%"
-                                            cy="50%"
-                                            outerRadius={110}
-                                            innerRadius={60}
-                                            label={(entry) => `${entry.name}: $${entry.value.toLocaleString(undefined, { maximumFractionDigits: 2 })}`}
-                                            labelStyle={{ fontSize: "12px", fontWeight: "bold", fill: "#4B5563" }}
-                                            dataKey="value"
-                                            paddingAngle={5}
-                                        >
-                                            {["#1E88E5", "#43A047"].map((color, index) => (
-                                                <Cell key={`cell-${index}`} fill={color} />
-                                            ))}
-                                        </Pie>
-                                        <Tooltip
-                                            contentStyle={{
-                                                backgroundColor: "#f8f9fa",
-                                                borderRadius: "8px",
-                                                boxShadow: "0 4px 15px rgba(0, 0, 0, 0.1)",
-                                                border: "1px solid #dee2e6",
-                                                padding: "12px",
-                                            }}
-                                            formatter={(value) =>
-                                                `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                                            }
-                                            cursor={{ fill: "rgba(107, 114, 128, 0.05)" }}
-                                        />
-                                    </PieChart>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <PieChart>
+                                    <defs>
+                                    {/* Soft modern gradients for each slice */}
+                                    <linearGradient id="loanAmountGradient" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stopColor="#1E88E5" stopOpacity={0.8} />
+                                        <stop offset="100%" stopColor="#1E88E5" stopOpacity={0.5} />
+                                    </linearGradient>
+                                    <linearGradient id="downPaymentGradient" x1="0" y1="0" x2="1" y2="1">
+                                        <stop offset="0%" stopColor="#43A047" stopOpacity={0.8} />
+                                        <stop offset="100%" stopColor="#43A047" stopOpacity={0.5} />
+                                    </linearGradient>
+
+                                    {/* Soft drop shadow effect */}
+                                    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                                        <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#000" floodOpacity="0.15" />
+                                    </filter>
+                                    </defs>
+
+                                    <Pie
+                                    data={[
+                                        { name: "Loan Amount", value: parseFloat(result.loanAmount.replace(/,/g, "")) },
+                                        { name: "Down Payment", value: result.downPayment },
+                                    ]}
+                                    cx="50%"
+                                    cy="50%"
+                                    outerRadius={110}
+                                    innerRadius={60}
+                                    paddingAngle={5}
+                                    dataKey="value"
+                                    stroke="none"
+                                    filter="url(#shadow)"
+                                    activeShape={({ cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill }) => {
+                                        const RADIAN = Math.PI / 180;
+                                        return (
+                                        <g>
+                                            <Sector
+                                            cx={cx}
+                                            cy={cy}
+                                            innerRadius={innerRadius}
+                                            outerRadius={outerRadius + 6}
+                                            startAngle={startAngle}
+                                            endAngle={endAngle}
+                                            fill={fill}
+                                            />
+                                        </g>
+                                        );
+                                    }}
+                                    >
+                                    <Cell fill="url(#loanAmountGradient)" />
+                                    <Cell fill="url(#downPaymentGradient)" />
+                                    </Pie>
+
+                                    <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: "#ffffff",
+                                        borderRadius: "8px",
+                                        boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                                        border: "1px solid #e0e0e0",
+                                    }}
+                                    itemStyle={{ color: "#333", fontWeight: 500 }}
+                                    formatter={(value, name) => {
+                                        const total = parseFloat(result.loanAmount.replace(/,/g, "")) + result.downPayment;
+                                        const percent = ((value / total) * 100).toFixed(2);
+                                        return [`$${value.toFixed(2)}`, `${name} (${percent}%)`];
+                                    }}
+                                    />
+
+                                    <Legend verticalAlign="bottom" height={36} />
+                                </PieChart>
                                 </ResponsiveContainer>
                             </div>
                         </div>
