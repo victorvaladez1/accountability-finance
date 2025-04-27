@@ -114,96 +114,100 @@ const MortgagePaymentCalculator = () => {
                             </div>
 
                             <div className="chart-container">
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <LineChart data={amortizationData}>
-                                        <defs>
-                                        <linearGradient id="principalGradient" x1="0" y1="0" x2="1" y2="0">
-                                            <stop offset="0%" stopColor="#1E88E5" stopOpacity={0.8} />
-                                            <stop offset="100%" stopColor="#64B5F6" stopOpacity={0.6} />
-                                        </linearGradient>
-                                        <linearGradient id="interestGradient" x1="0" y1="0" x2="1" y2="0">
-                                            <stop offset="0%" stopColor="#F57C00" stopOpacity={0.8} />
-                                            <stop offset="100%" stopColor="#FFB74D" stopOpacity={0.6} />
-                                        </linearGradient>
-                                        <linearGradient id="balanceGradient" x1="0" y1="0" x2="1" y2="0">
-                                            <stop offset="0%" stopColor="#43A047" stopOpacity={0.8} />
-                                            <stop offset="100%" stopColor="#81C784" stopOpacity={0.6} />
-                                        </linearGradient>
-                                        </defs>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <LineChart 
+                                    data={amortizationData}
+                                    margin={{ top: 20, right: 40, left: 30, bottom: 20 }}
+                                >
+                                    <defs>
+                                    <linearGradient id="principalGradient" x1="0" y1="0" x2="1" y2="0">
+                                        <stop offset="0%" stopColor="#1E88E5" stopOpacity={0.8} />
+                                        <stop offset="100%" stopColor="#64B5F6" stopOpacity={0.6} />
+                                    </linearGradient>
+                                    <linearGradient id="interestGradient" x1="0" y1="0" x2="1" y2="0">
+                                        <stop offset="0%" stopColor="#F57C00" stopOpacity={0.8} />
+                                        <stop offset="100%" stopColor="#FFB74D" stopOpacity={0.6} />
+                                    </linearGradient>
+                                    <linearGradient id="balanceGradient" x1="0" y1="0" x2="1" y2="0">
+                                        <stop offset="0%" stopColor="#43A047" stopOpacity={0.8} />
+                                        <stop offset="100%" stopColor="#81C784" stopOpacity={0.6} />
+                                    </linearGradient>
+                                    </defs>
 
-                                        <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
 
-                                        <XAxis
-                                        dataKey="month"
-                                        label={{
-                                            value: "Month",
-                                            position: "insideBottom",
-                                            offset: -5,
-                                            style: { fill: "#6B7280", fontSize: "0.9rem" },
-                                        }}
-                                        tick={{ fontSize: 12, fill: "#6B7280" }}
-                                        />
+                                    <XAxis
+                                    dataKey="month"
+                                    label={{
+                                        value: "Month",
+                                        position: "insideBottom",
+                                        offset: -5,
+                                        style: { fill: "#6B7280", fontSize: "0.9rem" },
+                                    }}
+                                    tick={{ fontSize: 12, fill: "#6B7280" }}
+                                    />
 
-                                        <YAxis
-                                        label={{
-                                            value: "Amount ($)",
-                                            angle: -90,
-                                            position: "insideLeft",
-                                            style: { fill: "#6B7280", fontSize: "0.9rem" },
-                                        }}
-                                        tick={{ fontSize: 12, fill: "#6B7280" }}
-                                        />
+                                    <YAxis
+                                    tickFormatter={(val) => `$${val.toLocaleString()}`}
+                                    label={{
+                                        value: "Amount ($)",
+                                        angle: -90,
+                                        position: "insideLeft",
+                                        offset: 10,
+                                        style: { fill: "#6B7280", fontSize: "0.9rem" },
+                                    }}
+                                    tick={{ fontSize: 12, fill: "#6B7280" }}
+                                    width={80}
+                                    />
 
-                                        <Tooltip
-                                        contentStyle={{
-                                            backgroundColor: "#ffffff",
-                                            borderRadius: "8px",
-                                            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
-                                            border: "1px solid #e0e0e0",
-                                            padding: "10px",
-                                        }}
-                                        itemStyle={{
-                                            color: "#333",
-                                            fontWeight: 500,
-                                        }}
-                                        formatter={(value) =>
-                                            `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                                        }
-                                        cursor={{ stroke: "rgba(107, 114, 128, 0.1)", strokeWidth: 2 }}
-                                        />
+                                    <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: "#ffffff",
+                                        borderRadius: "8px",
+                                        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+                                        border: "1px solid #e0e0e0",
+                                        padding: "10px",
+                                    }}
+                                    itemStyle={{
+                                        color: "#333",
+                                        fontWeight: 500,
+                                    }}
+                                    formatter={(value) =>
+                                        `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                                    }
+                                    cursor={{ stroke: "rgba(107, 114, 128, 0.1)", strokeWidth: 2 }}
+                                    />
 
-                                        <Legend verticalAlign="top" iconType="circle" wrapperStyle={{ paddingBottom: "10px" }} />
+                                    <Legend verticalAlign="top" iconType="circle" wrapperStyle={{ paddingBottom: "10px" }} />
 
-                                        <Line
-                                        type="monotone"
-                                        dataKey="principalPaid"
-                                        name="Principal Paid"
-                                        stroke="url(#principalGradient)"
-                                        strokeWidth={3}
-                                        dot={{ r: 3 }}
-                                        activeDot={{ r: 6 }}
-                                        />
-
-                                        <Line
-                                        type="monotone"
-                                        dataKey="interestPaid"
-                                        name="Interest Paid"
-                                        stroke="url(#interestGradient)"
-                                        strokeWidth={3}
-                                        dot={{ r: 3 }}
-                                        activeDot={{ r: 6 }}
-                                        />
-
-                                        <Line
-                                        type="monotone"
-                                        dataKey="loanBalance"
-                                        name="Loan Balance"
-                                        stroke="url(#balanceGradient)"
-                                        strokeWidth={3}
-                                        dot={{ r: 3 }}
-                                        activeDot={{ r: 6 }}
-                                        />
-                                    </LineChart>
+                                    <Line
+                                    type="monotone"
+                                    dataKey="principalPaid"
+                                    name="Principal Paid"
+                                    stroke="url(#principalGradient)"
+                                    strokeWidth={3}
+                                    dot={{ r: 3 }}
+                                    activeDot={{ r: 6 }}
+                                    />
+                                    <Line
+                                    type="monotone"
+                                    dataKey="interestPaid"
+                                    name="Interest Paid"
+                                    stroke="url(#interestGradient)"
+                                    strokeWidth={3}
+                                    dot={{ r: 3 }}
+                                    activeDot={{ r: 6 }}
+                                    />
+                                    <Line
+                                    type="monotone"
+                                    dataKey="loanBalance"
+                                    name="Loan Balance"
+                                    stroke="url(#balanceGradient)"
+                                    strokeWidth={3}
+                                    dot={{ r: 3 }}
+                                    activeDot={{ r: 6 }}
+                                    />
+                                </LineChart>
                                 </ResponsiveContainer>
                             </div>
                         </div>
