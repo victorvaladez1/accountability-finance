@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-    LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
+    LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend, CartesianGrid
 } from "recharts";
 import "./HomeAffordabilityCalculator.css";
 
@@ -100,31 +100,62 @@ const RothIraCalculator = () => {
                             </div>
 
                             <div className="chart-container">
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <LineChart data={growthData}>
-                                        <XAxis
-                                            dataKey="year"
-                                            label={{ value: "Years", position: "insideBottom", offset: -5 }}
-                                        />
-                                        <YAxis
-                                            label={{ value: "Balance ($)", angle: -90, position: "insideLeft" }}
-                                        />
-                                        <Tooltip
-                                            contentStyle={{
-                                                backgroundColor: "#f8f9fa",
-                                                borderRadius: "8px",
-                                                boxShadow: "0 4px 15px rgba(0, 0, 0, 0.1)",
-                                                border: "1px solid #dee2e6",
-                                                padding: "12px",
-                                            }}
-                                            formatter={(value) =>
-                                                `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                                            }
-                                            cursor={{ stroke: "rgba(107, 114, 128, 0.2)", strokeWidth: 2 }}
-                                        />
-                                        <Legend />
-                                        <Line type="monotone" dataKey="balance" stroke="#1E88E5" name="Balance" strokeWidth={2} />
-                                    </LineChart>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <LineChart data={growthData} margin={{ top: 20, right: 40, left: 20, bottom: 20 }}>
+                                    <defs>
+                                    <linearGradient id="growthLineGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stopColor="#1E88E5" stopOpacity={0.8} />
+                                        <stop offset="100%" stopColor="#1E88E5" stopOpacity={0.2} />
+                                    </linearGradient>
+                                    </defs>
+
+                                    <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+
+                                    <XAxis 
+                                    dataKey="year" 
+                                    label={{ value: "Years", position: "insideBottom", offset: -10 }}
+                                    tick={{ fontSize: 12 }}
+                                    />
+                                    
+                                    <YAxis 
+                                    tickFormatter={(val) => `$${val.toLocaleString()}`}
+                                    label={{
+                                        value: "Balance ($)", 
+                                        angle: -90, 
+                                        position: "insideLeft", 
+                                        offset: 10,
+                                        style: { textAnchor: 'middle', fontSize: 14 }
+                                    }}
+                                    tick={{ fontSize: 12 }}
+                                    width={90}
+                                    />
+
+                                    <Tooltip
+                                    contentStyle={{
+                                        backgroundColor: "#ffffff",
+                                        borderRadius: "8px",
+                                        boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                                        border: "1px solid #e0e0e0",
+                                    }}
+                                    itemStyle={{ color: "#333", fontWeight: 500 }}
+                                    formatter={(value) =>
+                                        `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                                    }
+                                    cursor={{ stroke: "rgba(107, 114, 128, 0.15)", strokeWidth: 2 }}
+                                    />
+
+                                    <Line
+                                    type="monotone"
+                                    dataKey="balance"
+                                    stroke="url(#growthLineGradient)"
+                                    strokeWidth={3}
+                                    dot={{ r: 3 }}
+                                    activeDot={{ r: 6 }}
+                                    name="Balance"
+                                    />
+
+                                    <Legend verticalAlign="bottom" height={36} />
+                                </LineChart>
                                 </ResponsiveContainer>
                             </div>
                         </div>
