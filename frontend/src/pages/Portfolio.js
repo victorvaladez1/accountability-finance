@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
+import PortfolioSummaryCard from '../components/Portfolio/PortfolioSummaryCard';
+import PortfolioPerformanceCard from '../components/Portfolio/PortfolioPerformanceCard';
+import InvestmentAccountCard from '../components/Portfolio/InvestmentAccountCard';
+
 import "./CommonLayout.css";
 import "./Portfolio.css";
 
@@ -17,6 +21,7 @@ import {
     CartesianGrid,
     Sector,
 } from "recharts";
+
 
 function Portfolio() {
     const [accounts, setAccounts] = useState([]);
@@ -46,6 +51,9 @@ function Portfolio() {
     const [openAccountId, setOpenAccountId] = useState(null);
     const [holdingPage, setHoldingPage] = useState({});
     const [holdingsPerPage, setHoldingsPerPage] = useState({});
+
+    const [showNewAccountModal, setShowNewAccountModal] = useState(false);
+
 
     const paginatedHoldings = (accountId) => {
         const allHoldings = holdingsMap[accountId] || [];
@@ -463,248 +471,44 @@ function Portfolio() {
             <Navbar />
             <h2>Investment Portfolio</h2>
 
-            <div className="portfolio-summary-card">
-                <h4>📊 Portfolio Summary</h4>
-                <p><strong>Total Value:</strong> ${totalPortfolioValue.toFixed(2)}</p>
-                <p><strong>Total Gain/Loss:</strong> 
-                    <span className={totalGainLoss >= 0 ? "gain" : "loss"}>
-                    {totalGainLoss >= 0 ? "+" : "-"}${Math.abs(totalGainLoss).toFixed(2)}
-                    </span>
-                </p>
-            </div>
+            {/* Top Portfolio Summary Card */}
+            <PortfolioSummaryCard 
+            totalValue={totalPortfolioValue} 
+            totalGainLoss={totalPortfolioValue - totalPortfolioCost} 
+            pieData={pieData} 
+            pieColors={pieColors}
+            />
 
-            <div className="portfolio-chart-container">
-                <h4>📊 Asset Allocation</h4>
-                <ResponsiveContainer width="100%" height={300}>
-                    <PieChart>
-                        <defs>
-                        {pieData.map((entry, index) => (
-                            <linearGradient id={`color-${index}`} key={index} x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stopColor={pieColors[index % pieColors.length]} stopOpacity={0.8} />
-                            <stop offset="100%" stopColor={pieColors[index % pieColors.length]} stopOpacity={0.5} />
-                            </linearGradient>
-                        ))}
-                        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#000" floodOpacity="0.2" />
-                        </filter>
-                        </defs>
+            {/* Portfolio Performance Chart */}
+            <PortfolioPerformanceCard 
+            snapshots={getFilteredSnapshots()} 
+            chartFilter={chartFilter} 
+            setChartFilter={setChartFilter}
+            />
 
-                        <Pie
-                        data={pieData}
-                        dataKey="value"
-                        nameKey="name"
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={100}
-                        label={false}
-                        stroke="none"
-                        fillOpacity={0.9}
-                        filter="url(#shadow)"
-                        activeShape={({ cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload }) => {
-                            const RADIAN = Math.PI / 180;
-                            const sin = Math.sin(-RADIAN * midAngle);
-                            const cos = Math.cos(-RADIAN * midAngle);
-                            const sx = cx + (outerRadius + 10) * cos;
-                            const sy = cy + (outerRadius + 10) * sin;
-                            const mx = cx + (outerRadius + 30) * cos;
-                            const my = cy + (outerRadius + 30) * sin;
-                            return (
-                            <g>
-                                <Sector
-                                cx={cx}
-                                cy={cy}
-                                innerRadius={innerRadius}
-                                outerRadius={outerRadius + 6}
-                                startAngle={startAngle}
-                                endAngle={endAngle}
-                                fill={fill}
-                                />
-                            </g>
-                            );
-                        }}
-                        >
-                        {pieData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={`url(#color-${index})`} />
-                        ))}
-                        </Pie>
-
-                        <Tooltip
-                            contentStyle={{
-                                backgroundColor: "#ffffff",
-                                borderRadius: "8px",
-                                boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
-                                border: "1px solid #e0e0e0",
-                            }}
-                            itemStyle={{
-                                color: "#333",
-                                fontWeight: 500,
-                            }}
-                            formatter={(value, name) => {
-                                const total = pieData.reduce((sum, item) => sum + item.value, 0);
-                                const percent = ((value / total) * 100).toFixed(2);
-                                return [`$${value.toFixed(2)}`, `${name} (${percent}%)`];
-                            }}
-                        />
-                        <Legend verticalAlign="bottom" height={36} />
-                    </PieChart>
-                    </ResponsiveContainer>
-            </div>
-
-            {snapshots.length > 1 && (
-            <div className="chart-card">
-                <h4>📈 Portfolio Performance</h4>
-
-                <div className="chart-controls">
-                    <div className="chart-filters">
-                        <button className={chartFilter === "7d" ? "active" : ""} onClick={() => setChartFilter("7d")}>Last 7 Days</button>
-                        <button className={chartFilter === "30d" ? "active" : ""} onClick={() => setChartFilter("30d")}>Last 30 Days</button>
-                        <button className={chartFilter === "all" ? "active" : ""} onClick={() => setChartFilter("all")}>All Time</button>
-                    </div>
-
-                    <div className="snapshot-buttons">
-                        <button onClick={async () => {
-                        const res = await fetch("/api/snapshots", {
-                            method: "POST",
-                            headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${localStorage.getItem("token")}`,
-                            },
-                            body: JSON.stringify({ value: totalPortfolioValue }),
-                        });
-
-                        if (res.ok) {
-                            alert("✅ Snapshot saved");
-                            window.location.reload();
-                        } else {
-                            alert("❌ Failed to save snapshot");
-                        }
-                        }}>
-                        📸 Save Snapshot Now
-                        </button>
-
-                        <button onClick={saveAllSnapshots}>
-                        📸 Save All Snapshots
-                        </button>
-                    </div>
-                </div>
-
-                {getFilteredSnapshots().length > 1 && (() => {
-                    const snapshots = getFilteredSnapshots();
-                    const first = snapshots[0].value;
-                    const last = snapshots[snapshots.length - 1].value;
-                    const change = last - first;
-                    const isGain = change >= 0;
-                    const lineColor = isGain ? "#4CAF50" : "#F44336"; // green or red
-
-                    return (
-                        <div className="performance-wrapper">
-                            <div className={`performance-header ${isGain ? "gain-bg" : "loss-bg"}`}>
-                                <span className="performance-icon">📈</span>
-                                <strong>{isGain ? "Gain" : "Loss"}:</strong> ${Math.abs(change).toLocaleString()}
-                            </div>
-
-                            <ResponsiveContainer width="100%" height={300}>
-                                <LineChart data={snapshots}>
-                                <defs>
-                                    <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor={lineColor} stopOpacity={0.8} />
-                                    <stop offset="100%" stopColor={lineColor} stopOpacity={0.2} />
-                                    </linearGradient>
-                                </defs>
-
-                                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                                <XAxis
-                                    dataKey="timestamp"
-                                    tickFormatter={(str) => new Date(str).toLocaleDateString()}
-                                />
-                                <YAxis
-                                    tickFormatter={(val) => `$${val.toLocaleString()}`}
-                                    domain={["auto", "auto"]}
-                                />
-                                <Tooltip
-                                    contentStyle={{
-                                        backgroundColor: "#ffffff",
-                                        borderRadius: "8px",
-                                        boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
-                                        border: "1px solid #e0e0e0",
-                                    }}
-                                    itemStyle={{
-                                        color: "#333",
-                                        fontWeight: 500,
-                                    }}
-                                    labelStyle={{
-                                        fontWeight: "bold",
-                                        color: "#555",
-                                    }}
-                                    labelFormatter={(str) => `Date: ${new Date(str).toLocaleDateString()}`}
-                                    formatter={(val) => [`$${val.toLocaleString()}`, "Portfolio Value"]}
-                                />
-                                <Line
-                                    type="monotone"
-                                    dataKey="value"
-                                    stroke="url(#colorValue)"
-                                    strokeWidth={3}
-                                    dot={{ r: 4 }}
-                                    activeDot={{ r: 6 }}
-                                />
-                                </LineChart>
-                            </ResponsiveContainer>
-                        </div>
-                    );
-                })()}
-            </div>
+            {/* Loop over Investment Accounts */}
+            {accounts.length === 0 ? (
+            <p>No investment accounts found.</p>
+            ) : (
+            accounts.map((account) => (
+                <InvestmentAccountCard
+                key={account._id}
+                account={account}
+                holdings={holdingsMap[account._id] || []}
+                livePrices={livePrices}
+                pieColors={pieColors}
+                onAddHolding={(accountId) => setSelectedAccountId(accountId)}
+                onDeleteAccount={deleteAccount}
+                snapshots={getFilteredAccountSnapshots(account._id)}
+                />
+            ))
             )}
 
-            <button onClick={() => setShowAddModal(true)} className="add-account-btn">
-            ➕ Add Investment Account
+            {/* Add New Account Button */}
+            <button onClick={() => setShowNewAccountModal(true)} className="add-account-btn">
+                ➕ Add Investment Account
             </button>
 
-            {showAddModal && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <h3>New Investment Account</h3>
-                        <input
-                            type="text"
-                            placeholder="Account Name"
-                            value={newAccountName}
-                            onChange={(e) => setNewAccountName(e.target.value)}
-                        />
-                        <input
-                            type="number"
-                            placeholder="Initial Balance"
-                            value={newAccountBalance}
-                            onChange={(e) => setNewAccountBalance(e.target.value)}
-                        />
-                        <button onClick={async () => {
-                            try {
-                                const res = await fetch("/api/accounts", {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/json",
-                                        Authorization: `Bearer ${localStorage.getItem("token")}`,
-                                    },
-                                    body: JSON.stringify({
-                                        name: newAccountName,
-                                        type: "Investment",
-                                        balance: parseFloat(newAccountBalance),
-                                    }),
-                                });
-                                if (res.ok) {
-                                    setShowAddModal(false);
-                                    setNewAccountName("");
-                                    setNewAccountBalance("");
-                                    window.location.reload();
-                                } else {
-                                    console.error("Error creating account");
-                                }
-                            } catch (err) {
-                                console.error("Account creation error:", err);
-                            }
-                        }}>Create</button>
-                        <button onClick={() => setShowAddModal(false)}>Cancel</button>
-                    </div>
-                </div>
-            )}
 
             {selectedAccountId && (
                 <div className="modal-overlay">
@@ -829,286 +633,55 @@ function Portfolio() {
             </div>
             )}
 
-
-            {accounts.length === 0 ? (
-                <p>No investment accounts found</p>
-            ) : (
-                accounts.map((account) => {
-                    const holdings = holdingsMap[account._id] || [];
-                    const totalValue = holdings.reduce((acc, holding) => {
-                        return acc + holding.shares * holding.averageCost;
-                    }, 0);
-
-                    return (
-                        <div key={account._id} className="account-card">
-                            <div className="account-card-header">
-                                <h3>{account.name}</h3>
-                                <button
-                                    className="delete-account-btn"
-                                    onClick={() => deleteAccount(account._id)}
-                                >
-                                    🗑️ Delete Account
-                                </button>
-                            </div>
-
-                            <div className="portfolio-summary">
-                                <h4>📊 Account Summary</h4>
-                                <p>
-                                    <strong>Total Value:</strong> ${totalValue.toFixed(2)}
-                                </p>
-                                <p>
-                                    <strong>Total Gain/Loss:</strong>{" "}
-                                    <span
-                                        style={{
-                                            color: totalValue - costBasis(account._id) >= 0 ? "green" : "red",
-                                            fontWeight: 600,
-                                        }}
-                                    >
-                                        {totalValue - costBasis(account._id) >= 0 ? "+" : "-"}$
-                                        {Math.abs(totalValue - costBasis(account._id)).toFixed(2)}
-                                    </span>
-                                </p>
-                            </div>
-                        
-                            <div>
-                                <button onClick={() => setSelectedAccountId(account._id)} className="add-holding-btn">
-                                    ➕ Add Holding
-                                </button>
-
-                                {getPieDataForAccount(account._id).length > 0 && (
-                                            <div className="account-chart">
-                                                <ResponsiveContainer width="100%" height={250}>
-                                                    <PieChart>
-                                                        <defs>
-                                                        {getPieDataForAccount(account._id).map((entry, index) => (
-                                                            <linearGradient id={`account-color-${account._id}-${index}`} key={index} x1="0" y1="0" x2="1" y2="1">
-                                                            <stop offset="0%" stopColor={pieColors[index % pieColors.length]} stopOpacity={0.8} />
-                                                            <stop offset="100%" stopColor={pieColors[index % pieColors.length]} stopOpacity={0.5} />
-                                                            </linearGradient>
-                                                        ))}
-                                                        <filter id={`shadow-${account._id}`} x="-20%" y="-20%" width="140%" height="140%">
-                                                            <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#000" floodOpacity="0.2" />
-                                                        </filter>
-                                                        </defs>
-
-                                                        <Pie
-                                                        data={getPieDataForAccount(account._id)}
-                                                        dataKey="value"
-                                                        nameKey="name"
-                                                        cx="50%"
-                                                        cy="50%"
-                                                        outerRadius={80}
-                                                        label={false}
-                                                        stroke="none"
-                                                        fillOpacity={0.9}
-                                                        filter={`url(#shadow-${account._id})`}
-                                                        activeShape={({ cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill }) => {
-                                                            const RADIAN = Math.PI / 180;
-                                                            const sin = Math.sin(-RADIAN * midAngle);
-                                                            const cos = Math.cos(-RADIAN * midAngle);
-                                                            const sx = cx + (outerRadius + 10) * cos;
-                                                            const sy = cy + (outerRadius + 10) * sin;
-                                                            const mx = cx + (outerRadius + 30) * cos;
-                                                            const my = cy + (outerRadius + 30) * sin;
-                                                            return (
-                                                            <g>
-                                                                <Sector
-                                                                cx={cx}
-                                                                cy={cy}
-                                                                innerRadius={innerRadius}
-                                                                outerRadius={outerRadius + 6}
-                                                                startAngle={startAngle}
-                                                                endAngle={endAngle}
-                                                                fill={fill}
-                                                                />
-                                                            </g>
-                                                            );
-                                                        }}
-                                                        >
-                                                        {getPieDataForAccount(account._id).map((entry, index) => (
-                                                            <Cell key={`cell-${index}`} fill={`url(#account-color-${account._id}-${index})`} />
-                                                        ))}
-                                                        </Pie>
-
-                                                        <Tooltip
-                                                        contentStyle={{
-                                                            backgroundColor: "#ffffff",
-                                                            borderRadius: "8px",
-                                                            boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
-                                                            border: "1px solid #e0e0e0",
-                                                        }}
-                                                        itemStyle={{
-                                                            color: "#333",
-                                                            fontWeight: 500,
-                                                        }}
-                                                        formatter={(value, name) => {
-                                                            const data = getPieDataForAccount(account._id);
-                                                            const total = data.reduce((sum, item) => sum + item.value, 0);
-                                                            const percent = ((value / total) * 100).toFixed(2);
-                                                            return [`$${value.toFixed(2)}`, `${name} (${percent}%)`];
-                                                        }}
-                                                        />
-
-                                                        <Legend verticalAlign="bottom" height={36} />
-                                                    </PieChart>
-                                                </ResponsiveContainer>
-                                            </div>
-                                        )}
-
-                                    
-                                {renderMiniChartForAccount(account)}
-
-                                <button
-                                    className="toggle-holdings-btn"
-                                    onClick={() =>
-                                        setOpenAccountId(openAccountId === account._id ? null : account._id)
-                                    }
-                                    >
-                                    {openAccountId === account._id ? "Hide Holdings ▲" : "View Holdings ▼"}
-                                    </button>
-
-                                    {openAccountId === account._id && (
-                                    <>
-                                        {paginatedHoldings(account._id).map((holding) => {
-                                        const livePrice = livePrices[holding.ticker];
-                                        const gainLoss = livePrice ? (livePrice - holding.averageCost) * holding.shares : 0;
-
-                                        return (
-                                            <div className="holding-card" key={holding._id}>
-                                            <div className="holding-header">
-                                                <span className="ticker">{holding.ticker}</span>
-                                                {livePrice && (
-                                                <span className={`gain-loss ${gainLoss >= 0 ? "gain" : "loss"}`}>
-                                                    {gainLoss >= 0 ? "+" : "-"}${Math.abs(gainLoss).toFixed(2)}
-                                                </span>
-                                                )}
-                                            </div>
-                                            <div className="holding-details">
-                                                <span>{holding.shares} shares</span>
-                                                <span>Avg: ${holding.averageCost.toFixed(2)}</span>
-                                                <span>
-                                                {livePrice ? `Live: $${livePrice.toFixed(2)}` : "Fetching..."}
-                                                </span>
-                                            </div>
-                                            <div className="holding-actions">
-                                                <button
-                                                className="edit-holding-btn"
-                                                onClick={() => {
-                                                    setEditHolding(holding);
-                                                    setEditShares(holding.shares.toString());
-                                                    setEditAvgCost(holding.averageCost.toString());
-                                                }}
-                                                >
-                                                ✏️ Edit
-                                                </button>
-
-                                                <button
-                                                className="delete-holding-btn"
-                                                onClick={async () => {
-                                                    const confirmDelete = window.confirm(`Delete ${holding.ticker}?`);
-                                                    if (!confirmDelete) return;
-
-                                                    try {
-                                                    const res = await fetch(`/api/holdings/${holding._id}`, {
-                                                        method: "DELETE",
-                                                        headers: {
-                                                        Authorization: `Bearer ${localStorage.getItem("token")}`,
-                                                        },
-                                                    });
-
-                                                    if (res.ok) {
-                                                        window.location.reload();
-                                                    } else {
-                                                        const err = await res.json();
-                                                        console.error("Delete failed:", err.message);
-                                                        alert("Failed to delete holding.");
-                                                    }
-                                                    } catch (err) {
-                                                    console.error("Delete error:", err);
-                                                    alert("Error deleting holding.");
-                                                    }
-                                                }}
-                                                >
-                                                🗑️ Delete
-                                                </button>
-                                            </div>
-                                            </div>
-                                        );
-                                        })}
-                                        
-                                        {holdings.length > 0 && (
-                                            <div className="holding-pagination">
-                                                <div className="rows-per-page">
-                                                <label htmlFor={`rows-${account._id}`}>Rows per page:</label>
-                                                <select
-                                                    id={`rows-${account._id}`}
-                                                    value={holdingsPerPage[account._id] || 5}
-                                                    onChange={(e) =>
-                                                    setHoldingsPerPage((prev) => ({
-                                                        ...prev,
-                                                        [account._id]: parseInt(e.target.value),
-                                                    }))
-                                                    }
-                                                >
-                                                    <option value={5}>5</option>
-                                                    <option value={10}>10</option>
-                                                    <option value={20}>20</option>
-                                                </select>
-                                                </div>
-
-                                                <div className="pagination-buttons">
-                                                <button
-                                                    className={`pagination-btn ${
-                                                    (holdingPage[account._id] || 1) === 1 ? "disabled" : ""
-                                                    }`}
-                                                    disabled={(holdingPage[account._id] || 1) === 1}
-                                                    onClick={() =>
-                                                    setHoldingPage((prev) => ({
-                                                        ...prev,
-                                                        [account._id]: (prev[account._id] || 1) - 1,
-                                                    }))
-                                                    }
-                                                >
-                                                    ◀ Prev
-                                                </button>
-
-                                                <span>
-                                                    Page {holdingPage[account._id] || 1} of{" "}
-                                                    {Math.ceil(holdings.length / (holdingsPerPage[account._id] || 5))}
-                                                </span>
-
-                                                <button
-                                                    className={`pagination-btn ${
-                                                    (holdingPage[account._id] || 1) * (holdingsPerPage[account._id] || 5) >=
-                                                    holdings.length
-                                                        ? "disabled"
-                                                        : ""
-                                                    }`}
-                                                    disabled={
-                                                    (holdingPage[account._id] || 1) * (holdingsPerPage[account._id] || 5) >=
-                                                    holdings.length
-                                                    }
-                                                    onClick={() =>
-                                                    setHoldingPage((prev) => ({
-                                                        ...prev,
-                                                        [account._id]: (prev[account._id] || 1) + 1,
-                                                    }))
-                                                    }
-                                                >
-                                                    Next ▶
-                                                </button>
-                                                </div>
-                                            </div>
-                                            )}
-                                    </>
-                                    )}
-                            </div>
-
-                        </div>
-                    );
-                })
+            {showNewAccountModal && (
+            <div className="modal-overlay">
+                <div className="modal-content">
+                <h3>New Investment Account</h3>
+                <input
+                    type="text"
+                    placeholder="Account Name (e.g., Vanguard Brokerage)"
+                    value={newAccountName}
+                    onChange={(e) => setNewAccountName(e.target.value)}
+                />
+                <input
+                    type="number"
+                    placeholder="Initial Balance"
+                    value={newAccountBalance}
+                    onChange={(e) => setNewAccountBalance(e.target.value)}
+                />
+                <button onClick={async () => {
+                    try {
+                    const res = await fetch("/api/accounts", {
+                        method: "POST",
+                        headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                        body: JSON.stringify({
+                        name: newAccountName,
+                        type: "Investment",
+                        balance: parseFloat(newAccountBalance),
+                        }),
+                    });
+                    if (res.ok) {
+                        setShowNewAccountModal(false);
+                        setNewAccountName("");
+                        setNewAccountBalance("");
+                        window.location.reload();
+                    } else {
+                        console.error("Error creating account");
+                    }
+                    } catch (err) {
+                    console.error("Account creation error:", err);
+                    }
+                }}>
+                    Create Account
+                </button>
+                <button onClick={() => setShowNewAccountModal(false)}>Cancel</button>
+                </div>
+            </div>
             )}
-        </div>
+    </div>
     );
 }
 
