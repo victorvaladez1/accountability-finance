@@ -167,6 +167,12 @@ function ChatCoach() {
                         </div>
                     )}
 
+                    {loading && (
+                    <div className="message assistant typing">
+                        <strong>Coach:</strong> <span className="typing-dots"></span>
+                    </div>
+                    )}
+
                     {(() => {
                         let lastDate = null;
 
