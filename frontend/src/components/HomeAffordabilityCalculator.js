@@ -110,86 +110,81 @@ const HomeAffordabilityCalculator = () => {
                         </div>
 
                         <div className="chart-container">
-                            <ResponsiveContainer width="100%" height={300}>
-                                <PieChart>
-                                    <defs>
-                                    {["#1976D2", "#64B5F6", "#BBDEFB"].map((color, index) => (
-                                        <linearGradient id={`color-${index}`} key={index} x1="0" y1="0" x2="1" y2="1">
-                                        <stop offset="0%" stopColor={color} stopOpacity={0.8} />
-                                        <stop offset="100%" stopColor={color} stopOpacity={0.5} />
-                                        </linearGradient>
-                                    ))}
-                                    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                                        <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#000" floodOpacity="0.2" />
-                                    </filter>
-                                    </defs>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <PieChart>
+                                <defs>
+                                <linearGradient id="loanGradient" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stopColor="#1E88E5" stopOpacity="0.8" />
+                                    <stop offset="100%" stopColor="#1E88E5" stopOpacity="0.5" />
+                                </linearGradient>
+                                <linearGradient id="taxGradient" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stopColor="#F57C00" stopOpacity="0.8" />
+                                    <stop offset="100%" stopColor="#F57C00" stopOpacity="0.5" />
+                                </linearGradient>
+                                <linearGradient id="insuranceGradient" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stopColor="#43A047" stopOpacity="0.8" />
+                                    <stop offset="100%" stopColor="#43A047" stopOpacity="0.5" />
+                                </linearGradient>
+                                
+                                <filter id="afford-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                                    <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#000" floodOpacity="0.2" />
+                                </filter>
+                                </defs>
 
-                                    <Pie
-                                    data={[
-                                        { name: "Loan Payment", value: result.loanPayment },
-                                        { name: "Taxes", value: result.taxes },
-                                        { name: "Insurance", value: result.insuranceCost },
-                                    ]}
-                                    cx="50%"
-                                    cy="50%"
-                                    innerRadius={60}
-                                    outerRadius={110}
-                                    paddingAngle={5}
-                                    stroke="none"
-                                    fillOpacity={0.9}
-                                    filter="url(#shadow)"
-                                    activeShape={({ cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill }) => {
-                                        const RADIAN = Math.PI / 180;
-                                        const sin = Math.sin(-RADIAN * midAngle);
-                                        const cos = Math.cos(-RADIAN * midAngle);
-                                        const sx = cx + (outerRadius + 10) * cos;
-                                        const sy = cy + (outerRadius + 10) * sin;
-                                        const ex = sx + (cos >= 0 ? 1 : -1) * 22;
-                                        const ey = sy;
-                                        
-                                        return (
-                                          <g>
-                                            <Sector
-                                              cx={cx}
-                                              cy={cy}
-                                              innerRadius={innerRadius}
-                                              outerRadius={outerRadius + 8}
-                                              startAngle={startAngle - 2}
-                                              endAngle={endAngle + 2}
-                                              fill={fill}
-                                            />
-                                          </g>
-                                        );
-                                      }}
-                                      
-                                    dataKey="value"
-                                    nameKey="name"
-                                    >
-                                    {["#1976D2", "#64B5F6", "#BBDEFB"].map((_, index) => (
-                                        <Cell key={`cell-${index}`} fill={`url(#color-${index})`} />
-                                    ))}
-                                    </Pie>
-
-                                    <Tooltip
-                                    contentStyle={{
-                                        backgroundColor: "#ffffff",
-                                        borderRadius: "8px",
-                                        boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
-                                        border: "1px solid #e0e0e0",
-                                    }}
-                                    itemStyle={{ color: "#333", fontWeight: 500 }}
-                                    formatter={(value, name, props) => {
-                                        const total = result.loanPayment + result.taxes + result.insuranceCost;
-                                        const percent = ((value / total) * 100).toFixed(2);
-                                        return [`$${value.toFixed(2)}`, `${name} (${percent}%)`];
-                                    }}
-                                    cursor={{ fill: "rgba(107, 114, 128, 0.05)" }}
+                                <Pie
+                                data={[
+                                    { name: "Loan Payment", value: result.loanPayment },
+                                    { name: "Taxes", value: result.taxes },
+                                    { name: "Insurance", value: result.insuranceCost },
+                                ]}
+                                cx="50%"
+                                cy="50%"
+                                innerRadius={60}
+                                outerRadius={110}
+                                paddingAngle={5}
+                                stroke="none"
+                                fillOpacity={0.9}
+                                filter="url(#afford-shadow)"
+                                dataKey="value"
+                                nameKey="name"
+                                activeShape={({ cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill }) => (
+                                    <g>
+                                    <Sector
+                                        cx={cx}
+                                        cy={cy}
+                                        innerRadius={innerRadius}
+                                        outerRadius={outerRadius + 8}
+                                        startAngle={startAngle}
+                                        endAngle={endAngle}
+                                        fill={fill}
                                     />
+                                    </g>
+                                )}
+                                >
+                                <Cell fill="url(#loanGradient)" />
+                                <Cell fill="url(#taxGradient)" />
+                                <Cell fill="url(#insuranceGradient)" />
+                                </Pie>
 
-                                    <Legend verticalAlign="bottom" height={36} />
-                                </PieChart>
+                                <Tooltip
+                                contentStyle={{
+                                    backgroundColor: "#ffffff",
+                                    borderRadius: "8px",
+                                    boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                                    border: "1px solid #e0e0e0",
+                                }}
+                                itemStyle={{ color: "#333", fontWeight: 500 }}
+                                formatter={(value, name) => {
+                                    const total = result.loanPayment + result.taxes + result.insuranceCost;
+                                    const percent = ((value / total) * 100).toFixed(2);
+                                    return [`$${value.toFixed(2)}`, `${name} (${percent}%)`];
+                                }}
+                                cursor={{ fill: "rgba(107, 114, 128, 0.05)" }}
+                                />
+
+                                <Legend verticalAlign="bottom" />
+                            </PieChart>
                             </ResponsiveContainer>
-
                         </div>
                     </div>
                 )}
