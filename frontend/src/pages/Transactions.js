@@ -18,30 +18,77 @@ function Transactions() {
   });
 
   const [editingId, setEditingId] = useState(null);
-  const [editForm, setEditForm] = useState({
-    account: "",
-    type: "",
-    amount: "",
-    category: "",
-    description: "",
-    date: "",
-  });
+  const [editForm, setEditForm] = useState({});
+  const [showModal, setShowModal] = useState(false);
 
   const [accountFilter, setAccountFilter] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
+  const [sortOption, setSortOption] = useState("dateDesc");
+
+  const [viewByMonth, setViewByMonth] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [monthlyTransactions, setMonthlyTransactions] = useState({});
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const [monthlyTransactions, setMonthlyTransactions] = useState({});
-  const [viewByMonth, setViewByMonth] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState();
+  useEffect(() => {
+    fetchData();
+    fetchMonthlyData();
+  }, []);
 
-  const [showModal, setShowModal] = useState(false);
-  
+  const fetchData = async (page = currentPage, limit = rowsPerPage) => {
+    try {
+      const token = localStorage.getItem("token");
+      const [transRes, acctRes] = await Promise.all([
+        axios.get(`http://localhost:5000/api/transactions?page=${page}&limit=${limit}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+        axios.get("http://localhost:5000/api/accounts", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
+      ]);
+      setTransactions(transRes.data.transactions);
+      setCurrentPage(transRes.data.currentPage);
+      setTotalPages(transRes.data.totalPages);
+      setAccounts(acctRes.data);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  };
+
+  const fetchMonthlyData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get("http://localhost:5000/api/transactions/monthly", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setMonthlyTransactions(res.data);
+    } catch (err) {
+      console.error("Error fetching monthly transactions:", err);
+    }
+  };
+
+  const handleChange = (e) => {
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post("http://localhost:5000/api/transactions", form, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setForm({ account: "", type: "Expense", amount: "", category: "", description: "", date: "" });
+      fetchData();
+    } catch (err) {
+      alert("Failed to create transaction.");
+    }
+  };
+
   const handleEditClick = (tx) => {
     setEditingId(tx._id);
     setEditForm({
@@ -54,79 +101,9 @@ function Transactions() {
     });
     setShowModal(true);
   };
-  
-  const [sortOption, setSortOption] = useState("dateDesc"); // default: newest first
-
-  useEffect(() => {
-    fetchData();
-    fetchMonthlyData();
-  }, []);
-
-  const fetchData = async (page = currentPage, limit = rowsPerPage) => {
-    const token = localStorage.getItem("token");
-    try {
-      const [transRes, acctRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/transactions?page=${page}&limit=${limit}`, {
-          headers: {Authorization: `Bearer ${token}`},
-        }),
-        axios.get("http://localhost:5000/api/accounts", {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-      ]);
-      setTransactions(transRes.data.transactions);
-      setCurrentPage(transRes.data.currentPage);
-      setTotalPages(transRes.data.totalPages);
-      setAccounts(acctRes.data);
-    } catch (err) {
-      console.error("error loading data:", err);
-    }
-  };
-
-  const fetchMonthlyData = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const res = await axios.get("http://localhost:5000/api/transactions/monthly", {
-        headers: { Authorization: `Bearer ${token}`},
-      });
-      setMonthlyTransactions(res.data);
-    } catch (err) {
-      console.error("Failed to fetch monthly breakdown:", err);
-    }
-  };
-
-  const handleChange = (e) => {
-    setForm((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem("token");
-    try {
-      await axios.post("http://localhost:5000/api/transactions", form, {
-        headers: {Authorization: `Bearer ${token}`},
-      });
-      setForm({
-        account: "",
-        type: "Expense",
-        amount: "",
-        category: "",
-        description: "",
-        date: "",
-      });
-      fetchData();
-    } catch (err) {
-      alert("Failed to create transaction");
-    }
-  };
 
   const handleEditChange = (e) => {
-    setEditForm((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    setEditForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleUpdate = async (e) => {
@@ -136,7 +113,6 @@ function Transactions() {
       const res = await axios.put(`http://localhost:5000/api/transactions/${editingId}`, editForm, {
         headers: { Authorization: `Bearer ${token}` },
       });
-  
       setTransactions((prev) =>
         prev.map((tx) => (tx._id === editingId ? res.data : tx))
       );
@@ -146,7 +122,7 @@ function Transactions() {
       alert("Error updating transaction.");
     }
   };
-  
+
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this transaction?")) return;
     try {
@@ -160,30 +136,22 @@ function Transactions() {
     }
   };
 
-  const uniqueCategories = Array.isArray(transactions)
-  ? [...new Set(transactions.map(tx => tx.category))]
-  : [];
-
+  const uniqueCategories = [...new Set(transactions.map(tx => tx.category))];
 
   const filteredTransactions = transactions.filter((tx) => {
-    const matchesAccount = accountFilter === "" || tx.account === accountFilter;
-    const matchesCategory = categoryFilter === "" || tx.category === categoryFilter;
-    const matchesType = typeFilter === "" || tx.type === typeFilter;
+    const matchesAccount = !accountFilter || tx.account === accountFilter;
+    const matchesCategory = !categoryFilter || tx.category === categoryFilter;
+    const matchesType = !typeFilter || tx.type === typeFilter;
     return matchesAccount && matchesCategory && matchesType;
   });
 
   const sortedTransactions = [...filteredTransactions].sort((a, b) => {
-    switch(sortOption) {
-      case "dateAsc":
-        return new Date(a.date) - new Date(b.date);
-      case "dateDesc":
-        return new Date(b.date) - new Date(a.date);
-      case "amountAsc":
-        return a.amount - b.amount;
-      case "amountDesc":
-        return b.amount - a.amount;
-      default:
-        return 0;
+    switch (sortOption) {
+      case "dateAsc": return new Date(a.date) - new Date(b.date);
+      case "dateDesc": return new Date(b.date) - new Date(a.date);
+      case "amountAsc": return a.amount - b.amount;
+      case "amountDesc": return b.amount - a.amount;
+      default: return 0;
     }
   });
 
@@ -191,7 +159,8 @@ function Transactions() {
     <div className="page-container">
       <Navbar />
       <h2>Transactions</h2>
-  
+
+      {/* Add Transaction Form */}
       <div className="transaction-form-card">
         <form onSubmit={handleSubmit} className="transaction-form">
           <select name="account" value={form.account} onChange={handleChange} required>
@@ -202,12 +171,12 @@ function Transactions() {
               </option>
             ))}
           </select>
-  
+
           <select name="type" value={form.type} onChange={handleChange} required>
             <option value="Expense">Expense</option>
             <option value="Income">Income</option>
           </select>
-  
+
           <input type="number" name="amount" placeholder="Amount" value={form.amount} onChange={handleChange} required />
           <input type="text" name="category" placeholder="Category" value={form.category} onChange={handleChange} />
           <input type="text" name="description" placeholder="Description" value={form.description} onChange={handleChange} />
@@ -215,34 +184,31 @@ function Transactions() {
           <button type="submit">Add Transaction</button>
         </form>
       </div>
-  
-      <div className="filter-section">
+
+      {/* Filters */}
+      <div className="filter-card">
         <h3>Filters</h3>
         <div className="filters">
           <select value={accountFilter} onChange={(e) => setAccountFilter(e.target.value)}>
             <option value="">All Accounts</option>
             {accounts.map((acc) => (
-              <option key={acc._id} value={acc._id}>
-                {acc.name}
-              </option>
+              <option key={acc._id} value={acc._id}>{acc.name}</option>
             ))}
           </select>
-  
+
           <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
             <option value="">All Categories</option>
             {uniqueCategories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
+              <option key={cat} value={cat}>{cat}</option>
             ))}
           </select>
-  
+
           <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
             <option value="">All Types</option>
             <option value="Income">Income</option>
             <option value="Expense">Expense</option>
           </select>
-  
+
           <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
             <option value="dateDesc">Date (Newest)</option>
             <option value="dateAsc">Date (Oldest)</option>
@@ -251,33 +217,31 @@ function Transactions() {
           </select>
         </div>
       </div>
-  
+
+      {/* Monthly Toggle */}
       <div className="monthly-toggle">
-        <label style={{ marginRight: "1rem" }}>
+        <label>
           <input type="checkbox" checked={viewByMonth} onChange={(e) => setViewByMonth(e.target.checked)} />
           Group by Month
         </label>
-  
+
         {viewByMonth && (
           <select className="month-dropdown" value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
             <option value="">Select Month</option>
             {Object.keys(monthlyTransactions).map((month) => (
-              <option key={month} value={month}>
-                {month}
-              </option>
+              <option key={month} value={month}>{month}</option>
             ))}
           </select>
         )}
       </div>
-  
+
+      {/* Transaction List */}
       <div className="transaction-list-section">
-        <h3>
-          {viewByMonth && selectedMonth ? `Transactions for ${selectedMonth}` : "All Transactions"}
-        </h3>
-  
+        <h3>{viewByMonth && selectedMonth ? `Transactions for ${selectedMonth}` : "All Transactions"}</h3>
+
         <ul className="transaction-list">
           {(viewByMonth && selectedMonth
-            ? monthlyTransactions[selectedMonth] || []
+            ? (monthlyTransactions[selectedMonth] || [])
             : sortedTransactions
           ).map((tx) => (
             <li key={tx._id}>
@@ -301,37 +265,34 @@ function Transactions() {
               </div>
             </li>
           ))}
-      </ul>
+        </ul>
       </div>
-  
+
+      {/* Pagination */}
       {!viewByMonth && (
-        <div className="rows-per-page">
-          <label>Rows per page: </label>
-          <select
-            value={rowsPerPage}
-            onChange={(e) => {
-              const newLimit = parseInt(e.target.value);
-              setRowsPerPage(newLimit);
-              fetchData(1, newLimit);
-            }}
-          >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-          </select>
-        </div>
-      )}
-  
-      {!viewByMonth && (
-        <div className="pagination-controls">
-          <button disabled={currentPage === 1} onClick={() => fetchData(currentPage - 1, rowsPerPage)}>
-            Previous
-          </button>
-          <span>Page {currentPage} of {totalPages}</span>
-          <button disabled={currentPage === totalPages} onClick={() => fetchData(currentPage + 1, rowsPerPage)}>
-            Next
-          </button>
-        </div>
+        <>
+          <div className="rows-per-page">
+            <label>Rows per page:</label>
+            <select
+              value={rowsPerPage}
+              onChange={(e) => {
+                const newLimit = parseInt(e.target.value);
+                setRowsPerPage(newLimit);
+                fetchData(1, newLimit);
+              }}
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+            </select>
+          </div>
+
+          <div className="pagination-controls">
+            <button disabled={currentPage === 1} onClick={() => fetchData(currentPage - 1, rowsPerPage)}>Previous</button>
+            <span>Page {currentPage} of {totalPages}</span>
+            <button disabled={currentPage === totalPages} onClick={() => fetchData(currentPage + 1, rowsPerPage)}>Next</button>
+          </div>
+        </>
       )}
 
       <EditTransactionModal
@@ -341,10 +302,8 @@ function Transactions() {
         handleEditChange={handleEditChange}
         handleUpdate={handleUpdate}
       />
-      
     </div>
   );
-  
 }
 
 export default Transactions;
