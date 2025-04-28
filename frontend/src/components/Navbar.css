@@ -9,14 +9,23 @@
   position: sticky;
   top: 0;
   z-index: 1000;
+  flex-wrap: wrap;
 }
 
-.navbar .logo {
+.logo {
   font-size: 1.7rem;
   font-weight: 700;
   color: #ffffff;
 }
 
+/* Hamburger Button */
+.hamburger {
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+/* Normal Nav Links */
 .nav-links {
   display: flex;
   align-items: center;
@@ -51,3 +60,110 @@
   background-color: #e04343;
   transform: translateY(-2px);
 }
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .nav-links.active {
+    display: flex;
+    background-color: #3e5c7b;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  
+
+  .nav-links a, .nav-links button {
+    width: 100%;
+    text-align: center;
+    padding: 0.8rem 0;
+    font-size: 1.1rem;
+  }
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 6px;
+}
+
+.hamburger span {
+  height: 3px;
+  width: 25px;
+  background: white;
+  border-radius: 5px;
+  transition: all 0.4s ease;
+}
+
+/* Hamburger transforms into "X" */
+.hamburger.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Show hamburger at small widths */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #3e5c7b; /* Solid background for mobile */
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    gap: 1.5rem;
+    display: none; /* Hidden by default */
+  }
+
+  .nav-links.active {
+    display: flex; /* Shown when active */
+  }
+}
+
+/* Frosted Glass Mobile Nav */
+.nav-links {
+  backdrop-filter: blur(10px); /* 🧊 Blur background */
+  background: rgba(62, 92, 123, 0.85); /* semi-transparent background */
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+}
+
+/* When menu is active */
+.nav-links.active {
+  display: flex;
+  animation: slideDown 0.3s ease forwards;
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(-10%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+
