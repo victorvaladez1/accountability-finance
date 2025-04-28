@@ -300,35 +300,51 @@ function Transactions() {
   
       {/* 📚 Pagination Controls */}
       {!viewByMonth && (
-        <>
-          <div className="rows-per-page">
-            <label>Rows per page:</label>
-            <select
-              value={rowsPerPage}
-              onChange={(e) => {
-                const newLimit = parseInt(e.target.value);
-                setRowsPerPage(newLimit);
-                fetchData(1, newLimit);
-              }}
-            >
-              <option value={5}>5</option>
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-            </select>
+        <div className="pagination-footer">
+          <div className="pagination-footer-inner">
+            <div className="rows-control">
+              <label htmlFor="rowsPerPage" className="rows-label">Rows per page:</label>
+              <select
+                id="rowsPerPage"
+                value={rowsPerPage}
+                onChange={(e) => {
+                  const newLimit = parseInt(e.target.value);
+                  setRowsPerPage(newLimit);
+                  fetchData(1, newLimit);
+                }}
+                className="rows-dropdown"
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+              </select>
+            </div>
+
+            <div className="pagination-controls">
+              <button
+                className="pagination-btn"
+                disabled={currentPage === 1}
+                onClick={() => fetchData(currentPage - 1, rowsPerPage)}
+              >
+                Previous
+              </button>
+
+              <span className="pagination-page-text">
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <button
+                className="pagination-btn"
+                disabled={currentPage === totalPages}
+                onClick={() => fetchData(currentPage + 1, rowsPerPage)}
+              >
+                Next
+              </button>
+            </div>
           </div>
-  
-          <div className="pagination-controls">
-            <button disabled={currentPage === 1} onClick={() => fetchData(currentPage - 1, rowsPerPage)}>
-              Previous
-            </button>
-            <span>Page {currentPage} of {totalPages}</span>
-            <button disabled={currentPage === totalPages} onClick={() => fetchData(currentPage + 1, rowsPerPage)}>
-              Next
-            </button>
-          </div>
-        </>
+        </div>
       )}
-  
+      
       {/* ✏️ Edit Modal */}
       <EditTransactionModal
         isOpen={showModal}
