@@ -1,17 +1,18 @@
 .calculator-visuals-wrapper {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  align-items: flex-start; /* Ensures consistent alignment of all sections */
+  gap: 2rem;
+  margin-top: 2rem;
+  flex-wrap: wrap; /* Allow wrapping on smaller screens */
+  align-items: flex-start; /* Keep alignment clean */
 }
 
 .calculator-section {
-  flex: 0 0 40%; /* Fixed width for the calculator */
+  flex: 0 0 40%; /* 40% width calculator */
   min-width: 300px;
 }
 
 .visuals-section {
-  flex: 0 0 55%; /* Fixed width for the visuals */
+  flex: 0 0 55%; /* 55% width visuals */
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -19,23 +20,23 @@
 
 .right-container {
   display: flex;
-  flex-direction: column; /* Stacked layout */
-  gap: 1.5rem; /* Space between elements */
-  width: 100%; /* Ensures the container takes full width */
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
 }
 
 .summary-card,
 .chart-container {
   background-color: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Unified shadow style */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
-  margin: 0 auto; /* Centers the cards */
-  width: 90%; /* Ensures both cards stay within boundaries */
+  margin: 0 auto;
+  width: 90%;
 }
 
 .summary-card {
-  text-align: center; /* Centers the text */
+  text-align: center;
 }
 
 .summary-card h3 {
@@ -55,22 +56,24 @@
 }
 
 .recharts-responsive-container {
-  width: 100%; /* Ensures the chart fills its container */
-  height: 300px; /* Fixed height for consistency */
+  width: 100%;
+  height: 300px;
 }
 
-@media (max-width: 768px) {
+/* Make it responsive */
+@media (max-width: 900px) {
   .calculator-visuals-wrapper {
-    flex-direction: column; /* Stacks sections vertically */
+    flex-direction: column;
+    gap: 1.5rem;
   }
 
   .calculator-section,
   .visuals-section {
-    flex: 0 0 100%; /* Full-width for both sections */
+    flex: 0 0 100%;
   }
 
   .summary-card,
   .chart-container {
-    width: 100%; /* Expands cards to fill container */
+    width: 100%;
   }
 }
