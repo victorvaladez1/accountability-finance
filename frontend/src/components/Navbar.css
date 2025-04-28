@@ -23,9 +23,9 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  background: none;         /* ✅ No background by default */
-  backdrop-filter: none;    /* ✅ No blur by default */
-  box-shadow: none;         /* ✅ No box-shadow by default */
+  background: none;      
+  backdrop-filter: none;    
+  box-shadow: none;        
 }
 
 .nav-links a {
@@ -41,7 +41,7 @@
 }
 
 .nav-links button {
-  background-color: #ff4d4f;
+  background-color: #ef4444; 
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -53,9 +53,10 @@
 }
 
 .nav-links button:hover {
-  background-color: #e04343;
+  background-color: #dc2626;
   transform: translateY(-2px);
 }
+
 
 /* Hamburger Default (hidden) */
 .hamburger {
