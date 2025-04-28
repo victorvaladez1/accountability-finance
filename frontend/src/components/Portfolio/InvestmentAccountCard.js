@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Sector } from 'recharts';
 import HoldingPreview from './HoldingPreview';
 
-const InvestmentAccountCard = ({ account, holdings, livePrices, pieColors, onAddHolding, onDeleteAccount, snapshots }) => {
+const InvestmentAccountCard = ({ account, holdings, livePrices, pieColors, onAddHolding, onDeleteAccount, onDeleteHolding, snapshots }) => {
   const [expanded, setExpanded] = useState(false);
 
   const getPieData = () => {
@@ -140,7 +140,15 @@ const InvestmentAccountCard = ({ account, holdings, livePrices, pieColors, onAdd
           padding: '1rem',
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
         }}>
-          <HoldingPreview holdings={holdings} expanded={expanded} setExpanded={setExpanded} livePrices={livePrices} />
+          
+          <HoldingPreview 
+            holdings={holdings} 
+            expanded={expanded} 
+            setExpanded={setExpanded} 
+            livePrices={livePrices}
+            onDeleteHolding={onDeleteHolding}
+          />
+
         </div>
 
         {/* Mini Line Chart Box */}

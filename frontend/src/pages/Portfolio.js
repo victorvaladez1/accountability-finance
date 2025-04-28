@@ -62,6 +62,38 @@ function Portfolio() {
         const start = (page - 1) * perPage;
         return allHoldings.slice(start, start + perPage);
     };
+
+    const deleteHolding = async (holdingId) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this holding?");
+        if (!confirmDelete) return;
+      
+        try {
+          const res = await fetch(`/api/holdings/${holdingId}`, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+      
+          if (res.ok) {
+            const updatedHoldingsMap = { ...holdingsMap };
+            for (const accountId in updatedHoldingsMap) {
+              updatedHoldingsMap[accountId] = updatedHoldingsMap[accountId].filter((h) => h._id !== holdingId);
+            }
+            setHoldingsMap(updatedHoldingsMap);
+      
+            console.log("✅ Holding deleted!");
+          } else {
+            const err = await res.json();
+            console.error("Delete failed:", err.message);
+            alert("Failed to delete holding.");
+          }
+        } catch (err) {
+          console.error("Delete error:", err);
+          alert("Error deleting holding.");
+        }
+      };
+      
       
     const saveAllSnapshots = async () => {
         try {
@@ -494,14 +526,15 @@ function Portfolio() {
             ) : (
             accounts.map((account) => (
                 <InvestmentAccountCard
-                key={account._id}
-                account={account}
-                holdings={holdingsMap[account._id] || []}
-                livePrices={livePrices}
-                pieColors={pieColors}
-                onAddHolding={(accountId) => setSelectedAccountId(accountId)}
-                onDeleteAccount={deleteAccount}
-                snapshots={getFilteredAccountSnapshots(account._id)}
+                    key={account._id}
+                    account={account}
+                    holdings={holdingsMap[account._id] || []}
+                    livePrices={livePrices}
+                    pieColors={pieColors}
+                    onAddHolding={(accountId) => setSelectedAccountId(accountId)}
+                    onDeleteAccount={deleteAccount}
+                    onDeleteHolding={deleteHolding}
+                    snapshots={getFilteredAccountSnapshots(account._id)}
                 />
             ))
             )}
