@@ -206,3 +206,31 @@
   gap: 0.5rem;
 }
 
+.group-by-month {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.group-by-month input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #3498db; /* fintech blue */
+  cursor: pointer;
+  margin: 0;
+}
+
+.group-by-month label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.group-by-month .month-dropdown {
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 0.95rem;
+}

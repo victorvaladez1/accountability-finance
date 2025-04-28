@@ -159,8 +159,8 @@ function Transactions() {
     <div className="page-container">
       <Navbar />
       <h2>Transactions</h2>
-
-      {/* Add Transaction Form */}
+  
+      {/* ➕ Add Transaction Form */}
       <div className="transaction-form-card">
         <form onSubmit={handleSubmit} className="transaction-form">
           <select name="account" value={form.account} onChange={handleChange} required>
@@ -171,21 +171,46 @@ function Transactions() {
               </option>
             ))}
           </select>
-
+  
           <select name="type" value={form.type} onChange={handleChange} required>
             <option value="Expense">Expense</option>
             <option value="Income">Income</option>
           </select>
-
-          <input type="number" name="amount" placeholder="Amount" value={form.amount} onChange={handleChange} required />
-          <input type="text" name="category" placeholder="Category" value={form.category} onChange={handleChange} />
-          <input type="text" name="description" placeholder="Description" value={form.description} onChange={handleChange} />
-          <input type="date" name="date" value={form.date} onChange={handleChange} required />
+  
+          <input
+            type="number"
+            name="amount"
+            placeholder="Amount"
+            value={form.amount}
+            onChange={handleChange}
+            required
+          />
+          <input
+            type="text"
+            name="category"
+            placeholder="Category"
+            value={form.category}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            name="description"
+            placeholder="Description"
+            value={form.description}
+            onChange={handleChange}
+          />
+          <input
+            type="date"
+            name="date"
+            value={form.date}
+            onChange={handleChange}
+            required
+          />
           <button type="submit">Add Transaction</button>
         </form>
       </div>
-
-      {/* Filters */}
+  
+      {/* 🔍 Filters */}
       <div className="filter-card">
         <h3>Filters</h3>
         <div className="filters">
@@ -195,55 +220,59 @@ function Transactions() {
               <option key={acc._id} value={acc._id}>{acc.name}</option>
             ))}
           </select>
-
+  
           <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
             <option value="">All Categories</option>
             {uniqueCategories.map((cat) => (
               <option key={cat} value={cat}>{cat}</option>
             ))}
           </select>
-
+  
           <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
             <option value="">All Types</option>
             <option value="Income">Income</option>
             <option value="Expense">Expense</option>
           </select>
-
+  
           <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
             <option value="dateDesc">Date (Newest)</option>
             <option value="dateAsc">Date (Oldest)</option>
             <option value="amountDesc">Amount (High to Low)</option>
             <option value="amountAsc">Amount (Low to High)</option>
           </select>
+  
+          {/* 📅 Group by Month Toggle inside Filters */}
+          <div className="group-by-month">
+            <input
+              type="checkbox"
+              id="groupByMonthToggle"
+              checked={viewByMonth}
+              onChange={(e) => setViewByMonth(e.target.checked)}
+            />
+            <label htmlFor="groupByMonthToggle">Group by Month</label>
+  
+            {viewByMonth && (
+              <select
+                className="month-dropdown"
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+              >
+                <option value="">Select Month</option>
+                {Object.keys(monthlyTransactions).map((month) => (
+                  <option key={month} value={month}>{month}</option>
+                ))}
+              </select>
+            )}
+          </div>
         </div>
       </div>
-
-      {/* Monthly Toggle */}
-      <div className="monthly-toggle">
-        <label>
-          <input type="checkbox" checked={viewByMonth} onChange={(e) => setViewByMonth(e.target.checked)} />
-          Group by Month
-        </label>
-
-        {viewByMonth && (
-          <select className="month-dropdown" value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
-            <option value="">Select Month</option>
-            {Object.keys(monthlyTransactions).map((month) => (
-              <option key={month} value={month}>{month}</option>
-            ))}
-          </select>
-        )}
-      </div>
-
-      {/* Transaction List */}
+  
+      {/* 📄 Transaction List */}
       <div className="transaction-list-section">
         <h3>{viewByMonth && selectedMonth ? `Transactions for ${selectedMonth}` : "All Transactions"}</h3>
-
+  
         <ul className="transaction-list">
-          {(viewByMonth && selectedMonth
-            ? (monthlyTransactions[selectedMonth] || [])
-            : sortedTransactions
-          ).map((tx) => (
+          {(viewByMonth && selectedMonth ? monthlyTransactions[selectedMonth] || [] : sortedTransactions).map((tx) => (
             <li key={tx._id}>
               <div className={`transaction-item ${tx.type.toLowerCase()}`}>
                 <div className="transaction-header">
@@ -257,6 +286,7 @@ function Transactions() {
                       <div>Balance: ${tx.account?.balance?.toFixed(2) || "N/A"}</div>
                     </div>
                   </div>
+  
                   <div className="transaction-actions">
                     <button onClick={() => handleEditClick(tx)}>Edit</button>
                     <button onClick={() => handleDelete(tx._id)}>Delete</button>
@@ -267,8 +297,8 @@ function Transactions() {
           ))}
         </ul>
       </div>
-
-      {/* Pagination */}
+  
+      {/* 📚 Pagination Controls */}
       {!viewByMonth && (
         <>
           <div className="rows-per-page">
@@ -286,15 +316,20 @@ function Transactions() {
               <option value={20}>20</option>
             </select>
           </div>
-
+  
           <div className="pagination-controls">
-            <button disabled={currentPage === 1} onClick={() => fetchData(currentPage - 1, rowsPerPage)}>Previous</button>
+            <button disabled={currentPage === 1} onClick={() => fetchData(currentPage - 1, rowsPerPage)}>
+              Previous
+            </button>
             <span>Page {currentPage} of {totalPages}</span>
-            <button disabled={currentPage === totalPages} onClick={() => fetchData(currentPage + 1, rowsPerPage)}>Next</button>
+            <button disabled={currentPage === totalPages} onClick={() => fetchData(currentPage + 1, rowsPerPage)}>
+              Next
+            </button>
           </div>
         </>
       )}
-
+  
+      {/* ✏️ Edit Modal */}
       <EditTransactionModal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
