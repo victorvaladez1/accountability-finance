@@ -480,10 +480,12 @@ function Portfolio() {
             />
 
             {/* Portfolio Performance Chart */}
-            <PortfolioPerformanceCard 
-            snapshots={getFilteredSnapshots()} 
-            chartFilter={chartFilter} 
-            setChartFilter={setChartFilter}
+            <PortfolioPerformanceCard
+                snapshots={getFilteredSnapshots()}
+                chartFilter={chartFilter}
+                setChartFilter={setChartFilter}
+                totalValue={totalPortfolioValue}
+                saveAllSnapshots={saveAllSnapshots}
             />
 
             {/* Loop over Investment Accounts */}

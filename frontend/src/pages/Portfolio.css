@@ -272,3 +272,33 @@ button:disabled {
 .modal-content button:last-of-type:hover {
   background-color: #b3b3b3;
 }
+
+.snapshot-buttons {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.snapshot-buttons button {
+  background-color: #1E88E5;
+  color: white;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(30, 136, 229, 0.25);
+  transition: background-color 0.2s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.snapshot-buttons button:hover {
+  background-color: #1565C0;
+  transform: translateY(-2px);
+}
+

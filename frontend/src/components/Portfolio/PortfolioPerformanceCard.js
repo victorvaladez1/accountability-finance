@@ -1,7 +1,7 @@
 import React from 'react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 
-const PortfolioPerformanceCard = ({ snapshots, chartFilter, setChartFilter }) => {
+const PortfolioPerformanceCard = ({ snapshots, chartFilter, setChartFilter, totalValue, saveAllSnapshots }) => {
   if (!snapshots || snapshots.length < 2) return null;
 
   const first = snapshots[0].value;
@@ -9,21 +9,57 @@ const PortfolioPerformanceCard = ({ snapshots, chartFilter, setChartFilter }) =>
   const isGain = last - first >= 0;
   const lineColor = isGain ? "#4CAF50" : "#F44336";
 
+  const handleSaveSnapshot = async () => {
+    try {
+      const res = await fetch("/api/snapshots", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ value: totalValue }),
+      });
+
+      if (res.ok) {
+        alert("✅ Portfolio snapshot saved!");
+        window.location.reload();
+      } else {
+        alert("❌ Failed to save snapshot.");
+      }
+    } catch (err) {
+      console.error("Snapshot save error:", err);
+      alert("❌ Error saving snapshot.");
+    }
+  };
+
+  const handleSaveAllSnapshots = async () => {
+    try {
+      await saveAllSnapshots();
+      window.location.reload();
+    } catch (err) {
+      console.error("Save all snapshots error:", err);
+      alert("❌ Error saving all snapshots.");
+    }
+  };
+
   return (
     <div className="card">
       <h3>📈 Portfolio Performance</h3>
 
+      {/* Chart Filters */}
       <div className="chart-filters">
         <button className={chartFilter === "7d" ? "active" : ""} onClick={() => setChartFilter("7d")}>7d</button>
         <button className={chartFilter === "30d" ? "active" : ""} onClick={() => setChartFilter("30d")}>30d</button>
         <button className={chartFilter === "all" ? "active" : ""} onClick={() => setChartFilter("all")}>All</button>
       </div>
 
+      {/* Gain / Loss Summary */}
       <div className={`performance-header ${isGain ? "gain-bg" : "loss-bg"}`}>
         <span className="performance-icon">📈</span>
         <strong>{isGain ? "Gain" : "Loss"}:</strong> ${Math.abs(last - first).toLocaleString()}
       </div>
 
+      {/* Line Chart */}
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={snapshots}>
           <defs>
@@ -58,6 +94,12 @@ const PortfolioPerformanceCard = ({ snapshots, chartFilter, setChartFilter }) =>
           />
         </LineChart>
       </ResponsiveContainer>
+
+      {/* 📸 Snapshot Buttons */}
+      <div className="snapshot-buttons">
+        <button onClick={handleSaveSnapshot}>📸 Save Portfolio Snapshot</button>
+        <button onClick={handleSaveAllSnapshots}>📸 Save All Account Snapshots</button>
+      </div>
     </div>
   );
 };
