@@ -69,41 +69,54 @@
     border-radius: 8px;
 }
 
+/* --- Enhanced Send Button --- */
 .chat-input button:not(.clear-btn-inline) {
-    background: #007bff;
+    background: linear-gradient(135deg, #0056b3, #007bff); /* Gradient for a modern look */
     color: white;
-    padding: 0.7rem 1.2rem;
-    font-weight: 600;
+    padding: 0.8rem 1.5rem;
+    font-weight: bold;
     font-size: 1rem;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px; /* Slightly more rounded for elegance */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .chat-input button:not(.clear-btn-inline):hover {
-    background: #0056b3;
+    background: linear-gradient(135deg, #003c82, #0056b3); /* Darker gradient on hover */
+    transform: scale(1.05); /* Subtle scaling for interactivity */
 }
 
 .chat-input button:disabled {
-    background: #b3d4fc;
+    background: #d4e4fa; /* Softer tone for disabled state */
     cursor: not-allowed;
+    box-shadow: none;
 }
 
-/* --- Clear Button Inline --- */
+/* --- Enhanced Clear Button --- */
 .clear-btn-inline {
-    background: #ff4d4d;
-    border: none;
+    background: linear-gradient(135deg, #e04141, #ff4d4d); /* Gradient for a vibrant look */
     color: white;
-    padding: 0.6rem 1rem;
-    border-radius: 8px;
+    padding: 0.7rem 1.3rem;
+    font-weight: bold;
+    font-size: 1rem;
+    border: none;
+    border-radius: 12px; /* Consistent roundness */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.2s;
+    transition: transform 0.2s ease, background-color 0.2s ease;
 }
 
 .clear-btn-inline:hover {
-    background: #e04141;
+    background: linear-gradient(135deg, #c12b2b, #e04141); /* Darker gradient on hover */
+    transform: scale(1.05); /* Interactive scaling */
+}
+
+.clear-btn-inline:disabled {
+    background: #f8c8c8; /* Softer tone for disabled state */
+    cursor: not-allowed;
+    box-shadow: none;
 }
 
 /* --- Chat Title --- */
