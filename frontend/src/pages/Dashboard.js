@@ -219,7 +219,15 @@ function Dashboard() {
                   </div>
                 ) : (
                   <>
-                    <strong>{acc.name}</strong> - ${acc.balance.toFixed(2)} ({acc.type})
+                    <div className="account-info">
+                      <strong>{acc.name}</strong>
+                      <span className="account-type-badge">
+                        <span className={`account-type ${acc.type.toLowerCase()}`}>
+                          {acc.type}
+                        </span>
+                      </span>
+                    </div>
+                    <p>${acc.balance.toFixed(2)}</p>
                     <div className="actions">
                       <button onClick={() => startEditing(acc)}>Edit</button>
                       <button onClick={() => handleDelete(acc._id)}>Delete</button>

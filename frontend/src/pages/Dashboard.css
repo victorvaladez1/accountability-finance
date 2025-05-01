@@ -50,6 +50,12 @@
     display: flex;
     flex-direction: column;
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .account-list li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
   }
   
   .account-list .actions {
@@ -132,10 +138,10 @@
   
   .chart-section {
     margin-top: 3rem;
-    padding: 1.5rem;
-    background-color: #fefefe;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    padding: 2rem;
+    background-color: #f8fafc;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
   }
 
   .analytics-section {
@@ -153,3 +159,36 @@
     color: #333;
   }
   
+  .account-type {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    margin-left: 0.5rem;
+  }
+  
+  .account-type.checking {
+    background-color: #cfe2ff;
+    color: #084298;
+  }
+  
+  .account-type.savings {
+    background-color: #e2e3e5;
+    color: #41464b;
+  }
+  
+  .account-type.investment {
+    background-color: #f8d7da;
+    color: #842029;
+  }
+
+  .accounts-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+  
+  .account-list li {
+    flex: 1 1 calc(50% - 1.25rem);
+  }
