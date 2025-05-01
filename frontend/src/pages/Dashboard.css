@@ -1,10 +1,10 @@
 .dashboard-container {
-    max-width: 95rem;
-    margin: 0 auto;
-    padding: 1rem 2rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f9fafb;
-  }
+  max-width: 95rem;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #ffffff;
+}
 
   .section-card {
     background-color: #f0f4f8;
@@ -145,11 +145,11 @@
   }
 
   .analytics-section {
-    background-color: #f0f4f8;
+    background-color: #ffffff;
     padding: 1.5rem;
     border-radius: 10px;
     margin-top: 2rem;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
   }
   
   .expense-summary-message {

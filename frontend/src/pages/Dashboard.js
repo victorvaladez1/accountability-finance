@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { Circles } from "react-loader-spinner";
 import axios from "axios";
 import Navbar from "../components/Navbar";
@@ -245,13 +245,31 @@ function Dashboard() {
         <div className="analytics-section">
           <h3>Monthly Spending (Last 12 Months)</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={expenseData}>
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
-              <Bar dataKey="total" fill="#e74c3c" />
+            <BarChart data={expenseData} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
+              <defs>
+                <linearGradient id="colorSpending" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.9} />
+                  <stop offset="100%" stopColor="#60a5fa" stopOpacity={0.6} />
+                </linearGradient>
+              </defs>
+
+              <XAxis dataKey="month" stroke="#374151" />
+              <YAxis stroke="#374151" />
+              <Tooltip
+                formatter={(value) => [`$${value.toFixed(2)}`, "Total"]}
+                contentStyle={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb" }}
+                labelStyle={{ color: "#1f2937" }}
+              />
+              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <Bar
+                dataKey="total"
+                fill="url(#colorSpending)"
+                radius={[8, 8, 0, 0]}
+                barSize={40}
+              />
             </BarChart>
           </ResponsiveContainer>
+
 
           <div className="expense-summary-message">
             {currentMonth < average ? (
