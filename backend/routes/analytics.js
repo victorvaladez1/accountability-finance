@@ -1,63 +1,42 @@
 import express from "express";
 import Transaction from "../models/Transaction.js";
 import requireAuth from "../middleware/verifyToken.js";
+import { DateTime } from "luxon";
 
 const router = express.Router();
-
 router.use(requireAuth);
 
 router.get("/monthly-expenses", async (req, res) => {
   try {
-    const now = new Date();
-    const pastYear = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+    const now = DateTime.now().setZone("America/Chicago");
+    const pastYear = now.minus({ months: 11 }).startOf("month");
+    const endOfToday = now.endOf("day");
 
-    console.log("User ID:", req.user.id);
-    console.log("Date Range:", pastYear.toISOString(), "->", now.toISOString());
-
-    const results = await Transaction.aggregate([
-      {
-        $match: {
-          user: req.user.id,
-          type: "Expense",
-          date: { $gte: pastYear, $lte: now },
-        },
+    const transactions = await Transaction.find({
+      user: req.user.id,
+      type: "Expense",
+      date: {
+        $gte: pastYear.toJSDate(),
+        $lte: endOfToday.toJSDate(),
       },
-      {
-        $group: {
-          _id: { $dateToString: { format: "%Y-%m", date: "$date" } },
-          total: { $sum: "$amount" },
-        },
-      },
-      { $sort: { _id: 1 } },
-      {
-        $project: {
-          _id: 0,
-          month: "$_id",
-          total: 1,
-        },
-      },
-    ]);
-
-    const monthsMap = {};
-    for (let i = 0; i < 12; i++) {
-      const date = new Date(now.getFullYear(), now.getMonth() - 11 + i, 1);
-      const key = date.toISOString().slice(0, 7);
-      monthsMap[key] = 0;
-    }
-
-    results.forEach((r) => {
-      monthsMap[r.month] = r.total;
     });
 
-    const monthsArray = Object.keys(monthsMap).map((month) => ({
-      month,
-      total: monthsMap[month],
-    }));
+    const grouped = {};
+    transactions.forEach((tx) => {
+      const monthKey = DateTime.fromJSDate(tx.date).setZone("America/Chicago").toFormat("yyyy-MM");
+      grouped[monthKey] = (grouped[monthKey] || 0) + tx.amount;
+    });
+
+    const monthsArray = [];
+    for (let i = 0; i < 12; i++) {
+      const key = now.minus({ months: 11 - i }).toFormat("yyyy-MM");
+      monthsArray.push({ month: key, total: grouped[key] || 0 });
+    }
 
     const totalSpending = monthsArray.reduce((sum, m) => sum + m.total, 0);
     const average = totalSpending / 12;
-    const currentMonthKey = now.toISOString().slice(0, 7);
-    const currentMonth = monthsMap[currentMonthKey] || 0;
+    const currentMonthKey = now.toFormat("yyyy-MM");
+    const currentMonth = grouped[currentMonthKey] || 0;
 
     res.json({
       months: monthsArray,

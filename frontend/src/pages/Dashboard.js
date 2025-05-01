@@ -30,6 +30,7 @@ function Dashboard() {
       });
   
       setExpenseData(res.data.months);
+      console.log("Bar Chart Data", res.data.months);
       setAverage(res.data.average);
       setCurrentMonth(res.data.currentMonth);
     };
