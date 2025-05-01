@@ -150,7 +150,7 @@ const InvestmentAccountCard = ({ account, holdings, livePrices, pieColors, onAdd
           />
 
         </div>
-
+        
         {/* Mini Line Chart Box */}
         {snapshots && snapshots.length > 1 && (
           <div style={{
