@@ -60,13 +60,19 @@ function Dashboard() {
       const res = await axios.get("http://localhost:5000/api/transactions", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setTransactions(res.data);
+  
+      const txData = Array.isArray(res.data) ? res.data : [];
+  
+      console.log("Transactions loaded:", txData);
+      setTransactions(res.data.transactions);
     } catch (err) {
       console.error("Failed to fetch transactions:", err);
+      setTransactions([]);
     } finally {
       setTxLoading(false);
     }
   };
+  
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -282,10 +288,15 @@ function Dashboard() {
       </div>
 
       <div className="chart-section">
-        {!txLoading && transactions.length > 0 && (
+        {!txLoading && Array.isArray(transactions) && transactions.some(tx => tx.type === "Expense") ? (
           <ExpensePieChart transactions={transactions} />
+        ) : (
+          <p style={{ textAlign: "center", color: "#666", marginTop: "1rem" }}>
+            No expenses to show pie chart.
+          </p>
         )}
       </div>
+
     </div>
   );
 }
