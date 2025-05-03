@@ -250,28 +250,28 @@ function Dashboard() {
       <div className="section-card">
         <div className="analytics-section">
           <h3>Monthly Spending (Last 12 Months)</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={expenseData} margin={{ top: 10, right: 30, left: 0, bottom: 5 }}>
+          <ResponsiveContainer width="100%" height={320}>
+            <BarChart data={expenseData} margin={{ top: 15, right: 30, left: 0, bottom: 10 }}>
               <defs>
                 <linearGradient id="colorSpending" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.9} />
-                  <stop offset="100%" stopColor="#60a5fa" stopOpacity={0.6} />
+                  <stop offset="0%" stopColor="#2563eb" stopOpacity={1} />
+                  <stop offset="100%" stopColor="#60a5fa" stopOpacity={0.8} />
                 </linearGradient>
               </defs>
 
-              <XAxis dataKey="month" stroke="#374151" />
-              <YAxis stroke="#374151" />
+              <XAxis dataKey="month" stroke="#1f2937" tick={{ fontSize: 14, fontWeight: 'bold' }} />
+              <YAxis stroke="#1f2937" tick={{ fontSize: 14, fontWeight: 'bold' }} />
               <Tooltip
                 formatter={(value) => [`$${value.toFixed(2)}`, "Total"]}
-                contentStyle={{ backgroundColor: "#f9fafb", border: "1px solid #e5e7eb" }}
-                labelStyle={{ color: "#1f2937" }}
+                contentStyle={{ backgroundColor: "#ffffff", border: "1px solid #d1d5db", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.15)" }}
+                labelStyle={{ color: "#1f2937", fontWeight: "bold" }}
               />
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
               <Bar
                 dataKey="total"
                 fill="url(#colorSpending)"
-                radius={[8, 8, 0, 0]}
-                barSize={40}
+                radius={[10, 10, 0, 0]}
+                barSize={50}
               />
             </BarChart>
           </ResponsiveContainer>
