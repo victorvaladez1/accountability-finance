@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LineChart, Line } from "recharts";
 import { Circles } from "react-loader-spinner";
 import { generateCashGraph } from "../utils/generateCashGraph";
+import { generatePerAccountCashGraphs } from "../utils/generatePerAccountCashGraphs";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import ExpensePieChart from "../components/ExpensePieChart";
