@@ -138,9 +138,13 @@ function Dashboard() {
     }
   };
 
-  const totalBalance = accounts.reduce((acc, curr) => acc + curr.balance, 0);
-  const checkingCount = accounts.filter((a) => a.type === "Checking").length;
-  const savingsCount = accounts.filter((a) => a.type === "Savings").length;
+  const cashAccounts = accounts.filter(
+    (a) => a.type === "Checking" || a.type === "Savings"
+  );
+  
+  const totalBalance = cashAccounts.reduce((acc, curr) => acc + curr.balance, 0);
+  const checkingCount = cashAccounts.filter((a) => a.type === "Checking").length;
+  const savingsCount = cashAccounts.filter((a) => a.type === "Savings").length;
 
   if (loading) return <div>Loading your dashboard...</div>;
   if (error) return <div>{error}</div>;
@@ -153,7 +157,11 @@ function Dashboard() {
       <div className="section-card">
         <h3>Account Summary</h3>
         <p><strong>Total Balance:</strong> ${totalBalance.toFixed(2)}</p>
-        <p><strong>Accounts:</strong> {accounts.length} ({checkingCount} Checking / {savingsCount} Savings)</p>
+        <p><strong>Accounts:</strong> {cashAccounts.length} ({checkingCount} Checking / {savingsCount} Savings)</p>
+        <p style={{ color: "#888", fontStyle: "italic" }}>
+          Investment accounts are viewable in the <strong>Portfolio</strong> tab.
+        </p>
+
       </div>
 
       <div className="section-card">
@@ -197,7 +205,9 @@ function Dashboard() {
           <p>No accounts yet.</p>
         ) : (
           <ul className="account-list">
-            {accounts.map((acc) => (
+            {accounts
+            .filter((acc) => acc.type !== "Investment")
+            .map((acc) => (
               <li key={acc._id}>
                 {editingId === acc._id ? (
                   <div>
