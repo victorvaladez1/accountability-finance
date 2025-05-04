@@ -76,6 +76,7 @@ function Dashboard() {
   };
 
   const cashGraphData = generateCashGraph(transactions, accounts);
+  const perAccountCashGraphs = generatePerAccountCashGraphs(transactions, accounts);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -259,56 +260,125 @@ function Dashboard() {
         ) : (
           <ul className="account-list">
             {accounts
-            .filter((acc) => acc.type !== "Investment")
-            .map((acc) => (
-              <li key={acc._id}>
-                {editingId === acc._id ? (
-                  <div>
-                    <input
-                      type="text"
-                      name="name"
-                      value={editForm.name}
-                      onChange={handleEditChange}
-                    />
-                    <select
-                      name="type"
-                      value={editForm.type}
-                      onChange={handleEditChange}
-                    >
-                      <option value="Checking">Checking</option>
-                      <option value="Savings">Savings</option>
-                    </select>
-                    <input
-                      type="number"
-                      name="balance"
-                      value={editForm.balance}
-                      onChange={handleEditChange}
-                    />
-                    <button onClick={handleSave}>Save</button>
-                    <button onClick={cancelEdit}>Cancel</button>
-                  </div>
-                ) : (
-                  <>
-                    <div className="account-info">
-                      <strong>{acc.name}</strong>
-                      <span className="account-type-badge">
-                        <span className={`account-type ${acc.type.toLowerCase()}`}>
-                          {acc.type}
+              .filter((acc) => acc.type !== "Investment")
+              .map((acc) => {
+                const graphData =
+                  perAccountCashGraphs.find((g) => g.accountId === acc._id)
+                    ?.snapshots || [];
+
+                return (
+                  <li key={acc._id} className="account-item">
+                    <div className="account-header">
+                      <div className="account-info">
+                        <strong>{acc.name}</strong>
+                        <span className="account-type-badge">
+                          <span className={`account-type ${acc.type.toLowerCase()}`}>
+                            {acc.type}
+                          </span>
                         </span>
-                      </span>
+                      </div>
+                      <p className="account-balance">${acc.balance.toFixed(2)}</p>
+                      <div className="actions">
+                        {editingId === acc._id ? (
+                          <>
+                            <input
+                              type="text"
+                              name="name"
+                              value={editForm.name}
+                              onChange={handleEditChange}
+                            />
+                            <select
+                              name="type"
+                              value={editForm.type}
+                              onChange={handleEditChange}
+                            >
+                              <option value="Checking">Checking</option>
+                              <option value="Savings">Savings</option>
+                            </select>
+                            <input
+                              type="number"
+                              name="balance"
+                              value={editForm.balance}
+                              onChange={handleEditChange}
+                            />
+                            <button onClick={handleSave}>Save</button>
+                            <button onClick={cancelEdit}>Cancel</button>
+                          </>
+                        ) : (
+                          <>
+                            <button onClick={() => startEditing(acc)}>Edit</button>
+                            <button onClick={() => handleDelete(acc._id)}>Delete</button>
+                          </>
+                        )}
+                      </div>
                     </div>
-                    <p>${acc.balance.toFixed(2)}</p>
-                    <div className="actions">
-                      <button onClick={() => startEditing(acc)}>Edit</button>
-                      <button onClick={() => handleDelete(acc._id)}>Delete</button>
+
+                    <div className="account-chart">
+                      <ResponsiveContainer width="100%" height={200}>
+                        <LineChart data={graphData}>
+                          <defs>
+                            <linearGradient
+                              id={`accGradient-${acc._id}`}
+                              x1="0"
+                              y1="0"
+                              x2="0"
+                              y2="1"
+                            >
+                              <stop
+                                offset="0%"
+                                stopColor="#2563eb"
+                                stopOpacity={0.8}
+                              />
+                              <stop
+                                offset="100%"
+                                stopColor="#2563eb"
+                                stopOpacity={0.2}
+                              />
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                          <XAxis
+                            dataKey="timestamp"
+                            tickFormatter={(str) =>
+                              new Date(str).toLocaleDateString()
+                            }
+                          />
+                          <YAxis
+                            tickFormatter={(val) => `$${val.toLocaleString()}`}
+                            domain={["auto", "auto"]}
+                          />
+                          <Tooltip
+                            contentStyle={{
+                              backgroundColor: "#fff",
+                              borderRadius: "8px",
+                              boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
+                              border: "1px solid #e0e0e0",
+                            }}
+                            itemStyle={{ color: "#333", fontWeight: 500 }}
+                            labelStyle={{ fontWeight: "bold", color: "#555" }}
+                            labelFormatter={(str) =>
+                              `Date: ${new Date(str).toLocaleDateString()}`
+                            }
+                            formatter={(val) => [`$${val.toLocaleString()}`, "Balance"]}
+                          />
+                          <Line
+                            type="monotone"
+                            dataKey="value"
+                            stroke={`url(#accGradient-${acc._id})`}
+                            strokeWidth={3}
+                            dot={{ r: 3 }}
+                            activeDot={{ r: 5 }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
                     </div>
-                  </>
-                )}
-              </li>
-            ))}
+                  </li>
+                );
+              })}
           </ul>
         )}
       </div>
+
 
       <div className="section-card">
         <div className="analytics-section">
