@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LineChart, Line } from "recharts";
 import { Circles } from "react-loader-spinner";
+import { generateCashGraph } from "../utils/generateCashGraph";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import ExpensePieChart from "../components/ExpensePieChart";
@@ -72,7 +73,8 @@ function Dashboard() {
       setTxLoading(false);
     }
   };
-  
+
+  const cashGraphData = generateCashGraph(transactions, accounts);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -162,6 +164,18 @@ function Dashboard() {
           Investment accounts are viewable in the <strong>Portfolio</strong> tab.
         </p>
 
+        <div className="section-card">
+          <h3>Cash Flow Over Time</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={cashGraphData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+              <Line type="monotone" dataKey="totalCash" stroke="#2563eb" strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
       <div className="section-card">
