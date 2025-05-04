@@ -164,17 +164,55 @@ function Dashboard() {
           Investment accounts are viewable in the <strong>Portfolio</strong> tab.
         </p>
 
-        <div className="section-card">
+        <div className="section-card-white">
           <h3>Cash Flow Over Time</h3>
           <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={cashGraphData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
-              <Line type="monotone" dataKey="totalCash" stroke="#2563eb" strokeWidth={2} />
-            </LineChart>
-          </ResponsiveContainer>
+          <LineChart data={cashGraphData}>
+            <defs>
+              <linearGradient id="cashGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#2563eb" stopOpacity={0.8} />
+                <stop offset="100%" stopColor="#2563eb" stopOpacity={0.2} />
+              </linearGradient>
+            </defs>
+
+            <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+
+            <XAxis
+              dataKey="date"
+              tickFormatter={(str) => new Date(str).toLocaleDateString()}
+            />
+            <YAxis
+              tickFormatter={(val) => `$${val.toLocaleString()}`}
+              domain={["auto", "auto"]}
+            />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#ffffff",
+                borderRadius: "8px",
+                boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                border: "1px solid #e0e0e0",
+              }}
+              itemStyle={{
+                color: "#333",
+                fontWeight: 500,
+              }}
+              labelStyle={{
+                fontWeight: "bold",
+                color: "#555",
+              }}
+              labelFormatter={(str) => `Date: ${new Date(str).toLocaleDateString()}`}
+              formatter={(val) => [`$${val.toLocaleString()}`, "Total Cash"]}
+            />
+            <Line
+              type="monotone"
+              dataKey="totalCash"
+              stroke="url(#cashGradient)"
+              strokeWidth={3}
+              dot={{ r: 4 }}
+              activeDot={{ r: 6 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
         </div>
       </div>
 
