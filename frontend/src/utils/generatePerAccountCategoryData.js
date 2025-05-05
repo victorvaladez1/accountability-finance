@@ -1,6 +1,6 @@
 export function generatePerAccountCategoryData(transactions, accountId) {
     const filtered = transactions.filter(
-      (tx) => tx.accountId === accountId && tx.type === "Expense"
+      (tx) => tx.account?._id === accountId && tx.type === "Expense"
     );
   
     const categoryMap = {};

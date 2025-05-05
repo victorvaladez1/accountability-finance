@@ -428,32 +428,41 @@ function Dashboard() {
                         </LineChart>
                       </ResponsiveContainer>
                     </div>
-                    {transactions.length > 0 && (
-                      <div style={{ height: 250, marginTop: "1rem" }}>
-                        <h4>Expenses by Category</h4>
-                        <ResponsiveContainer width="100%" height="100%">
-                          <PieChart>
-                            <Pie
-                              data={generatePerAccountCategoryData(transactions, acc._id)}
-                              dataKey="value"
-                              nameKey="name"
-                              cx="50%"
-                              cy="50%"
-                              outerRadius={80}
-                              fill="#8884d8"
-                              label
-                            >
-                              {["#60a5fa", "#34d399", "#fbbf24", "#f87171", "#a78bfa"].map((color, index) => (
-                                <Cell key={`cell-${index}`} fill={color} />
-                              ))}
-                            </Pie>
-                            <Tooltip
-                              formatter={(value) => [`$${value.toFixed(2)}`, "Total"]}
-                            />
-                          </PieChart>
-                        </ResponsiveContainer>
-                      </div>
-                    )}
+                    {transactions.length > 0 && (() => {
+                      const data = generatePerAccountCategoryData(transactions, acc._id);
+                      return data.length > 0 ? (
+                        <div style={{ height: 250, marginTop: "1rem" }}>
+                          <h4>Expenses by Category</h4>
+                          <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                              <Pie
+                                data={data}
+                                dataKey="value"
+                                nameKey="name"
+                                cx="50%"
+                                cy="50%"
+                                outerRadius={80}
+                                fill="#8884d8"
+                                label
+                              >
+                                {["#60a5fa", "#34d399", "#fbbf24", "#f87171", "#a78bfa"].map(
+                                  (color, index) => (
+                                    <Cell key={`cell-${index}`} fill={color} />
+                                  )
+                                )}
+                              </Pie>
+                              <Tooltip
+                                formatter={(value) => [`$${value.toFixed(2)}`, "Total"]}
+                              />
+                            </PieChart>
+                          </ResponsiveContainer>
+                        </div>
+                      ) : (
+                        <p style={{ textAlign: "center", color: "#666", marginTop: "1rem" }}>
+                          No expenses for this account.
+                        </p>
+                      );
+                    })()}
                   </li>
                 );
               })}
