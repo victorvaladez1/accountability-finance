@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LineChart, Line } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 import { Circles } from "react-loader-spinner";
 import { generateCashGraph } from "../utils/generateCashGraph";
 import { generatePerAccountCashGraphs } from "../utils/generatePerAccountCashGraphs";
+import { generatePerAccountCategoryData } from "../utils/generatePerAccountCategoryData";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import CreateCashAccountModal from "../components/CreateCashAccountModal";
@@ -419,6 +420,32 @@ function Dashboard() {
                         </LineChart>
                       </ResponsiveContainer>
                     </div>
+                    {transactions.length > 0 && (
+                      <div style={{ height: 250, marginTop: "1rem" }}>
+                        <h4>Expenses by Category</h4>
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={generatePerAccountCategoryData(transactions, acc._id)}
+                              dataKey="value"
+                              nameKey="name"
+                              cx="50%"
+                              cy="50%"
+                              outerRadius={80}
+                              fill="#8884d8"
+                              label
+                            >
+                              {["#60a5fa", "#34d399", "#fbbf24", "#f87171", "#a78bfa"].map((color, index) => (
+                                <Cell key={`cell-${index}`} fill={color} />
+                              ))}
+                            </Pie>
+                            <Tooltip
+                              formatter={(value) => [`$${value.toFixed(2)}`, "Total"]}
+                            />
+                          </PieChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
                   </li>
                 );
               })}
