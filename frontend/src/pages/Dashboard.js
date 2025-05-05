@@ -249,6 +249,56 @@ function Dashboard() {
           </LineChart>
         </ResponsiveContainer>
         </div>
+
+        <div className="chart-section">
+          {!txLoading && Array.isArray(transactions) && transactions.some(tx => tx.type === "Expense") ? (
+            <ExpensePieChart transactions={transactions} />
+          ) : (
+            <p style={{ textAlign: "center", color: "#666", marginTop: "1rem" }}>
+              No expenses to show pie chart.
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="section-card">
+        <div className="analytics-section">
+          <h3>Monthly Spending (Last 12 Months)</h3>
+          <ResponsiveContainer width="100%" height={320}>
+            <BarChart data={expenseData} margin={{ top: 15, right: 30, left: 0, bottom: 10 }}>
+              <defs>
+                <linearGradient id="colorSpending" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#2563eb" stopOpacity={1} />
+                  <stop offset="100%" stopColor="#60a5fa" stopOpacity={0.8} />
+                </linearGradient>
+              </defs>
+
+              <XAxis dataKey="month" stroke="#1f2937" tick={{ fontSize: 14, fontWeight: 'bold' }} />
+              <YAxis stroke="#1f2937" tick={{ fontSize: 14, fontWeight: 'bold' }} />
+              <Tooltip
+                formatter={(value) => [`$${value.toFixed(2)}`, "Total"]}
+                contentStyle={{ backgroundColor: "#ffffff", border: "1px solid #d1d5db", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.15)" }}
+                labelStyle={{ color: "#1f2937", fontWeight: "bold" }}
+              />
+              <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
+              <Bar
+                dataKey="total"
+                fill="url(#colorSpending)"
+                radius={[10, 10, 0, 0]}
+                barSize={50}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+
+
+          <div className="expense-summary-message">
+            {currentMonth < average ? (
+              <p>🎉 You’ve spent <strong>${(average - currentMonth).toFixed(2)}</strong> less than your average monthly spending.</p>
+            ) : (
+              <p>⚠️ You’ve spent <strong>${(currentMonth - average).toFixed(2)}</strong> more than your average monthly spending.</p>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="section-card">
@@ -380,56 +430,6 @@ function Dashboard() {
         <button onClick={() => setIsModalOpen(true)} className="add-account-btn">
           + Add Cash Account
         </button>
-      </div>
-
-      <div className="section-card">
-        <div className="analytics-section">
-          <h3>Monthly Spending (Last 12 Months)</h3>
-          <ResponsiveContainer width="100%" height={320}>
-            <BarChart data={expenseData} margin={{ top: 15, right: 30, left: 0, bottom: 10 }}>
-              <defs>
-                <linearGradient id="colorSpending" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#2563eb" stopOpacity={1} />
-                  <stop offset="100%" stopColor="#60a5fa" stopOpacity={0.8} />
-                </linearGradient>
-              </defs>
-
-              <XAxis dataKey="month" stroke="#1f2937" tick={{ fontSize: 14, fontWeight: 'bold' }} />
-              <YAxis stroke="#1f2937" tick={{ fontSize: 14, fontWeight: 'bold' }} />
-              <Tooltip
-                formatter={(value) => [`$${value.toFixed(2)}`, "Total"]}
-                contentStyle={{ backgroundColor: "#ffffff", border: "1px solid #d1d5db", boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.15)" }}
-                labelStyle={{ color: "#1f2937", fontWeight: "bold" }}
-              />
-              <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" />
-              <Bar
-                dataKey="total"
-                fill="url(#colorSpending)"
-                radius={[10, 10, 0, 0]}
-                barSize={50}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-
-
-          <div className="expense-summary-message">
-            {currentMonth < average ? (
-              <p>🎉 You’ve spent <strong>${(average - currentMonth).toFixed(2)}</strong> less than your average monthly spending.</p>
-            ) : (
-              <p>⚠️ You’ve spent <strong>${(currentMonth - average).toFixed(2)}</strong> more than your average monthly spending.</p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="chart-section">
-        {!txLoading && Array.isArray(transactions) && transactions.some(tx => tx.type === "Expense") ? (
-          <ExpensePieChart transactions={transactions} />
-        ) : (
-          <p style={{ textAlign: "center", color: "#666", marginTop: "1rem" }}>
-            No expenses to show pie chart.
-          </p>
-        )}
       </div>
 
       <CreateCashAccountModal
