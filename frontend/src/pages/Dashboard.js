@@ -25,6 +25,7 @@ function Dashboard() {
   const [expenseData, setExpenseData] = useState([]);
   const [average, setAverage] = useState(0);
   const [currentMonth, setCurrentMonth] = useState(0);
+  const [range, setRange] = useState("30d");
 
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -98,6 +99,19 @@ function Dashboard() {
     }
   };
 
+  const filterByRange = (data, range) => {
+    if (range === "all") return data;
+  
+    const now = new Date();
+    const cutoff = new Date(
+      range === "7d"
+        ? now.setDate(now.getDate() - 7)
+        : now.setDate(now.getDate() - 30)
+    );
+  
+    return data.filter((item) => new Date(item.date || item.timestamp) >= cutoff);
+  };
+
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure?")) return;
     try {
@@ -155,6 +169,12 @@ function Dashboard() {
   if (loading) return <div>Loading your dashboard...</div>;
   if (error) return <div>{error}</div>;
 
+  const filteredCashGraphData = filterByRange(cashGraphData, range);
+  const filteredPerAccountCashGraphs = perAccountCashGraphs.map((graph) => ({
+    ...graph,
+    snapshots: filterByRange(graph.snapshots, range),
+  }));
+
   return (
     <div className="page-container">
       <Navbar />
@@ -169,9 +189,20 @@ function Dashboard() {
         </p>
 
         <div className="section-card-white">
+        <div className="chart-filters">
+            {["7d", "30d", "All"].map((r) => (
+              <button
+                key={r}
+                className={range === r.toLowerCase() ? "active" : ""}
+                onClick={() => setRange(r.toLowerCase())}
+              >
+                {r}
+              </button>
+            ))}
+          </div>
           <h3>Cash Flow Over Time</h3>
           <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={cashGraphData}>
+          <LineChart data={filteredCashGraphData}>
             <defs>
               <linearGradient id="cashGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#2563eb" stopOpacity={0.8} />
@@ -229,9 +260,8 @@ function Dashboard() {
             {accounts
               .filter((acc) => acc.type !== "Investment")
               .map((acc) => {
-                const graphData =
-                  perAccountCashGraphs.find((g) => g.accountId === acc._id)
-                    ?.snapshots || [];
+                const graphData = filteredPerAccountCashGraphs.find((g) => g.accountId === acc._id)
+                ?.snapshots || [];
 
                 return (
                   <li key={acc._id} className="account-item">
