@@ -326,3 +326,86 @@
 .modal-content button:last-of-type:hover {
   background-color: #b3b3b3;
 }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.summary-section {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 1rem 0;
+}
+
+.summary-box {
+  flex: 1;
+  min-width: 250px;
+}
+
+.summary-pie {
+  flex: 1;
+  min-width: 300px;
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.summary-pie h3 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.summary-grid {
+  display: flex;
+  gap: 3rem;
+  margin-bottom: 1rem;
+}
+
+.summary-label {
+  font-weight: 500;
+  color: #555;
+  margin-bottom: 0.25rem;
+}
+
+.summary-value {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.summary-note {
+  font-style: italic;
+  color: #888;
+}
+
+
+.section-card-white {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .summary-section {
+    flex-direction: column;
+  }
+}
+
+.summary-pie h3 {
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+

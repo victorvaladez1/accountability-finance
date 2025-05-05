@@ -181,28 +181,61 @@ function Dashboard() {
       <Navbar />
       <h2>Welcome to your Dashboard</h2>
 
-      <div className="section-card">
-        <h3>Account Summary</h3>
-        <p><strong>Total Balance:</strong> ${totalBalance.toFixed(2)}</p>
-        <p><strong>Accounts:</strong> {cashAccounts.length} ({checkingCount} Checking / {savingsCount} Savings)</p>
-        <p style={{ color: "#888", fontStyle: "italic" }}>
-          Investment accounts are viewable in the <strong>Portfolio</strong> tab.
-        </p>
-
-        <div className="section-card-white">
-        <div className="chart-filters">
-            {["7d", "30d", "All"].map((r) => (
-              <button
-                key={r}
-                className={range === r.toLowerCase() ? "active" : ""}
-                onClick={() => setRange(r.toLowerCase())}
-              >
-                {r}
-              </button>
-            ))}
+      <div className="section-card-white">
+        <div className="summary-section">
+          {/* Account Summary */}
+          <div className="summary-box">
+            <div className="section-header">
+              <h3>Account Summary</h3>
+            </div>
+            <div className="summary-grid">
+            <div>
+              <p className="summary-label">Total Balance:</p>
+              <p className="summary-value">
+                ${totalBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </p>
+            </div>
+              <div>
+                <p className="summary-label">Accounts:</p>
+                <p className="summary-value">
+                  {cashAccounts.length} ({checkingCount} Checking / {savingsCount} Savings)
+                </p>
+              </div>
+            </div>
+            <p className="summary-note">
+              Investment accounts are viewable in the <strong><em>Portfolio</em></strong> tab.
+            </p>
           </div>
-          <h3>Cash Flow Over Time</h3>
-          <ResponsiveContainer width="100%" height={300}>
+
+          {/* Expenses by Category */}
+          <div className="summary-pie">
+            <h3>Expenses by Category</h3>
+            {!txLoading && Array.isArray(transactions) && transactions.some(tx => tx.type === "Expense") ? (
+              <ExpensePieChart transactions={transactions} />
+            ) : (
+              <p style={{ textAlign: "center", color: "#666", marginTop: "1rem" }}>
+                No expenses to show pie chart.
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Chart Filters */}
+        <div className="chart-filters">
+          {["7d", "30d", "All"].map((r) => (
+            <button
+              key={r}
+              className={range === r.toLowerCase() ? "active" : ""}
+              onClick={() => setRange(r.toLowerCase())}
+            >
+              {r}
+            </button>
+          ))}
+        </div>
+
+        {/* Cash Flow Chart */}
+        <h3>Cash Flow Over Time</h3>
+        <ResponsiveContainer width="100%" height={300}>
           <LineChart data={filteredCashGraphData}>
             <defs>
               <linearGradient id="cashGradient" x1="0" y1="0" x2="0" y2="1">
@@ -210,17 +243,9 @@ function Dashboard() {
                 <stop offset="100%" stopColor="#2563eb" stopOpacity={0.2} />
               </linearGradient>
             </defs>
-
             <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-
-            <XAxis
-              dataKey="date"
-              tickFormatter={(str) => new Date(str).toLocaleDateString()}
-            />
-            <YAxis
-              tickFormatter={(val) => `$${val.toLocaleString()}`}
-              domain={["auto", "auto"]}
-            />
+            <XAxis dataKey="date" tickFormatter={(str) => new Date(str).toLocaleDateString()} />
+            <YAxis tickFormatter={(val) => `$${val.toLocaleString()}`} domain={["auto", "auto"]} />
             <Tooltip
               contentStyle={{
                 backgroundColor: "#ffffff",
@@ -228,14 +253,8 @@ function Dashboard() {
                 boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
                 border: "1px solid #e0e0e0",
               }}
-              itemStyle={{
-                color: "#333",
-                fontWeight: 500,
-              }}
-              labelStyle={{
-                fontWeight: "bold",
-                color: "#555",
-              }}
+              itemStyle={{ color: "#333", fontWeight: 500 }}
+              labelStyle={{ fontWeight: "bold", color: "#555" }}
               labelFormatter={(str) => `Date: ${new Date(str).toLocaleDateString()}`}
               formatter={(val) => [`$${val.toLocaleString()}`, "Total Cash"]}
             />
@@ -249,17 +268,6 @@ function Dashboard() {
             />
           </LineChart>
         </ResponsiveContainer>
-        </div>
-
-        <div className="chart-section">
-          {!txLoading && Array.isArray(transactions) && transactions.some(tx => tx.type === "Expense") ? (
-            <ExpensePieChart transactions={transactions} />
-          ) : (
-            <p style={{ textAlign: "center", color: "#666", marginTop: "1rem" }}>
-              No expenses to show pie chart.
-            </p>
-          )}
-        </div>
       </div>
 
       <div className="section-card">
