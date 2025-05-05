@@ -319,22 +319,27 @@ function Dashboard() {
             {accounts
               .filter((acc) => acc.type !== "Investment")
               .map((acc) => {
-                const graphData = filteredPerAccountCashGraphs.find((g) => g.accountId === acc._id)
-                ?.snapshots || [];
+                const graphData =
+                  filteredPerAccountCashGraphs.find((g) => g.accountId === acc._id)?.snapshots || [];
+
+                const categoryData = generatePerAccountCategoryData(transactions, acc._id);
 
                 return (
                   <li key={acc._id} className="account-item">
-                    <div className="account-header">
-                      <div className="account-info">
-                        <strong>{acc.name}</strong>
-                        <span className="account-type-badge">
-                          <span className={`account-type ${acc.type.toLowerCase()}`}>
+                    <div className="account-header-row">
+                      <div className="account-info-block">
+                        <div className="account-name-row">
+                          <strong className="account-name">{acc.name}</strong>
+                          <span className={`account-type-badge ${acc.type.toLowerCase()}`}>
                             {acc.type}
                           </span>
-                        </span>
+                        </div>
+                        <div className="account-balance-large">
+                          ${acc.balance.toLocaleString()}
+                        </div>
                       </div>
-                      <p className="account-balance">${acc.balance.toFixed(2)}</p>
-                      <div className="actions">
+
+                      <div className="account-action-buttons">
                         {editingId === acc._id ? (
                           <>
                             <input
@@ -362,120 +367,31 @@ function Dashboard() {
                           </>
                         ) : (
                           <>
-                            <button onClick={() => startEditing(acc)}>Edit</button>
                             <button onClick={() => handleDelete(acc._id)}>Delete</button>
                           </>
                         )}
                       </div>
                     </div>
 
-                    <div className="account-chart">
-                      <ResponsiveContainer width="100%" height={200}>
-                        <LineChart data={graphData}>
-                          <defs>
-                            <linearGradient
-                              id={`accGradient-${acc._id}`}
-                              x1="0"
-                              y1="0"
-                              x2="0"
-                              y2="1"
-                            >
-                              <stop
-                                offset="0%"
-                                stopColor="#2563eb"
-                                stopOpacity={0.8}
-                              />
-                              <stop
-                                offset="100%"
-                                stopColor="#2563eb"
-                                stopOpacity={0.2}
-                              />
-                            </linearGradient>
-                          </defs>
-                          <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                          <XAxis
-                            dataKey="timestamp"
-                            tickFormatter={(str) =>
-                              new Date(str).toLocaleDateString()
-                            }
-                          />
-                          <YAxis
-                            tickFormatter={(val) => `$${val.toLocaleString()}`}
-                            domain={["auto", "auto"]}
-                          />
-                          <Tooltip
-                            contentStyle={{
-                              backgroundColor: "#fff",
-                              borderRadius: "8px",
-                              boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
-                              border: "1px solid #e0e0e0",
-                            }}
-                            itemStyle={{ color: "#333", fontWeight: 500 }}
-                            labelStyle={{ fontWeight: "bold", color: "#555" }}
-                            labelFormatter={(str) =>
-                              `Date: ${new Date(str).toLocaleDateString()}`
-                            }
-                            formatter={(val) => [`$${val.toLocaleString()}`, "Balance"]}
-                          />
-                          <Line
-                            type="monotone"
-                            dataKey="value"
-                            stroke={`url(#accGradient-${acc._id})`}
-                            strokeWidth={3}
-                            dot={{ r: 3 }}
-                            activeDot={{ r: 5 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                    {transactions.length > 0 && (() => {
-                      const data = generatePerAccountCategoryData(transactions, acc._id);
-                      return data.length > 0 ? (
-                        <div style={{ height: 300, marginTop: "1rem" }}>
-                          <h4>Expenses by Category</h4>
-                          <ResponsiveContainer width="100%" height="100%">
-                            <PieChart>
+                    <div className="account-visuals">
+                      <div className="account-chart-line">
+                        <h4>Cash Flow Over Time</h4>
+                        {graphData.length === 0 ? (
+                          <p style={{ textAlign: 'center', padding: '2rem 0', color: '#666' }}>
+                            No cash flow data available.
+                          </p>
+                        ) : (
+                          <ResponsiveContainer width="100%" height={250}>
+                            <LineChart data={graphData}>
                               <defs>
-                                {data.map((entry, index) => (
-                                  <linearGradient id={`color-${acc._id}-${index}`} key={index} x1="0" y1="0" x2="1" y2="1">
-                                    <stop offset="0%" stopColor={["#60a5fa", "#34d399", "#fbbf24", "#f87171", "#a78bfa", "#f472b6", "#4ade80", "#c084fc"][index % 8]} stopOpacity={0.85} />
-                                    <stop offset="100%" stopColor={["#60a5fa", "#34d399", "#fbbf24", "#f87171", "#a78bfa", "#f472b6", "#4ade80", "#c084fc"][index % 8]} stopOpacity={0.6} />
-                                  </linearGradient>
-                                ))}
-                                <filter id={`shadow-${acc._id}`} x="-20%" y="-20%" width="140%" height="140%">
-                                  <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#000" floodOpacity="0.2" />
-                                </filter>
+                                <linearGradient id={`gradient-${acc._id}`} x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="0%" stopColor="#2563eb" stopOpacity={0.8} />
+                                  <stop offset="100%" stopColor="#2563eb" stopOpacity={0.2} />
+                                </linearGradient>
                               </defs>
-
-                              <Pie
-                                data={data}
-                                cx="50%"
-                                cy="50%"
-                                outerRadius={100}
-                                dataKey="value"
-                                label
-                                stroke="none"
-                                fillOpacity={0.9}
-                                filter={`url(#shadow-${acc._id})`}
-                                activeShape={({ cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill }) => (
-                                  <g>
-                                    <Sector
-                                      cx={cx}
-                                      cy={cy}
-                                      innerRadius={innerRadius}
-                                      outerRadius={outerRadius + 8}
-                                      startAngle={startAngle}
-                                      endAngle={endAngle}
-                                      fill={fill}
-                                    />
-                                  </g>
-                                )}
-                              >
-                                {data.map((entry, index) => (
-                                  <Cell key={`cell-${index}`} fill={`url(#color-${acc._id}-${index})`} />
-                                ))}
-                              </Pie>
-
+                              <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+                              <XAxis dataKey="timestamp" tickFormatter={(str) => new Date(str).toLocaleDateString()} />
+                              <YAxis tickFormatter={(val) => `$${val.toLocaleString()}`} domain={['auto', 'auto']} />
                               <Tooltip
                                 contentStyle={{
                                   backgroundColor: "#ffffff",
@@ -484,22 +400,24 @@ function Dashboard() {
                                   border: "1px solid #e0e0e0",
                                 }}
                                 itemStyle={{ color: "#333", fontWeight: 500 }}
-                                formatter={(value, name) => {
-                                  const total = data.reduce((sum, d) => sum + d.value, 0);
-                                  const percent = ((value / total) * 100).toFixed(2);
-                                  return [`$${value.toFixed(2)}`, `${name} (${percent}%)`];
-                                }}
+                                labelStyle={{ fontWeight: "bold", color: "#555" }}
+                                labelFormatter={(str) => `Date: ${new Date(str).toLocaleDateString()}`}
+                                formatter={(val) => [`$${val.toLocaleString()}`, "Balance"]}
                               />
-                              <Legend verticalAlign="bottom" />
-                            </PieChart>
+                              <Line
+                                type="monotone"
+                                dataKey="value"
+                                stroke={`url(#gradient-${acc._id})`}
+                                strokeWidth={3}
+                                dot={{ r: 4 }}
+                                activeDot={{ r: 6 }}
+                              />
+                            </LineChart>
                           </ResponsiveContainer>
-                        </div>
-                      ) : (
-                        <p style={{ textAlign: "center", color: "#666", marginTop: "1rem" }}>
-                          No expenses for this account.
-                        </p>
-                      );
-                    })()}
+                        )}
+
+                      </div>
+                    </div>
                   </li>
                 );
               })}
