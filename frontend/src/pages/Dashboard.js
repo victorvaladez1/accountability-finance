@@ -5,6 +5,7 @@ import { generateCashGraph } from "../utils/generateCashGraph";
 import { generatePerAccountCashGraphs } from "../utils/generatePerAccountCashGraphs";
 import axios from "axios";
 import Navbar from "../components/Navbar";
+import CreateCashAccountModal from "../components/CreateCashAccountModal";
 import ExpensePieChart from "../components/ExpensePieChart";
 import "./Dashboard.css";
 import "./CommonLayout.css";
@@ -14,6 +15,7 @@ function Dashboard() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [txLoading, setTxLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState("");
   const [editingId, setEditingId] = useState(null);
 
@@ -219,41 +221,6 @@ function Dashboard() {
       </div>
 
       <div className="section-card">
-        <h3>Create a New Account</h3>
-        <form className="account-form" onSubmit={handleCreateAccount}>
-          <div className="form-row">
-            <input
-              type="text"
-              name="name"
-              placeholder="Account Name"
-              value={form.name}
-              onChange={handleChange}
-              required
-            />
-            <select
-              name="type"
-              value={form.type}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select Type</option>
-              <option value="Checking">Checking</option>
-              <option value="Savings">Savings</option>
-            </select>
-            <input
-              type="number"
-              name="balance"
-              placeholder="Starting Balance"
-              value={form.balance}
-              onChange={handleChange}
-              required
-            />
-            <button type="submit">Add Account</button>
-            </div>
-        </form>
-      </div>
-
-      <div className="section-card">
         <h3>Your Accounts</h3>
         {accounts.length === 0 ? (
           <p>No accounts yet.</p>
@@ -379,6 +346,11 @@ function Dashboard() {
         )}
       </div>
 
+      <div style={{ textAlign: "left", margin: "1rem 0" }}>
+        <button onClick={() => setIsModalOpen(true)} className="add-account-btn">
+          + Add Cash Account
+        </button>
+      </div>
 
       <div className="section-card">
         <div className="analytics-section">
@@ -429,6 +401,17 @@ function Dashboard() {
           </p>
         )}
       </div>
+
+      <CreateCashAccountModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={(e) => {
+          handleCreateAccount(e);
+          setIsModalOpen(false);
+        }}
+        form={form}
+        handleChange={handleChange}
+      />
 
     </div>
   );

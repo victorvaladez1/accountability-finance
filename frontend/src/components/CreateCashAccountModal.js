@@ -1,12 +1,14 @@
 import React from "react";
-import "./Modal.css"; // If you're reusing the same modal styles
+
+import "../pages/CommonLayout.css";
+import "../pages/Dashboard.css";
 
 function CreateCashAccountModal({ isOpen, onClose, onSubmit, form, handleChange }) {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal">
+    <div className="modal-overlay">
+      <div className="modal-content">
         <h3>Create a New Cash Account</h3>
         <form onSubmit={onSubmit}>
           <input
@@ -35,9 +37,9 @@ function CreateCashAccountModal({ isOpen, onClose, onSubmit, form, handleChange 
             onChange={handleChange}
             required
           />
-          <div className="modal-actions">
+          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
             <button type="submit">Add Account</button>
-            <button type="button" onClick={onClose} className="cancel-btn">Cancel</button>
+            <button type="button" onClick={onClose}>Cancel</button>
           </div>
         </form>
       </div>
