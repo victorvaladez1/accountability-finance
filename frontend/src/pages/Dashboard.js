@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LineChart, Line, PieChart, Pie, Cell } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, LineChart, Line, PieChart, Pie, Cell, Sector, Legend } from "recharts";
 import { Circles } from "react-loader-spinner";
 import { generateCashGraph } from "../utils/generateCashGraph";
 import { generatePerAccountCashGraphs } from "../utils/generatePerAccountCashGraphs";
@@ -431,29 +431,66 @@ function Dashboard() {
                     {transactions.length > 0 && (() => {
                       const data = generatePerAccountCategoryData(transactions, acc._id);
                       return data.length > 0 ? (
-                        <div style={{ height: 250, marginTop: "1rem" }}>
+                        <div style={{ height: 300, marginTop: "1rem" }}>
                           <h4>Expenses by Category</h4>
                           <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
+                              <defs>
+                                {data.map((entry, index) => (
+                                  <linearGradient id={`color-${acc._id}-${index}`} key={index} x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stopColor={["#60a5fa", "#34d399", "#fbbf24", "#f87171", "#a78bfa", "#f472b6", "#4ade80", "#c084fc"][index % 8]} stopOpacity={0.85} />
+                                    <stop offset="100%" stopColor={["#60a5fa", "#34d399", "#fbbf24", "#f87171", "#a78bfa", "#f472b6", "#4ade80", "#c084fc"][index % 8]} stopOpacity={0.6} />
+                                  </linearGradient>
+                                ))}
+                                <filter id={`shadow-${acc._id}`} x="-20%" y="-20%" width="140%" height="140%">
+                                  <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#000" floodOpacity="0.2" />
+                                </filter>
+                              </defs>
+
                               <Pie
                                 data={data}
-                                dataKey="value"
-                                nameKey="name"
                                 cx="50%"
                                 cy="50%"
-                                outerRadius={80}
-                                fill="#8884d8"
+                                outerRadius={100}
+                                dataKey="value"
                                 label
-                              >
-                                {["#60a5fa", "#34d399", "#fbbf24", "#f87171", "#a78bfa"].map(
-                                  (color, index) => (
-                                    <Cell key={`cell-${index}`} fill={color} />
-                                  )
+                                stroke="none"
+                                fillOpacity={0.9}
+                                filter={`url(#shadow-${acc._id})`}
+                                activeShape={({ cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill }) => (
+                                  <g>
+                                    <Sector
+                                      cx={cx}
+                                      cy={cy}
+                                      innerRadius={innerRadius}
+                                      outerRadius={outerRadius + 8}
+                                      startAngle={startAngle}
+                                      endAngle={endAngle}
+                                      fill={fill}
+                                    />
+                                  </g>
                                 )}
+                              >
+                                {data.map((entry, index) => (
+                                  <Cell key={`cell-${index}`} fill={`url(#color-${acc._id}-${index})`} />
+                                ))}
                               </Pie>
+
                               <Tooltip
-                                formatter={(value) => [`$${value.toFixed(2)}`, "Total"]}
+                                contentStyle={{
+                                  backgroundColor: "#ffffff",
+                                  borderRadius: "8px",
+                                  boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                                  border: "1px solid #e0e0e0",
+                                }}
+                                itemStyle={{ color: "#333", fontWeight: 500 }}
+                                formatter={(value, name) => {
+                                  const total = data.reduce((sum, d) => sum + d.value, 0);
+                                  const percent = ((value / total) * 100).toFixed(2);
+                                  return [`$${value.toFixed(2)}`, `${name} (${percent}%)`];
+                                }}
                               />
+                              <Legend verticalAlign="bottom" />
                             </PieChart>
                           </ResponsiveContainer>
                         </div>
