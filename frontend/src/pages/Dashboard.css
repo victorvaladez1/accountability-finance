@@ -201,4 +201,50 @@
     flex: 1 1 calc(50% - 1.25rem);
   }
 
+  .account-item {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .account-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .account-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+  }
+  
+  .account-type-badge .account-type {
+    padding: 2px 8px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    background-color: #e5e7eb;
+  }
+  
+  .account-type.checking {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+  }
+  
+  .account-type.savings {
+    background-color: #fef3c7;
+    color: #b45309;
+  }
+  
+  .account-balance {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #111827;
+  }
+  
+  .actions button {
+    margin-right: 0.5rem;
+  }
   
