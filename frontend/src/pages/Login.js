@@ -4,7 +4,9 @@ import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
 
 function Login() {
+
   const navigate = useNavigate();
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -24,7 +26,7 @@ function Login() {
       localStorage.setItem("token", res.data.token);
       navigate("/");
     } catch (err) {
-      alert("Login failed: " + (err.response?.data?.message || "Unknown error"));
+      setError(err.response?.data?.message || "Login failed.");
     }
   };
 
@@ -55,6 +57,7 @@ function Login() {
               onChange={handleChange}
               required
             />
+            {error && <p className="login-error">{error}</p>}
             <button type="submit">Login</button>
           </form>
           <p className="login-link">
