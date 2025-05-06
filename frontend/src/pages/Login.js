@@ -32,12 +32,19 @@ function Login() {
 
   return (
     <div className="login-page">
-      <div className="login-left">
+      {/* Desktop branding only */}
+      <div className="login-left desktop-branding">
         <h1>AccountAbility</h1>
         <p>Take control of your finances with confidence.</p>
-        {/* LOGO GOES HERE */}
       </div>
+
       <div className="login-right">
+        {/* Mobile branding only */}
+        <div className="mobile-branding-banner">
+          <h1>AccountAbility</h1>
+          <p>Take control of your finances with confidence.</p>
+        </div>
+
         <div className="login-form-card">
           <h2>Login to Your Account</h2>
           <form onSubmit={handleSubmit}>

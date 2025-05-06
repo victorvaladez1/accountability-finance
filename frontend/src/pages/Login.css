@@ -177,4 +177,62 @@
   color: #4b5563;
 }
 
+.login-mobile-branding {
+  display: none;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Hide desktop branding on mobile */
+@media (max-width: 768px) {
+  .desktop-branding {
+    display: none;
+  }
+}
+
+/* Show mobile branding only on small screens */
+.mobile-branding-banner {
+  display: none;
+  margin: 1rem auto 1.5rem auto;
+  border-radius: 16px;
+}
+
+@media (max-width: 768px) {
+  .mobile-branding-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1f2d3d, #31475e);
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+  }
+
+  .mobile-branding-banner h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .mobile-branding-banner p {
+    font-size: 1rem;
+    opacity: 0.9;
+    max-width: 300px;
+  }
+
+  .login-right {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+
+
+
+
+
+
 
