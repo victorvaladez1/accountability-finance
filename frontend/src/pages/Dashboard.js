@@ -221,6 +221,8 @@ function Dashboard() {
         </div>
 
         {/* Chart Filters */}
+        {/* Cash Flow Chart */}
+        <h3>Cash Flow Over Time</h3>
         <div className="chart-filters">
           {["7d", "30d", "All"].map((r) => (
             <button
@@ -232,9 +234,6 @@ function Dashboard() {
             </button>
           ))}
         </div>
-
-        {/* Cash Flow Chart */}
-        <h3>Cash Flow Over Time</h3>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={filteredCashGraphData}>
             <defs>
