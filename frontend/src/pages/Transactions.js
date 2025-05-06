@@ -161,7 +161,7 @@ function Transactions() {
       <h2>Transactions</h2>
   
       {/* ➕ Add Transaction Form */}
-      <div className="transaction-form-card">
+      <div className="section-card">
         <form onSubmit={handleSubmit} className="transaction-form">
           <select name="account" value={form.account} onChange={handleChange} required>
             <option value="">Select Account</option>
@@ -211,7 +211,7 @@ function Transactions() {
       </div>
   
       {/* 🔍 Filters */}
-      <div className="filter-card">
+      <div className="section-card">
         <h3>Filters</h3>
         <div className="filters">
           <select value={accountFilter} onChange={(e) => setAccountFilter(e.target.value)}>
@@ -268,7 +268,7 @@ function Transactions() {
       </div>
   
       {/* 📄 Transaction List */}
-      <div className="transaction-list-section">
+      <div className="section-card">
         <h3>{viewByMonth && selectedMonth ? `Transactions for ${selectedMonth}` : "All Transactions"}</h3>
   
         <ul className="transaction-list">
@@ -300,8 +300,8 @@ function Transactions() {
   
       {/* 📚 Pagination Controls */}
       {!viewByMonth && (
-        <div className="pagination-footer">
-          <div className="pagination-footer-inner">
+        <div className="section-card">
+          <div className="pagination-footer-inner"s>
             <div className="rows-control">
               <label htmlFor="rowsPerPage" className="rows-label">Rows per page:</label>
               <select

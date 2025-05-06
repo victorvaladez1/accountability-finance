@@ -12,11 +12,9 @@
 .filter-card,
 .transaction-list-section,
 .pagination-controls {
-  background-color: #f0f4f8;
   padding: 1.5rem;
   border-radius: 10px;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
 }
 
 /* Transaction Form */
