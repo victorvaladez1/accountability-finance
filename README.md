@@ -1,99 +1,129 @@
 # 💰 AccountAbility
 
-**AccountAbility** is a modern personal finance tracker built with the MERN stack. It helps users track their income, expenses, and accounts with clean UI, helpful visualizations, and simple filtering tools.
+**AccountAbility** is a full-stack personal finance tracker built with the MERN stack. It empowers users to manage income, expenses, and cash accounts with intuitive charts, clean UI, and financial tools that actually help.
+
+> "AccountAbility" is about more than just tracking — it's about building clarity, confidence, and control over your financial life.
 
 ---
 
-## 🚀 Features
+## 🚀 Key Features
 
 ### 🔐 Authentication
-- Secure login and registration using JWT tokens.
-- Protected backend routes with middleware.
+
+- Secure user login & registration using JWT tokens
+- Protected routes via backend middleware
 
 ### 💳 Account Management
-- Create, edit, and delete checking or savings accounts.
-- Real-time balance updates based on transactions.
+
+- Add, edit, and delete checking/savings accounts
+- Balances update in real-time based on transactions
+- Individual cash flow charts for each account
 
 ### 📒 Transactions
-- Add income or expenses with descriptions, categories, and dates.
-- Filter transactions by account, type, or category.
-- Sort by amount or date.
-- Pagination and adjustable rows per page (5, 10, 20).
-- Monthly breakdown view for better tracking.
+
+- Record income or expenses with category, date, description
+- Filter by account, category, or transaction type
+- Sort by amount or date
+- Supports pagination (5, 10, 20 rows per page)
+- Monthly breakdown view for insight into trends
 
 ### 📊 Dashboard
-- Pie chart of spending by category.
-- Total balance and account summary.
-- Bar chart of monthly expenses (last 12 months).
-- Smart spending summary ("You've spent more/less than average this month").
 
-### 📈 Planning Page (NEW)
-- Calculate house or car affordability based on income, interest rates, and terms.
-- Follows popular financial rules and guidelines.
-- Educates users with rule explanations.
+- Total balance and account summary
+- Pie chart: Spending by category
+- Bar chart: Monthly spending (past 12 months)
+- Smart alerts: “You’ve spent more/less than average this month”
 
-### 🤖 AI Assistant Page (Coming Soon)
-- "Ask Me Anything" Financial Coach powered by OpenAI.
-- Users can ask questions like "What’s the 50/30/20 rule?" or "How do I save for retirement?"
+### 🧮 Planning Tools
+
+- 💡 **NEW:** Planning Page with calculators for:
+  - Mortgage/Car affordability
+  - Monthly loan payments
+  - Budgeting breakdowns (e.g., 50/30/20 rule)
+- Explains financial rules and gives actionable insights
+
+### 🤖 AI Chat Coach _(Coming Soon)_
+
+- Ask natural questions like “How do I start investing?” or “What’s the 50/30/20 rule?”
+- Built using OpenAI’s GPT for financial education
 
 ---
 
-## 🖼️ Screenshots
+## 📸 Screenshots
 
-> Screenshots coming soon – app includes modern UI styled with custom CSS and responsive layouts.
+Modern, clean, and responsive UI.
+
+> 🖼️ Preview images coming soon after deployment!
 
 ---
 
-## 📦 Tech Stack
+## 🛠️ Tech Stack
 
 - **Frontend:** React, Axios, Recharts
-- **Backend:** Node.js, Express
-- **Database:** MongoDB + Mongoose
-- **Auth:** JWT
-- **Styling:** Custom CSS + modular layout
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB (Mongoose)
+- **Authentication:** JWT
+- **Styling:** Custom CSS (mobile-first & responsive)
 
 ---
 
-## 🛠️ Installation
+## ⚙️ Local Setup
 
 ```bash
-# Clone the repo
+# Clone the repository
 git clone https://github.com/victorvaladez1/accountability-finance.git
 cd accountability-finance
 
-# Start backend
+# Start the backend
 cd backend
 npm install
 npm run dev
 
-# Start frontend
+# Start the frontend
 cd ../frontend
 npm install
 npm start
 ```
 
+> App runs on localhost:3000 (frontend) and localhost:5000 (backend)
+
 ---
 
-## 🌍 Live Demo
+## 🌐 Deployment
 
-Coming soon – to be hosted with Vercel and MongoDB Atlas.
+**Status:** _In progress_
+
+Will be deployed with:
+
+- **Frontend:** Vercel
+- **Database:** MongoDB Atlas
+- **Domain:** Custom domain or Vercel link
 
 ---
 
 ## 📅 Roadmap
 
-- [x] Core: Auth, Accounts, Transactions
-- [x] Pagination and Monthly breakdown
-- [x] Dashboard charts and insights
-- [x] Planning Page with financial tools
-- [ ] AI Chatbot Page
-- [ ] Deploy to production (Vercel + Atlas)
-- [ ] Add budgeting goals
+- [x] Core CRUD for accounts & transactions
+- [x] Dashboard with charts & summaries
+- [x] Planning page with calculators
+- [x] Responsive design for mobile & desktop
+- [x] Subtle UI animations and polish
+- [ ] AI ChatCoach integration (OpenAI)
+- [ ] Budget goal tracker
+- [ ] Final deployment to production
 
 ---
 
-## 🧠 Inspiration
+## 🙌 Inspiration
 
-Built by someone who cares about mastering personal finance and helping others do the same. "AccountAbility" stands for accountability and financial clarity. 💡
+This project is built by someone passionate about both personal finance and software engineering. Whether you're trying to take control of your money or just love clean interfaces, **AccountAbility** was made to help.
+
+> "Because knowing your numbers should be empowering — not overwhelming."
+
+---
+
+## 👨‍💻 Author
+
+Victor Valadez — [GitHub](https://github.com/victorvaladez1)
 
 ---
