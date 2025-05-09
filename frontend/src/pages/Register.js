@@ -7,6 +7,7 @@ function Register() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -14,10 +15,15 @@ function Register() {
   });
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
+
+    if (name === "password") {
+      setPasswordStrength(evaluatePasswordStrength(value));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -30,6 +36,12 @@ function Register() {
       setError(err.response?.data?.error || "Registration failed.");
     }
   };
+
+  function evaluatePasswordStrength(password) {
+    if (password.length < 6) return "Weak";
+    if (password.length >= 6 && /[A-Z]/.test(password) && /\d/.test(password)) return "Strong";
+    return "Medium";
+  }
 
   return (
     <div className="login-page">
@@ -86,6 +98,13 @@ function Register() {
                 )}
               </span>
             </div>
+
+            {formData.password && (
+              <p className={`password-strength ${passwordStrength.toLowerCase()}`}>
+                Password Strength: {passwordStrength}
+              </p>
+            )}
+
             {error && <p className="login-error">{error}</p>}
             <button type="submit">Register</button>
           </form>

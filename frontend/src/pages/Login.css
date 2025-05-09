@@ -245,3 +245,22 @@
   animation-delay: 0.1s;
   animation-fill-mode: backwards;
 }
+
+.password-strength {
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.password-strength.strong {
+  color: #22c55e; /* green */
+}
+
+.password-strength.medium {
+  color: #facc15; /* yellow */
+}
+
+.password-strength.weak {
+  color: #ef4444; /* red */
+}
