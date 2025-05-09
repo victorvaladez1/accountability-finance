@@ -354,3 +354,81 @@
 .reset-btn:hover {
   background-color: #dc2626;
 }
+
+.filter-card.enhanced {
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  margin: 2rem 0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e5e7eb;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.filters-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 160px;
+  flex: 1;
+}
+
+.filter-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.filter-group select {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: #fff;
+  font-size: 0.95rem;
+}
+
+.filter-group.full-width {
+  flex-basis: 100%;
+  margin-top: 1rem;
+  align-items: flex-start;
+}
+
+.reset-btn {
+  background-color: #ef4444;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reset-btn:hover {
+  background-color: #dc2626;
+}
+
+.filter-group.full-width {
+  flex-basis: 100%;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.group-by-month select {
+  margin-top: 0.25rem;
+  max-width: 200px;
+}

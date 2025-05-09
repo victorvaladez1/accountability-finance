@@ -171,59 +171,9 @@ function Transactions() {
         </button>
 
       {/* 🔍 Filters */}
-      <div className="filter-card">
-        <h3>Filters</h3>
-        <div className="filters">
-          <select value={accountFilter} onChange={(e) => setAccountFilter(e.target.value)}>
-            <option value="">All Accounts</option>
-            {accounts.map((acc) => (
-              <option key={acc._id} value={acc._id}>{acc.name}</option>
-            ))}
-          </select>
-
-          <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
-            <option value="">All Categories</option>
-            {uniqueCategories.map((cat) => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
-          </select>
-
-          <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
-            <option value="">All Types</option>
-            <option value="Income">Income</option>
-            <option value="Expense">Expense</option>
-          </select>
-
-          <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
-            <option value="dateDesc">Date (Newest)</option>
-            <option value="dateAsc">Date (Oldest)</option>
-            <option value="amountDesc">Amount (High to Low)</option>
-            <option value="amountAsc">Amount (Low to High)</option>
-          </select>
-
-          <div className="group-by-month">
-            <input
-              type="checkbox"
-              id="groupByMonthToggle"
-              checked={viewByMonth}
-              onChange={(e) => setViewByMonth(e.target.checked)}
-            />
-            <label htmlFor="groupByMonthToggle">Group by Month</label>
-
-            {viewByMonth && (
-              <select
-                className="month-dropdown"
-                value={selectedMonth}
-                onChange={(e) => setSelectedMonth(e.target.value)}
-              >
-                <option value="">Select Month</option>
-                {Object.keys(monthlyTransactions).map((month) => (
-                  <option key={month} value={month}>{month}</option>
-                ))}
-              </select>
-            )}
-          </div>
-
+      <div className="filter-card enhanced">
+        <div className="filter-header">
+          <h3>Filters</h3>
           <button
             className="reset-btn"
             onClick={() => {
@@ -238,7 +188,72 @@ function Transactions() {
             Reset Filters
           </button>
         </div>
+
+        <div className="filters-grid">
+          <div className="filter-group">
+            <label>Account</label>
+            <select value={accountFilter} onChange={(e) => setAccountFilter(e.target.value)}>
+              <option value="">All Accounts</option>
+              {accounts.map((acc) => (
+                <option key={acc._id} value={acc._id}>{acc.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label>Category</label>
+            <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+              <option value="">All Categories</option>
+              {uniqueCategories.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label>Type</label>
+            <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+              <option value="">All Types</option>
+              <option value="Income">Income</option>
+              <option value="Expense">Expense</option>
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label>Sort By</label>
+            <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+              <option value="dateDesc">Date (Newest)</option>
+              <option value="dateAsc">Date (Oldest)</option>
+              <option value="amountDesc">Amount (High to Low)</option>
+              <option value="amountAsc">Amount (Low to High)</option>
+            </select>
+          </div>
+          <div className="filter-group full-width group-by-month">
+            <label>
+              <input
+                type="checkbox"
+                id="groupByMonthToggle"
+                checked={viewByMonth}
+                onChange={(e) => setViewByMonth(e.target.checked)}
+              /> Group by Month
+            </label>
+
+            {viewByMonth && (
+              <select
+                className="month-dropdown"
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+              >
+                <option value="">Select Month</option>
+                {Object.keys(monthlyTransactions).map((month) => (
+                  <option key={month} value={month}>{month}</option>
+                ))}
+              </select>
+            )}
+          </div>
+        </div>
       </div>
+
 
       {/* 📄 Transaction List */}
       <div className="section-card">
