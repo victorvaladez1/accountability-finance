@@ -141,7 +141,7 @@ function Transactions() {
   const uniqueCategories = [...new Set(transactions.map(tx => tx.category))];
 
   const filteredTransactions = transactions.filter((tx) => {
-    const matchesAccount = !accountFilter || tx.account === accountFilter;
+    const matchesAccount = !accountFilter || tx.account?._id === accountFilter;
     const matchesCategory = !categoryFilter || tx.category === categoryFilter;
     const matchesType = !typeFilter || tx.type === typeFilter;
     return matchesAccount && matchesCategory && matchesType;
@@ -160,7 +160,7 @@ function Transactions() {
   return (
     <div className="page-container">
       <Navbar />
-      
+
       <h2>Transactions</h2>
   
         <button
@@ -171,7 +171,7 @@ function Transactions() {
         </button>
 
       {/* 🔍 Filters */}
-      <div className="section-card">
+      <div className="filter-card">
         <h3>Filters</h3>
         <div className="filters">
           <select value={accountFilter} onChange={(e) => setAccountFilter(e.target.value)}>
@@ -180,28 +180,27 @@ function Transactions() {
               <option key={acc._id} value={acc._id}>{acc.name}</option>
             ))}
           </select>
-  
+
           <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
             <option value="">All Categories</option>
             {uniqueCategories.map((cat) => (
               <option key={cat} value={cat}>{cat}</option>
             ))}
           </select>
-  
+
           <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
             <option value="">All Types</option>
             <option value="Income">Income</option>
             <option value="Expense">Expense</option>
           </select>
-  
+
           <select value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
             <option value="dateDesc">Date (Newest)</option>
             <option value="dateAsc">Date (Oldest)</option>
             <option value="amountDesc">Amount (High to Low)</option>
             <option value="amountAsc">Amount (Low to High)</option>
           </select>
-  
-          {/* 📅 Group by Month Toggle inside Filters */}
+
           <div className="group-by-month">
             <input
               type="checkbox"
@@ -210,7 +209,7 @@ function Transactions() {
               onChange={(e) => setViewByMonth(e.target.checked)}
             />
             <label htmlFor="groupByMonthToggle">Group by Month</label>
-  
+
             {viewByMonth && (
               <select
                 className="month-dropdown"
@@ -224,9 +223,23 @@ function Transactions() {
               </select>
             )}
           </div>
+
+          <button
+            className="reset-btn"
+            onClick={() => {
+              setAccountFilter("");
+              setCategoryFilter("");
+              setTypeFilter("");
+              setSortOption("dateDesc");
+              setViewByMonth(false);
+              setSelectedMonth("");
+            }}
+          >
+            Reset Filters
+          </button>
         </div>
       </div>
-  
+
       {/* 📄 Transaction List */}
       <div className="section-card">
         <h3>{viewByMonth && selectedMonth ? `Transactions for ${selectedMonth}` : "All Transactions"}</h3>
