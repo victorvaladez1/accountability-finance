@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import EditTransactionModal from "../components/EditTransactionModal";
+import AddTransactionModal from "../components/AddTransactionModal";
 import "./Transactions.css";
 import "./CommonLayout.css";
 
@@ -33,6 +34,7 @@ function Transactions() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -160,56 +162,15 @@ function Transactions() {
       <Navbar />
       <h2>Transactions</h2>
   
-      {/* ➕ Add Transaction Form */}
       <div className="section-card">
-        <form onSubmit={handleSubmit} className="transaction-form">
-          <select name="account" value={form.account} onChange={handleChange} required>
-            <option value="">Select Account</option>
-            {accounts.map((acc) => (
-              <option key={acc._id} value={acc._id}>
-                {acc.name} (${acc.balance.toFixed(2)})
-              </option>
-            ))}
-          </select>
-  
-          <select name="type" value={form.type} onChange={handleChange} required>
-            <option value="Expense">Expense</option>
-            <option value="Income">Income</option>
-          </select>
-  
-          <input
-            type="number"
-            name="amount"
-            placeholder="Amount"
-            value={form.amount}
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="text"
-            name="category"
-            placeholder="Category"
-            value={form.category}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            name="description"
-            placeholder="Description"
-            value={form.description}
-            onChange={handleChange}
-          />
-          <input
-            type="date"
-            name="date"
-            value={form.date}
-            onChange={handleChange}
-            required
-          />
-          <button type="submit">Add Transaction</button>
-        </form>
+        <button
+          className="add-transaction-btn"
+          onClick={() => setShowAddModal(true)}
+        >
+          ➕ Add Transaction
+        </button>
       </div>
-  
+
       {/* 🔍 Filters */}
       <div className="section-card">
         <h3>Filters</h3>
@@ -352,6 +313,17 @@ function Transactions() {
         editForm={editForm}
         handleEditChange={handleEditChange}
         handleUpdate={handleUpdate}
+      />
+      <AddTransactionModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        form={form}
+        handleChange={handleChange}
+        handleSubmit={(e) => {
+          handleSubmit(e);
+          setShowAddModal(false);
+        }}
+        accounts={accounts}
       />
     </div>
   );
