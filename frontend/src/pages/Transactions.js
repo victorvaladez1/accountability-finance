@@ -160,16 +160,15 @@ function Transactions() {
   return (
     <div className="page-container">
       <Navbar />
+      
       <h2>Transactions</h2>
   
-      <div className="section-card">
         <button
           className="add-transaction-btn"
           onClick={() => setShowAddModal(true)}
         >
           ➕ Add Transaction
         </button>
-      </div>
 
       {/* 🔍 Filters */}
       <div className="section-card">

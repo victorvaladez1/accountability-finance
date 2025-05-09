@@ -93,3 +93,26 @@
     background-color: #d1d5db;
   }
   
+  .add-transaction-btn {
+    background-color: #2563eb; 
+    color: white;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 999px;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5em;
+    margin-bottom: 1.5em;
+  }
+  
+  .add-transaction-btn:hover {
+    background-color: #1e40af;
+    transform: translateY(-2px);
+  }
+  
