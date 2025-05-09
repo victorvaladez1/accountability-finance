@@ -14,11 +14,8 @@
     "postcss": "^8.5.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-<<<<<<< HEAD
     "react-modal": "^3.16.3",
-=======
     "react-router": "^7.6.0",
->>>>>>> 2a8a8b31b7bb0de087e69779d3b33c04213eea38
     "react-router-dom": "^7.5.0",
     "react-scripts": "5.0.1",
     "recharts": "^2.15.3",
