@@ -318,8 +318,18 @@ function Portfolio() {
     takeSnapshotOnce();
     }, [loading, totalPortfolioValue]);
     
-    if (loading) return <div className="page-container"><Navbar /><p>Loading portfolio...</p></div>;
-
+    if (loading) {
+      return (
+        <div className="page-container">
+          <Navbar />
+          <div className="loading-container">
+            <div className="spinner" />
+            <p>Fetching your investment data...</p>
+          </div>
+        </div>
+      );
+    }
+    
     const totalGainLoss = totalPortfolioValue - totalPortfolioCost;
 
     const pieData = [];
