@@ -162,13 +162,6 @@ function Transactions() {
       <Navbar />
 
       <h2>Transactions</h2>
-  
-        <button
-          className="add-transaction-btn"
-          onClick={() => setShowAddModal(true)}
-        >
-          ➕ Add Transaction
-        </button>
 
       {/* 🔍 Filters */}
       <div className="filter-card enhanced">
@@ -254,6 +247,12 @@ function Transactions() {
         </div>
       </div>
 
+      <button
+          className="add-transaction-btn"
+          onClick={() => setShowAddModal(true)}
+        >
+          ➕ Add Transaction
+        </button>
 
       {/* 📄 Transaction List */}
       <div className="section-card">
