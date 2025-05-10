@@ -36,7 +36,7 @@ const InvestmentAccountCard = ({ account, holdings, livePrices, pieColors, onAdd
       {/* Account Title and Delete */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h3>{account.name}</h3>
-        <button onClick={() => onDeleteAccount(account._id)} className="delete-account-btn">🗑️ Delete Account</button>
+        <button onClick={() => onDeleteAccount(account._id)} className="delete-account-btn">Delete Account</button>
       </div>
 
       {/* Total Value and Gain/Loss */}
