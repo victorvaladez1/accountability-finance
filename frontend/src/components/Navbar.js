@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import logo from "../assets/logo.png";
 import "./Navbar.css";
 
 function Navbar() {
@@ -14,9 +15,15 @@ function Navbar() {
 
   return (
     <nav className="navbar">
-      <h2 className="logo">AccountAbility</h2>
+      <div className="logo-container">
+        <img src={logo} alt="AccountAbility Logo" className="navbar-logo" />
+        <h2 className="logo-text">AccountAbility</h2>
+      </div>
 
-      <div className={`hamburger ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)}>
+      <div
+        className={`hamburger ${menuOpen ? "open" : ""}`}
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
         <span></span>
         <span></span>
         <span></span>
