@@ -22,14 +22,28 @@ const PortfolioSummaryCard = ({ totalValue, totalGainLoss, pieData, pieColors })
           padding: '1rem',
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
         }}>
-          <p><strong>Total Value:</strong> ${totalValue.toFixed(2)}</p>
-          <p><strong>Total Gain/Loss:</strong> 
-            <span className={totalGainLoss >= 0 ? "gain" : "loss"}>
-              {totalGainLoss >= 0 ? "+" : "-"}${Math.abs(totalGainLoss).toFixed(2)}
-            </span>
-          </p>
-        </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div>
+              <div style={{ fontSize: '0.9rem', color: '#6b7280', fontWeight: 600 }}>Total Value</div>
+              <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#111827' }}>
+                ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              </div>
+            </div>
 
+            <div>
+              <div style={{ fontSize: '0.9rem', color: '#6b7280', fontWeight: 600 }}>Total Gain/Loss</div>
+              <div
+                style={{
+                  fontSize: '1.5rem',
+                  fontWeight: 700,
+                  color: totalGainLoss >= 0 ? '#10b981' : '#ef4444',
+                }}
+              >
+                {totalGainLoss >= 0 ? '+' : '-'}${Math.abs(totalGainLoss).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              </div>
+            </div>
+          </div>
+        </div>
         {/* Pie Chart Box */}
         <div style={{
           flex: '1',
