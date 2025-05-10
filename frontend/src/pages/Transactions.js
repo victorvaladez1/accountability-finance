@@ -187,8 +187,12 @@ function Transactions() {
             <label>Account</label>
             <select value={accountFilter} onChange={(e) => setAccountFilter(e.target.value)}>
               <option value="">All Accounts</option>
-              {accounts.map((acc) => (
-                <option key={acc._id} value={acc._id}>{acc.name}</option>
+              {accounts
+                .filter((acc) => acc.type === "Checking" || acc.type === "Savings")
+                .map((acc) => (
+                  <option key={acc._id} value={acc._id}>
+                    {acc.name}
+                  </option>
               ))}
             </select>
           </div>
