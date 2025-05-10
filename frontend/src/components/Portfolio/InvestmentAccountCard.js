@@ -36,7 +36,7 @@ const InvestmentAccountCard = ({ account, holdings, livePrices, pieColors, onAdd
       {/* Account Title and Delete */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
         <h3>{account.name}</h3>
-        <button onClick={() => onDeleteAccount(account._id)} className="delete-account-btn">Delete Account</button>
+        <button onClick={() => onDeleteAccount(account._id)} className="delete-account-btn">🗑️ Delete Account</button>
       </div>
 
       {/* Total Value and Gain/Loss */}
@@ -152,15 +152,23 @@ const InvestmentAccountCard = ({ account, holdings, livePrices, pieColors, onAdd
         </div>
         
         {/* Mini Line Chart Box */}
-        {snapshots && snapshots.length > 1 && (
-          <div style={{
-            flex: '1',
-            minWidth: '250px',
-            background: '#fff',
-            borderRadius: '12px',
-            padding: '1rem',
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
-          }}>
+        {/* Mini Line Chart Box OR Fallback Message */}
+        <div style={{
+          flex: '1',
+          minWidth: '250px',
+          background: '#fff',
+          borderRadius: '12px',
+          padding: '1rem',
+          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          color: '#6b7280',
+          fontSize: '0.95rem',
+          textAlign: 'center',
+        }}>
+          {snapshots && snapshots.length > 1 ? (
             <ResponsiveContainer width="100%" height={250}>
               <LineChart data={snapshots}>
                 <defs>
@@ -194,8 +202,15 @@ const InvestmentAccountCard = ({ account, holdings, livePrices, pieColors, onAdd
                 />
               </LineChart>
             </ResponsiveContainer>
-          </div>
-        )}
+          ) : (
+            <>
+              <p style={{ fontWeight: "bold" }}>No snapshot data yet.</p>
+              <p style={{ fontSize: "0.85rem", color: "#9ca3af" }}>
+                Save a snapshot to track performance over time.
+              </p>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Add Holding Button */}
