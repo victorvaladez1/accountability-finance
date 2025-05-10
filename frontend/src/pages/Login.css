@@ -264,3 +264,9 @@
 .password-strength.weak {
   color: #ef4444; /* red */
 }
+
+.login-logo {
+  width: 120px;
+  height: auto;
+  margin-bottom: 1rem;
+}

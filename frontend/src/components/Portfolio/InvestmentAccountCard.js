@@ -40,14 +40,37 @@ const InvestmentAccountCard = ({ account, holdings, livePrices, pieColors, onAdd
       </div>
 
       {/* Total Value and Gain/Loss */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <p><strong>Total Value:</strong> ${totalValue.toFixed(2)}</p>
-        <p><strong>Total Gain/Loss:</strong> 
-          <span className={change >= 0 ? "gain" : "loss"}>
-            {change >= 0 ? "+" : "-"}${Math.abs(change).toFixed(2)}
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.5rem',
+          marginBottom: '1.5rem',
+          background: '#f9fafb',
+          padding: '1rem',
+          borderRadius: '8px',
+          border: '1px solid #e5e7eb',
+        }}
+      >
+        <div style={{ fontSize: '1.1rem', fontWeight: 500, color: '#374151' }}>
+          <strong>Total Value:</strong>{" "}
+          <span style={{ color: '#111827' }}>
+            ${totalValue.toLocaleString(undefined, { minimumFractionDigits: 2 })}
           </span>
-        </p>
+        </div>
+        <div
+          style={{
+            fontSize: '1.05rem',
+            fontWeight: 500,
+            color: isGain ? '#16a34a' : '#dc2626',
+          }}
+        >
+          <strong>Total Gain/Loss:</strong>{" "}
+          {isGain ? "+" : "-"}$
+          {Math.abs(change).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+        </div>
       </div>
+
 
       {/* Flex Row for Charts + Holdings */}
       <div style={{
