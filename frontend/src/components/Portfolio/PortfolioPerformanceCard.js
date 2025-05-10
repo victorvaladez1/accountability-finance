@@ -2,7 +2,27 @@ import React from 'react';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 
 const PortfolioPerformanceCard = ({ snapshots, chartFilter, setChartFilter, totalValue, saveAllSnapshots }) => {
-  if (!snapshots || snapshots.length < 2) return null;
+  if (!snapshots || snapshots.length < 2) {
+    return (
+      <div className="card">
+        <h3>📈 Portfolio Performance</h3>
+        <p style={{ padding: "1rem", color: "#6b7280" }}>
+          Not enough data to generate a performance chart.
+        </p>
+        <div className="snapshot-buttons">
+          <button onClick={() => {
+            if (totalValue <= 0) {
+              alert("⚠️ Portfolio value must be greater than 0 to save a snapshot.");
+              return;
+            }
+            saveAllSnapshots();
+          }}>
+            📸 Save Snapshot
+          </button>
+        </div>
+      </div>
+    );
+  }  
 
   const first = snapshots[0].value;
   const last = snapshots[snapshots.length - 1].value;
