@@ -36,7 +36,9 @@ function Login() {
       {/* Desktop branding only */}
       <div className="login-left desktop-branding">
         <img src={logo} alt="AccountAbility Logo" className="login-logo" />
-        <h1>AccountAbility</h1>
+        <div className="blue-text">
+          <h1>AccountAbility</h1>
+        </div>
         <p>Take control of your finances with confidence.</p>
       </div>
 
@@ -45,7 +47,9 @@ function Login() {
         {/* Mobile branding only */}
         <div className="mobile-branding-banner">
           <img src={logo} alt="AccountAbility Logo" className="login-logo" />
-          <h1>AccountAbility</h1>
+          <div className="blue-text">
+            <h1>AccountAbility</h1>
+          </div>
           <p>Take control of your finances with confidence.</p>
         </div>
 

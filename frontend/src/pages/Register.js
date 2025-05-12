@@ -48,13 +48,17 @@ function Register() {
     <div className="login-page">
       <div className="login-left desktop-branding">
         <img src={logo} alt="AccountAbility Logo" className="login-logo" />
-        <h1>AccountAbility</h1>
+        <div className="blue-text">
+            <h1>AccountAbility</h1>
+          </div>
         <p>Your journey to smarter finances starts here.</p>
       </div>
       <div className="login-right">
         <div className="mobile-branding-banner">
           <img src={logo} alt="AccountAbility Logo" className="login-logo" />
-          <h1>AccountAbility</h1>
+          <div className="blue-text">
+            <h1>AccountAbility</h1>
+          </div>
           <p>Your journey to smarter finances starts here.</p>
         </div>
         <div className="login-form-card">

@@ -270,3 +270,7 @@
   height: auto;
   margin-bottom: 1rem;
 }
+
+.blue-text h1 {
+  color: #2CD4C4;
+}
