@@ -29,14 +29,6 @@ function CreateCashAccountModal({ isOpen, onClose, onSubmit, form, handleChange 
             <option value="Checking">Checking</option>
             <option value="Savings">Savings</option>
           </select>
-          <input
-            type="number"
-            name="balance"
-            placeholder="Starting Balance"
-            value={form.balance}
-            onChange={handleChange}
-            required
-          />
           <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
             <button type="submit">Add Account</button>
             <button type="button" onClick={onClose}>Cancel</button>

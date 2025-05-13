@@ -20,7 +20,7 @@ function Dashboard() {
   const [error, setError] = useState("");
   const [editingId, setEditingId] = useState(null);
 
-  const [form, setForm] = useState({ name: "", type: "", balance: "" });
+  const [form, setForm] = useState({ name: "", type: ""});
   const [editForm, setEditForm] = useState({ name: "", type: "", balance: "" });
 
   const [expenseData, setExpenseData] = useState([]);
@@ -94,7 +94,7 @@ function Dashboard() {
         headers: { Authorization: `Bearer ${token}` },
       });
       setAccounts((prev) => [res.data, ...prev]);
-      setForm({ name: "", type: "", balance: "" });
+      setForm({ name: "", type: ""});
     } catch (err) {
       alert("Error creating account");
     }
