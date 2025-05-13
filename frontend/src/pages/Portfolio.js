@@ -31,7 +31,6 @@ function Portfolio() {
 
     const [showAddModal, setShowAddModal] = useState(false);
     const [newAccountName, setNewAccountName] = useState("");
-    const [newAccountBalance, setNewAccountBalance] = useState("");
 
     const [selectedAccountId, setSelectedAccountId] = useState(null);
     const [newTicker, setNewTicker] = useState("");
@@ -688,12 +687,6 @@ function Portfolio() {
                     value={newAccountName}
                     onChange={(e) => setNewAccountName(e.target.value)}
                 />
-                <input
-                    type="number"
-                    placeholder="Initial Balance"
-                    value={newAccountBalance}
-                    onChange={(e) => setNewAccountBalance(e.target.value)}
-                />
                 <button onClick={async () => {
                     try {
                     const res = await fetch("/api/accounts", {
@@ -705,13 +698,12 @@ function Portfolio() {
                         body: JSON.stringify({
                         name: newAccountName,
                         type: "Investment",
-                        balance: parseFloat(newAccountBalance),
+                        balance: 0,
                         }),
                     });
                     if (res.ok) {
                         setShowNewAccountModal(false);
                         setNewAccountName("");
-                        setNewAccountBalance("");
                         window.location.reload();
                     } else {
                         console.error("Error creating account");
