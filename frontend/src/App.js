@@ -11,7 +11,6 @@ import ChatCoach from "./pages/ChatCoach";
 import Portfolio from "./pages/Portfolio";
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
-axios.defaults.withCredentials = true;
 
 function App() {
   return (

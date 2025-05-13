@@ -21,8 +21,7 @@ const app = express();
 const allowedOrigins = ["https://accountability-finance.vercel.app"];
 
 app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,
+  origin: allowedOrigins
 }));
 
 // Middleware
