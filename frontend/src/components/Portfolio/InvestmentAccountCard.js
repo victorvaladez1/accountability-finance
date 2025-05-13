@@ -89,69 +89,74 @@ const InvestmentAccountCard = ({ account, holdings, livePrices, pieColors, onAdd
           padding: '1rem',
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
         }}>
-          <ResponsiveContainer width="100%" height={250}>
-            <PieChart>
-              <defs>
-                {pieData.map((entry, index) => (
-                  <linearGradient id={`account-color-${account._id}-${index}`} key={index} x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor={pieColors[index % pieColors.length]} stopOpacity={0.8} />
-                    <stop offset="100%" stopColor={pieColors[index % pieColors.length]} stopOpacity={0.5} />
-                  </linearGradient>
-                ))}
-                <filter id={`shadow-${account._id}`} x="-20%" y="-20%" width="140%" height="140%">
-                  <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#000" floodOpacity="0.2" />
-                </filter>
-              </defs>
+          {pieData.length === 0 ? (
+          <p style={{ color: "#6b7280", fontStyle: "italic", textAlign: "center", padding: "2rem" }}>
+             No holdings to display. Add stocks or ETFs to visualize your portfolio allocation.
+            </p>
+          ) : (
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <defs>
+                  {pieData.map((entry, index) => (
+                    <linearGradient id={`account-color-${account._id}-${index}`} key={index} x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor={pieColors[index % pieColors.length]} stopOpacity={0.8} />
+                      <stop offset="100%" stopColor={pieColors[index % pieColors.length]} stopOpacity={0.5} />
+                    </linearGradient>
+                  ))}
+                  <filter id={`shadow-${account._id}`} x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#000" floodOpacity="0.2" />
+                  </filter>
+                </defs>
 
-              <Pie
-                data={pieData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={90}
-                stroke="none"
-                fillOpacity={0.9}
-                filter={`url(#shadow-${account._id})`}
-                activeShape={({ cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill }) => {
-                  const RADIAN = Math.PI / 180;
-                  return (
-                    <g>
-                      <Sector
-                        cx={cx}
-                        cy={cy}
-                        innerRadius={innerRadius}
-                        outerRadius={outerRadius + 6}
-                        startAngle={startAngle}
-                        endAngle={endAngle}
-                        fill={fill}
-                      />
-                    </g>
-                  );
-                }}
-              >
-                {pieData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={`url(#account-color-${account._id}-${index})`} />
-                ))}
-              </Pie>
+                <Pie
+                  data={pieData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={90}
+                  stroke="none"
+                  fillOpacity={0.9}
+                  filter={`url(#shadow-${account._id})`}
+                  activeShape={({ cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill }) => {
+                    return (
+                      <g>
+                        <Sector
+                          cx={cx}
+                          cy={cy}
+                          innerRadius={innerRadius}
+                          outerRadius={outerRadius + 6}
+                          startAngle={startAngle}
+                          endAngle={endAngle}
+                          fill={fill}
+                        />
+                      </g>
+                    );
+                  }}
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={`url(#account-color-${account._id}-${index})`} />
+                  ))}
+                </Pie>
 
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#ffffff",
-                  borderRadius: "8px",
-                  boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
-                  border: "1px solid #e0e0e0",
-                }}
-                itemStyle={{ color: "#333", fontWeight: 500 }}
-                formatter={(value, name) => {
-                  const total = pieData.reduce((sum, item) => sum + item.value, 0);
-                  const percent = ((value / total) * 100).toFixed(2);
-                  return [`$${value.toFixed(2)}`, `${name} (${percent}%)`];
-                }}
-              />
-              <Legend verticalAlign="bottom" />
-            </PieChart>
-          </ResponsiveContainer>
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#ffffff",
+                    borderRadius: "8px",
+                    boxShadow: "0 2px 12px rgba(0, 0, 0, 0.1)",
+                    border: "1px solid #e0e0e0",
+                  }}
+                  itemStyle={{ color: "#333", fontWeight: 500 }}
+                  formatter={(value, name) => {
+                    const total = pieData.reduce((sum, item) => sum + item.value, 0);
+                    const percent = ((value / total) * 100).toFixed(2);
+                    return [`$${value.toFixed(2)}`, `${name} (${percent}%)`];
+                  }}
+                />
+                <Legend verticalAlign="bottom" />
+              </PieChart>
+            </ResponsiveContainer>
+          )}
         </div>
 
         {/* Holdings Box */}
@@ -164,14 +169,19 @@ const InvestmentAccountCard = ({ account, holdings, livePrices, pieColors, onAdd
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
         }}>
           
-          <HoldingPreview 
-            holdings={holdings} 
-            expanded={expanded} 
-            setExpanded={setExpanded} 
-            livePrices={livePrices}
-            onDeleteHolding={onDeleteHolding}
-          />
-
+          {holdings.length === 0 ? (
+            <p style={{ color: "#6b7280", fontStyle: "italic", textAlign: "center", padding: "2rem" }}>
+              No holdings yet. Add a stock or ETF to start building your portfolio.
+            </p>
+          ) : (
+            <HoldingPreview 
+              holdings={holdings} 
+              expanded={expanded} 
+              setExpanded={setExpanded} 
+              livePrices={livePrices}
+              onDeleteHolding={onDeleteHolding}
+            />
+          )}
         </div>
         
         {/* Mini Line Chart Box */}
@@ -226,12 +236,14 @@ const InvestmentAccountCard = ({ account, holdings, livePrices, pieColors, onAdd
               </LineChart>
             </ResponsiveContainer>
           ) : (
-            <>
-              <p style={{ fontWeight: "bold" }}>No snapshot data yet.</p>
-              <p style={{ fontSize: "0.85rem", color: "#9ca3af" }}>
-                Save a snapshot to track performance over time.
-              </p>
-            </>
+            <p style={{
+              color: "#6b7280", 
+              fontStyle: "italic", 
+              textAlign: "center", 
+              padding: "2rem"
+            }}>
+              No snapshot data yet. Add holdings and save a snapshot to track performance over time.
+            </p>            
           )}
         </div>
       </div>
