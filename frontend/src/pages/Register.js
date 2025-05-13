@@ -15,6 +15,8 @@ function Register() {
     password: "",
   });
 
+  const [success, setSuccess] = useState("");
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -32,7 +34,10 @@ function Register() {
     setError("");
     try {
       await axios.post("http://localhost:5000/api/auth/register", formData);
-      navigate("/login");
+      setSuccess("Account created successfully! Redirecting to login...");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1800);
     } catch (err) {
       setError(err.response?.data?.error || "Registration failed.");
     }
@@ -113,6 +118,7 @@ function Register() {
             )}
 
             {error && <p className="login-error">{error}</p>}
+            {success && <p className="login-success">{success}</p>}
             <button type="submit">Register</button>
           </form>
           <p className="login-link">
