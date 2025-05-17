@@ -22,15 +22,21 @@ const allowedOrigins = [
   "https://accountability-finance-smrxm15id-victor-valadez-projects.vercel.app",
 ];
 
-app.use(cors({
+// Apply CORS
+const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps, curl, Postman)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error("Not allowed by CORS"));
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
   },
   credentials: true,
-}));
+};
+
+app.use(cors(corsOptions));
+
+app.options("*", cors(corsOptions));
 
 // Middleware
 app.use(express.json());
@@ -46,10 +52,12 @@ app.use("/api/market", marketRoutes);
 app.use("/api/snapshots", snapshotRoutes);
 app.use("/api/account-snapshots", accountSnapshotsRoute);
 
+// Root test route
 app.get("/", (req, res) => {
   res.send("AccountAbility backend is running");
 });
 
+// MongoDB + Server start
 const PORT = process.env.PORT || 5000;
 
 mongoose.connect(process.env.MONGO_URI, {
