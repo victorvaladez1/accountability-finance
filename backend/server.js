@@ -7,15 +7,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Import Routes
-// import authRoutes from "./routes/auth.js";
-// import accountRoutes from "./routes/accounts.js";
-// import transactionRoutes from "./routes/transactions.js";
-// import analyticsRoutes from "./routes/analytics.js";
-// import chatRoutes from "./routes/chat.js";
-// import holdingsRoutes from "./routes/holdings.js";
-// import marketRoutes from "./routes/market.js";
-// import snapshotRoutes from "./routes/snapshots.js";
-// import accountSnapshotsRoute from "./routes/accountSnapshots.js";
+import authRoutes from "./routes/auth.js";
+import accountRoutes from "./routes/accounts.js";
+import transactionRoutes from "./routes/transactions.js";
+import analyticsRoutes from "./routes/analytics.js";
+import chatRoutes from "./routes/chat.js";
+import holdingsRoutes from "./routes/holdings.js";
+import marketRoutes from "./routes/market.js";
+import snapshotRoutes from "./routes/snapshots.js";
+import accountSnapshotsRoute from "./routes/accountSnapshots.js";
 
 const app = express();
 
@@ -42,15 +42,15 @@ app.options("*", cors());
 app.use(express.json());
 
 // API Routes
-// app.use("/api/auth", authRoutes);
-// app.use("/api/accounts", accountRoutes);
-// app.use("/api/transactions", transactionRoutes);
-// app.use("/api/analytics", analyticsRoutes);
-// app.use("/api/chat", chatRoutes);
-// app.use("/api/holdings", holdingsRoutes);
-// app.use("/api/market", marketRoutes);
-// app.use("/api/snapshots", snapshotRoutes);
-// app.use("/api/account-snapshots", accountSnapshotsRoute);
+app.use("/api/auth", authRoutes);
+app.use("/api/accounts", accountRoutes);
+app.use("/api/transactions", transactionRoutes);
+app.use("/api/analytics", analyticsRoutes);
+app.use("/api/chat", chatRoutes);
+app.use("/api/holdings", holdingsRoutes);
+app.use("/api/market", marketRoutes);
+app.use("/api/snapshots", snapshotRoutes);
+app.use("/api/account-snapshots", accountSnapshotsRoute);
 
 // Test route
 app.get("/", (req, res) => {
