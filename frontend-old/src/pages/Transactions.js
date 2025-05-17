@@ -6,6 +6,8 @@ import AddTransactionModal from "../components/AddTransactionModal";
 import "./Transactions.css";
 import "./CommonLayout.css";
 
+const API = import.meta.env.VITE_API_URL;
+
 function Transactions() {
   const [transactions, setTransactions] = useState([]);
   const [accounts, setAccounts] = useState([]);
@@ -45,10 +47,10 @@ function Transactions() {
     try {
       const token = localStorage.getItem("token");
       const [transRes, acctRes] = await Promise.all([
-        axios.get(`http://localhost:5000/api/transactions?page=${page}&limit=${limit}`, {
+        axios.get(`${API}/api/transactions?page=${page}&limit=${limit}`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get("http://localhost:5000/api/accounts", {
+        axios.get(`${API}/api/accounts`, {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
@@ -59,12 +61,12 @@ function Transactions() {
     } catch (err) {
       console.error("Error fetching data:", err);
     }
-  };
+  }
 
   const fetchMonthlyData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/transactions/monthly", {
+      const res = await axios.get(`${API}/api/transactions/monthly`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMonthlyTransactions(res.data);
@@ -81,7 +83,7 @@ function Transactions() {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      await axios.post("http://localhost:5000/api/transactions", form, {
+      await axios.post(`${API}/api/transactions`, form, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setForm({ account: "", type: "Expense", amount: "", category: "", description: "", date: "" });
@@ -112,7 +114,7 @@ function Transactions() {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.put(`http://localhost:5000/api/transactions/${editingId}`, editForm, {
+      const res = await axios.put(`${API}/api/transactions/${editingId}`, editForm, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTransactions((prev) =>
@@ -129,7 +131,7 @@ function Transactions() {
     if (!window.confirm("Are you sure you want to delete this transaction?")) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/transactions/${id}`, {
+      await axios.delete(`${API}/api/transactions/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTransactions((prev) => prev.filter((tx) => tx._id !== id));

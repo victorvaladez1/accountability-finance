@@ -4,6 +4,8 @@ import { useNavigate, Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import "./Login.css";
 
+const API = import.meta.env.VITE_API_URL;
+
 function Login() {
   const navigate = useNavigate();
   const [error, setError] = useState("");
@@ -12,6 +14,8 @@ function Login() {
     email: "",
     password: "",
   });
+
+  console.log("API:", import.meta.env.VITE_API_URL);
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -23,14 +27,14 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/auth/login", formData);
+      const res = await axios.post(`${API}/api/auth/login`, formData);
       localStorage.setItem("token", res.data.token);
       navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed.");
     }
   };
-
+  
   return (
     <div className="login-page">
       {/* Desktop branding only */}

@@ -16,39 +16,46 @@
 ## 🚀 Key Features
 
 ### 🔐 Authentication
+
 - Secure user login & registration using JWT tokens
 - Protected routes via backend middleware
 
 ### 💳 Account Management
+
 - Add, edit, and delete checking, savings, and investment accounts
 - Real-time balance updates from transactions and holdings
 - Account-specific performance and chart views
 
 ### 📒 Transactions
+
 - Record income or expenses with category, description, and date
 - Filter by account, category, or type
 - Sort and paginate results
 - Visual breakdowns of spending trends
 
 ### 📊 Dashboard
+
 - Overview of total balances and gain/loss
 - Pie chart: Spending by category
 - Bar chart: Monthly spending trends
 - Smart alerts for unusual spending behavior
 
 ### 📈 Investment Portfolio
+
 - Add and track stock/ETF holdings per account
 - Automatic valuation using live market data
 - Portfolio summary and individual gain/loss
 - Historical snapshots with mini performance charts
 
 ### 🧮 Planning Tools
+
 - 💡 **New Calculators for:**
   - Mortgage & car affordability
   - Loan payment breakdowns
   - Budget planner using the 50/30/20 rule
 
 ### 🤖 AI Chat Coach _(Coming Soon)_
+
 - Ask questions like: “How do I start investing?” or “What’s the snowball method?”
 - Powered by OpenAI for financial literacy education
 
@@ -90,6 +97,7 @@ npm start
 ```
 
 > Runs locally on:
+>
 > - Frontend: `http://localhost:3000`
 > - Backend: `http://localhost:5000`
 

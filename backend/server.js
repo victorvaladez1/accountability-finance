@@ -18,10 +18,14 @@ import accountSnapshotsRoute from "./routes/accountSnapshots.js";
 const app = express();
 
 // ✅ CORS config (allow frontend access)
-const allowedOrigins = ["https://accountability-finance.vercel.app"];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://accountability-finance-backend.onrender.com",
+];
 
 app.use(cors({
-  origin: allowedOrigins
+  origin: allowedOrigins,
+  credentials: true,
 }));
 
 // Middleware

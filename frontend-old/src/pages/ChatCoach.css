@@ -1,0 +1,169 @@
+/* --- Chat Box --- */
+.chat-box {
+    background: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    max-width: 1000px;
+    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+}
+
+/* --- Chat Log --- */
+.chat-log {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+/* --- Messages --- */
+.message {
+    max-width: 75%;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    position: relative;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+.message.user {
+    align-self: flex-end;
+    background: #e9f5ff;
+    color: #0056b3;
+}
+
+.message.assistant {
+    align-self: flex-start;
+    background: #f1f1f1;
+    color: #333;
+}
+
+/* --- Timestamp --- */
+.timestamp {
+    position: absolute;
+    bottom: -18px;
+    right: 0;
+    font-size: 0.7rem;
+    color: #999;
+}
+
+/* --- Chat Input --- */
+.chat-input {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+/* --- Enhanced Send Button --- */
+.chat-input button:not(.clear-btn-inline) {
+    background: linear-gradient(135deg, #0056b3, #007bff); /* Gradient for a modern look */
+    color: white;
+    padding: 0.8rem 1.5rem;
+    font-weight: bold;
+    font-size: 1rem;
+    border: none;
+    border-radius: 12px; /* Slightly more rounded for elegance */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.chat-input button:not(.clear-btn-inline):hover {
+    background: linear-gradient(135deg, #003c82, #0056b3); /* Darker gradient on hover */
+    transform: scale(1.05); /* Subtle scaling for interactivity */
+}
+
+.chat-input button:disabled {
+    background: #d4e4fa; /* Softer tone for disabled state */
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* --- Enhanced Clear Button --- */
+.clear-btn-inline {
+    background: linear-gradient(135deg, #e04141, #ff4d4d); /* Gradient for a vibrant look */
+    color: white;
+    padding: 0.7rem 1.3rem;
+    font-weight: bold;
+    font-size: 1rem;
+    border: none;
+    border-radius: 12px; /* Consistent roundness */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.clear-btn-inline:hover {
+    background: linear-gradient(135deg, #c12b2b, #e04141); /* Darker gradient on hover */
+    transform: scale(1.05); /* Interactive scaling */
+}
+
+.clear-btn-inline:disabled {
+    background: #f8c8c8; /* Softer tone for disabled state */
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* --- Chat Title --- */
+.chat-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 1.8rem;
+    color: #333;
+}
+
+/* --- Suggested Prompts --- */
+.suggested-prompts {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.prompt-btn {
+    background: #e8f0fe; /* Soft light blue */
+    border: 1px solid #007bff; /* Match your brand blue */
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    color: #0056b3; /* Darker blue text */
+    font-weight: 500;
+}
+
+.prompt-btn:hover {
+    background: #d0e2ff; /* Slightly deeper blue on hover */
+    border-color: #0056b3;
+}
+
+.prompt-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
+/* --- Date Separator --- */
+.date-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin: 1rem
+}

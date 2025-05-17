@@ -11,6 +11,8 @@ import ExpensePieChart from "../components/ExpensePieChart";
 import "./Dashboard.css";
 import "./CommonLayout.css";
 
+const API = import.meta.env.VITE_API_URL;
+
 function Dashboard() {
   const [accounts, setAccounts] = useState([]);
   const [transactions, setTransactions] = useState([]);
@@ -31,16 +33,16 @@ function Dashboard() {
   useEffect(() => {
     const fetchExpenses = async () => {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/analytics/monthly-expenses", {
+      const res = await axios.get(`${API}/api/analytics/monthly-expenses`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-  
+
       setExpenseData(res.data.months);
       console.log("Bar Chart Data", res.data.months);
       setAverage(res.data.average);
       setCurrentMonth(res.data.currentMonth);
     };
-  
+
     fetchExpenses();
     fetchAccounts();
     fetchTransactions();
@@ -49,7 +51,7 @@ function Dashboard() {
   const fetchAccounts = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/accounts", {
+      const res = await axios.get(`${API}/api/accounts`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setAccounts(res.data);
@@ -60,15 +62,16 @@ function Dashboard() {
     }
   };
 
+
   const fetchTransactions = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/transactions", {
+      const res = await axios.get(`${API}/api/transactions`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-  
+
       const txData = Array.isArray(res.data) ? res.data : [];
-  
+
       console.log("Transactions loaded:", txData);
       setTransactions(res.data.transactions);
     } catch (err) {
@@ -90,7 +93,7 @@ function Dashboard() {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.post("http://localhost:5000/api/accounts", form, {
+      const res = await axios.post(`${API}/api/accounts`, form, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setAccounts((prev) => [res.data, ...prev]);
@@ -117,7 +120,7 @@ function Dashboard() {
     if (!window.confirm("Are you sure?")) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/accounts/${id}`, {
+      await axios.delete(`${API}/api/accounts/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setAccounts((prev) => prev.filter((a) => a._id !== id));
@@ -125,6 +128,7 @@ function Dashboard() {
       alert("Delete failed.");
     }
   };
+
 
   const startEditing = (acc) => {
     setEditingId(acc._id);
@@ -143,13 +147,9 @@ function Dashboard() {
   const handleSave = async () => {
     const token = localStorage.getItem("token");
     try {
-      const res = await axios.put(
-        `http://localhost:5000/api/accounts/${editingId}`,
-        editForm,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.put(`${API}/api/accounts/${editingId}`, editForm, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setAccounts((prev) =>
         prev.map((acc) => (acc._id === editingId ? res.data : acc))
       );

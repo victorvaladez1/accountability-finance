@@ -1,0 +1,434 @@
+/* General Page Layout */
+.transactions-container, .page-container {
+  max-width: 95rem;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9fafb;
+}
+
+/* Card Wrappers */
+.transaction-form-card,
+.filter-card,
+.transaction-list-section,
+.pagination-controls {
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+}
+
+/* Transaction Form */
+.transaction-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.transaction-form input,
+.transaction-form select {
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+  min-width: 150px;
+}
+
+.transaction-form button {
+  background-color: #3498db;
+  color: white;
+  font-weight: bold;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.transaction-form button:hover {
+  background-color: #2980b9;
+}
+
+/* Filter Section */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.filters select {
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* Monthly Toggle */
+.monthly-toggle {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0 1rem 0;
+}
+
+.month-dropdown {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
+
+/* Transaction List */
+.transaction-list {
+  list-style: none;
+  padding: 0;
+}
+
+.transaction-item {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  border-left: 6px solid #ccc;
+}
+
+/* Differentiate Income vs Expense */
+.transaction-item.expense {
+  border-left-color: #e74c3c;
+  background-color: #fff5f5;
+}
+
+.transaction-item.income {
+  border-left-color: #2ecc71;
+  background-color: #f0fff4;
+}
+
+/* Transaction Inner Layout */
+.transaction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.transaction-left {
+  flex: 1;
+  text-align: left;
+}
+
+.transaction-topline {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.transaction-meta {
+  font-size: 0.85rem;
+  color: #555;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Action Buttons */
+.transaction-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.transaction-actions button {
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.transaction-actions button:first-child {
+  background-color: #3498db;
+  color: white;
+}
+
+.transaction-actions button:first-child:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+.transaction-actions button:last-child {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.transaction-actions button:last-child:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+}
+
+/* Pagination Controls */
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.pagination-controls button {
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pagination-controls button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Rows Per Page */
+.rows-per-page {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.group-by-month {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.group-by-month input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #3498db; /* fintech blue */
+  cursor: pointer;
+  margin: 0;
+}
+
+.group-by-month label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.group-by-month .month-dropdown {
+  padding: 0.45rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 0.95rem;
+}
+
+.pagination-footer {
+  margin-top: 2rem;
+  background-color: #f1f5f9;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: center;
+}
+
+.pagination-footer-inner {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.rows-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rows-label {
+  font-weight: 600;
+  color: #374151;
+}
+
+.rows-dropdown {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background-color: white;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pagination-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+.pagination-btn:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.pagination-page-text {
+  font-weight: 600;
+  color: #374151;
+}
+
+.transaction-item {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.transaction-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.filter-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.filters select {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 0.95rem;
+  background-color: white;
+}
+
+.filters select:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+.reset-btn {
+  background-color: #ef4444;
+  color: white;
+  font-weight: bold;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reset-btn:hover {
+  background-color: #dc2626;
+}
+
+.filter-card.enhanced {
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  margin: 2rem 0;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e5e7eb;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.filters-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 160px;
+  flex: 1;
+}
+
+.filter-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.filter-group select {
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: #fff;
+  font-size: 0.95rem;
+}
+
+.filter-group.full-width {
+  flex-basis: 100%;
+  margin-top: 1rem;
+  align-items: flex-start;
+}
+
+.reset-btn {
+  background-color: #ef4444;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.reset-btn:hover {
+  background-color: #dc2626;
+}
+
+.filter-group.full-width {
+  flex-basis: 100%;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.group-by-month select {
+  margin-top: 0.25rem;
+  max-width: 200px;
+}
