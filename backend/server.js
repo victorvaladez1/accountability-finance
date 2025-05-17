@@ -7,15 +7,15 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // Import Routes
-import authRoutes from "./routes/auth.js";
-import accountRoutes from "./routes/accounts.js";
-import transactionRoutes from "./routes/transactions.js";
-import analyticsRoutes from "./routes/analytics.js";
-import chatRoutes from "./routes/chat.js";
-import holdingsRoutes from "./routes/holdings.js";
-import marketRoutes from "./routes/market.js";
-import snapshotRoutes from "./routes/snapshots.js";
-import accountSnapshotsRoute from "./routes/accountSnapshots.js";
+// import authRoutes from "./routes/auth.js";
+// import accountRoutes from "./routes/accounts.js";
+// import transactionRoutes from "./routes/transactions.js";
+// import analyticsRoutes from "./routes/analytics.js";
+// import chatRoutes from "./routes/chat.js";
+// import holdingsRoutes from "./routes/holdings.js";
+// import marketRoutes from "./routes/market.js";
+// import snapshotRoutes from "./routes/snapshots.js";
+// import accountSnapshotsRoute from "./routes/accountSnapshots.js";
 
 const app = express();
 
