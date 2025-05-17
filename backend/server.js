@@ -42,15 +42,15 @@ app.options("*", cors());
 app.use(express.json());
 
 // API Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/accounts", accountRoutes);
-app.use("/api/transactions", transactionRoutes);
-app.use("/api/analytics", analyticsRoutes);
-app.use("/api/chat", chatRoutes);
-app.use("/api/holdings", holdingsRoutes);
-app.use("/api/market", marketRoutes);
-app.use("/api/snapshots", snapshotRoutes);
-app.use("/api/account-snapshots", accountSnapshotsRoute);
+// app.use("/api/auth", authRoutes);
+// app.use("/api/accounts", accountRoutes);
+// app.use("/api/transactions", transactionRoutes);
+// app.use("/api/analytics", analyticsRoutes);
+// app.use("/api/chat", chatRoutes);
+// app.use("/api/holdings", holdingsRoutes);
+// app.use("/api/market", marketRoutes);
+// app.use("/api/snapshots", snapshotRoutes);
+// app.use("/api/account-snapshots", accountSnapshotsRoute);
 
 // Test route
 app.get("/", (req, res) => {
