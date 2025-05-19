@@ -470,30 +470,30 @@ function Portfolio() {
       const deleteAccount = async (accountId) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this investment account?");
         if (!confirmDelete) return;
-      
+
         try {
-          const res = await fetch(`/api/accounts/${accountId}`, {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          });
-      
-          if (res.ok) {
-            setAccounts((prev) => prev.filter((acc) => acc._id !== accountId));
-            const newHoldingsMap = { ...holdingsMap };
-            delete newHoldingsMap[accountId];
-            setHoldingsMap(newHoldingsMap);
-          } else {
-            const err = await res.json();
-            console.error("Delete failed:", err.message);
-            alert("Failed to delete account.");
-          }
+            const res = await fetch(`${API}/api/accounts/${accountId}`, {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            });
+
+            if (res.ok) {
+                setAccounts((prev) => prev.filter((acc) => acc._id !== accountId));
+                const newHoldingsMap = { ...holdingsMap };
+                delete newHoldingsMap[accountId];
+                setHoldingsMap(newHoldingsMap);
+            } else {
+                const err = await res.json();
+                console.error("Delete failed:", err.message);
+                alert("Failed to delete account.");
+            }
         } catch (err) {
-          console.error("Delete error:", err);
-          alert("Error deleting account.");
+            console.error("Delete error:", err);
+            alert("Error deleting account.");
         }
-      };
+    };
 
       const costBasis = (accountId) => {
         const holdings = holdingsMap[accountId] || [];

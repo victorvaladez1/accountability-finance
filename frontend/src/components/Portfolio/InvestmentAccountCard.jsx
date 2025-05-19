@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Sector } from 'recharts';
 import HoldingPreview from './HoldingPreview';
 
+const API = import.meta.env.VITE_API_URL;
+
 const InvestmentAccountCard = ({ account, holdings, livePrices, pieColors, onAddHolding, onDeleteAccount, onDeleteHolding, snapshots }) => {
   const [expanded, setExpanded] = useState(false);
 
