@@ -117,8 +117,7 @@ const PortfolioPerformanceCard = ({ snapshots, chartFilter, setChartFilter, tota
 
       {/* 📸 Snapshot Buttons */}
       <div className="snapshot-buttons">
-        <button onClick={handleSaveSnapshot}>📸 Save Portfolio Snapshot</button>
-        <button onClick={handleSaveAllSnapshots}>📸 Save All Account Snapshots</button>
+        <button onClick={handleSaveAllSnapshots}>Save Snapshot</button>
       </div>
     </div>
   );
