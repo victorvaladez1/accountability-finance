@@ -2,14 +2,25 @@ import express from "express";
 import axios from "axios";
 const router = express.Router();
 
+const FINNHUB_API_KEY = process.env.FINNHUB_API_KEY;
+
+const cache = {};
+const CACHE_TTL = 5 * 60 * 1000;
+
 router.get("/:ticker", async (req, res) => {
-    const { ticker } = req.params;
-    const FINNHUB_API_KEY = process.env.FINNHUB_API_KEY;
+    const ticker = req.params.ticker.toUpperCase();
+
+    const cached = cache[ticker];
+    const now = Date.now();
+
+    if (cached && now - cached.timestamp < CACHE_TTL) {
+        return res.json({ price: cached.price, cached: true });
+    }
 
     try {
         const response = await axios.get("https://finnhub.io/api/v1/quote", {
             params: {
-                symbol: ticker.toUpperCase(),
+                symbol: ticker,
                 token: FINNHUB_API_KEY,
             },
         });
@@ -23,9 +34,14 @@ router.get("/:ticker", async (req, res) => {
             });
         }
 
-        res.json({ price });
+        cache[ticker] = {
+            price,
+            timestamp: now,
+        };
+
+        res.json({ price, cached: false });
     } catch (err) {
-        console.error("Finnhub error:", err.message);
+        console.error("❌ Finnhub error:", err.message || err);
         res.status(503).json({
             message: "Market API limit reached or failed. Showing fallback data.",
             fallback: true,
