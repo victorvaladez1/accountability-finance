@@ -578,7 +578,7 @@ function Portfolio() {
                             try {
                                 let finalAvgCost = parseFloat(newAvgCost);
                                 if (!newAvgCost) {
-                                    const priceRes = await fetch(`/api/market/${newTicker.toUpperCase()}`);
+                                    const priceRes = await fetch(`${API}/api/market/${newTicker.toUpperCase()}`);
                                     const priceData = await priceRes.json();
                                     if (!priceData.fallback && priceData.price) {
                                         finalAvgCost = priceData.price;
@@ -588,7 +588,7 @@ function Portfolio() {
                                     }
                                 }
 
-                                const res = await fetch("/api/holdings", {
+                                const res = await fetch(`${API}/api/holdings`, {
                                     method: "POST",
                                     headers: {
                                         "Content-Type": "application/json",
