@@ -287,7 +287,7 @@ function Portfolio() {
         if (totalPortfolioValue <= 0) return;
 
         try {
-        const res = await fetch("/api/snapshots", {
+        const res = await fetch(`${API}/api/snapshots`, {
             method: "POST",
             headers: {
             "Content-Type": "application/json",
