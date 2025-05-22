@@ -682,7 +682,7 @@ function Portfolio() {
                 />
                 <button onClick={async () => {
                     try {
-                    const res = await fetch("/api/accounts", {
+                    const res = await fetch(`${API}/api/accounts`, {
                         method: "POST",
                         headers: {
                         "Content-Type": "application/json",
