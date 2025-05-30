@@ -139,8 +139,6 @@ npm start
 - [x] UI polish + responsive design
 - [x] Deployed to Vercel & Render
 - [x] AI ChatCoach with GPT integration
-- [ ] Budget goal system
-- [ ] Cross-platform app (Electron or React Native)
 
 ---
 
